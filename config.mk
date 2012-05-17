@@ -18,8 +18,8 @@ XINERAMAFLAGS = -DXINERAMA
 XFTLIBS = `pkg-config --cflags --libs xft`
 
 # includes and libs
-INCS = -I. -I/usr/include -I${X11INC}
-LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS}
+INCS = -I. -I/usr/include -I${X11INC} -I/usr/include/freetype2
+LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS} -L/usr/lib/x86_64-linux-gnu -lfreetype -lz -lXft
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
