@@ -1,0 +1,166 @@
+--- src/dwm-6.0/dwm.c	2011-12-19 10:02:46.000000000 -0500
++++ src/dwm-6.0-xft/dwm.c	2012-03-30 10:29:25.156110278 -0400
+@@ -39,6 +39,7 @@
+ #ifdef XINERAMA
+ #include <X11/extensions/Xinerama.h>
+ #endif /* XINERAMA */
++#include <X11/Xft/Xft.h> /* XFT */
+ 
+ /* macros */
+ #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
+@@ -108,7 +109,7 @@
+ 		int descent;
+ 		int height;
+ 		XFontSet set;
+-		XFontStruct *xfont;
++		XftFont *xfont;
+ 	} font;
+ } DC; /* draw context */
+ 
+@@ -485,10 +486,7 @@
+ 	for(m = mons; m; m = m->next)
+ 		while(m->stack)
+ 			unmanage(m->stack, False);
+-	if(dc.font.set)
+-		XFreeFontSet(dpy, dc.font.set);
+-	else
+-		XFreeFont(dpy, dc.font.xfont);
++
+ 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+ 	XFreePixmap(dpy, dc.drawable);
+ 	XFreeGC(dpy, dc.gc);
+@@ -792,6 +790,22 @@
+ 
+ 	XSetForeground(dpy, dc.gc, col[invert ? ColFG : ColBG]);
+ 	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
++
++	/*
++	 *	Color assignment and conversion to Xft's coloring
++	 */
++
++	XftColor color;
++	color.color.red = ((col[invert ? ColBG : ColFG]  & 0xFF0000) >> 16 )* 0x101;
++	color.color.green = ((col[invert ? ColBG : ColFG]  & 0x00FF00) >> 8 )* 0x101;
++	color.color.blue = ((col[invert ? ColBG : ColFG]  & 0x0000FF) )* 0x101;
++	color.color.alpha = 0xFFFF;
++	color.pixel = 0xFFFFFF00;
++	Colormap cmap = DefaultColormap(dpy, screen);
++
++	XftColorAllocValue(dpy, DefaultVisual(dpy, screen), cmap, &color.color, &color);
++	XftDraw *draw = XftDrawCreate(dpy, dc.drawable, DefaultVisual(dpy, screen), cmap);
++
+ 	if(!text)
+ 		return;
+ 	olen = strlen(text);
+@@ -805,11 +819,10 @@
+ 	memcpy(buf, text, len);
+ 	if(len < olen)
+ 		for(i = len; i && i > len - 3; buf[--i] = '.');
+-	XSetForeground(dpy, dc.gc, col[invert ? ColBG : ColFG]);
+-	if(dc.font.set)
+-		XmbDrawString(dpy, dc.drawable, dc.font.set, dc.gc, x, y, buf, len);
+-	else
+-		XDrawString(dpy, dc.drawable, dc.gc, x, y, buf, len);
++
++	XftDrawStringUtf8(draw, &color, dc.font.xfont, x, y, (XftChar8 *)buf, len);
++
++	free(draw);
+ }
+ 
+ void
+@@ -1057,8 +1070,8 @@
+ 		}
+ 	}
+ 	else {
+-		if(!(dc.font.xfont = XLoadQueryFont(dpy, fontstr))
+-		&& !(dc.font.xfont = XLoadQueryFont(dpy, "fixed")))
++		if(!(dc.font.xfont = XftFontOpenXlfd(dpy,screen, fontstr))
++		&& !(dc.font.xfont = XftFontOpenXlfd(dpy,screen, "fixed")))
+ 			die("error, cannot load font: '%s'\n", fontstr);
+ 		dc.font.ascent = dc.font.xfont->ascent;
+ 		dc.font.descent = dc.font.xfont->descent;
+@@ -1621,8 +1634,6 @@
+ 	dc.drawable = XCreatePixmap(dpy, root, DisplayWidth(dpy, screen), bh, DefaultDepth(dpy, screen));
+ 	dc.gc = XCreateGC(dpy, root, 0, NULL);
+ 	XSetLineAttributes(dpy, dc.gc, 1, LineSolid, CapButt, JoinMiter);
+-	if(!dc.font.set)
+-		XSetFont(dpy, dc.gc, dc.font.xfont->fid);
+ 	/* init bars */
+ 	updatebars();
+ 	updatestatus();
+@@ -1693,12 +1704,15 @@
+ int
+ textnw(const char *text, unsigned int len) {
+ 	XRectangle r;
++	XGlyphInfo ext;
+ 
+ 	if(dc.font.set) {
+ 		XmbTextExtents(dc.font.set, text, len, NULL, &r);
+ 		return r.width;
+ 	}
+-	return XTextWidth(dc.font.xfont, text, len);
++
++	XftTextExtentsUtf8(dpy, dc.font.xfont, (XftChar8 *)text, len, &ext);
++	return ext.xOff;
+ }
+ 
+ void
+--- src/dwm-6.0/config.def.h	2011-12-19 10:02:46.000000000 -0500
++++ src/dwm-6.0-xft/config.def.h	2012-03-30 10:22:26.048380780 -0400
+@@ -1,7 +1,7 @@
+ /* See LICENSE file for copyright and license details. */
+ 
+ /* appearance */
+-static const char font[]            = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
++static const char font[]            = "-*-dejavu sans mono-medium-r-*-*-13-*-*-*-*-*-*-*";
+ static const char normbordercolor[] = "#444444";
+ static const char normbgcolor[]     = "#222222";
+ static const char normfgcolor[]     = "#bbbbbb";
+@@ -18,8 +18,7 @@
+ 
+ static const Rule rules[] = {
+ 	/* class      instance    title       tags mask     isfloating   monitor */
+-	{ "Gimp",     NULL,       NULL,       0,            True,        -1 },
+-	{ "Firefox",  NULL,       NULL,       1 << 8,       False,       -1 },
++	{0}
+ };
+ 
+ /* layout(s) */
+@@ -29,9 +28,9 @@
+ 
+ static const Layout layouts[] = {
+ 	/* symbol     arrange function */
+-	{ "[]=",      tile },    /* first entry is default */
+-	{ "><>",      NULL },    /* no layout function means floating behavior */
+-	{ "[M]",      monocle },
++	{ "◧",      tile },    /* first entry is default */
++	{ "◰",      NULL },    /* no layout function means floating behavior */
++	{ "□",      monocle },
+ };
+ 
+ /* key definitions */
+@@ -47,7 +46,7 @@
+ 
+ /* commands */
+ static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+-static const char *termcmd[]  = { "uxterm", NULL };
++static const char *termcmd[]  = { "urxvt", NULL };
+ 
+ static Key keys[] = {
+ 	/* modifier                     key        function        argument */
+--- src/dwm-6.0/config.mk	2011-12-19 10:02:46.000000000 -0500
++++ src/dwm-6.0-xft/config.mk	2012-03-30 11:32:31.768929769 -0400
+@@ -14,9 +14,12 @@
+ XINERAMALIBS = -L${X11LIB} -lXinerama
+ XINERAMAFLAGS = -DXINERAMA
+ 
++# Xft
++XFTLIBS = `pkg-config --cflags --libs xft`
++
+ # includes and libs
+ INCS = -I. -I/usr/include -I${X11INC}
+-LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS}
++LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS}
+ 
+ # flags
+ CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
