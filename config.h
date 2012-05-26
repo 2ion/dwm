@@ -1,7 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[]            = "Terminus 7";
+/* use pango font description format */
+static const char font[]            = "Terminus,EPSON 丸ゴシック体Ｍ 7";
+static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-16-*-*-*-*-*-*-*";
 static const char normbordercolor[] = "#171c12";
 static const char normbgcolor[]     = "#1c1c1c";
 static const char normfgcolor[]     = "#4f4f4f";
@@ -14,7 +16,7 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = False;     /* False means bottom bar */
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "1:dev", "2:web", "3:mail", "4:mpd", "5:view", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
@@ -46,7 +48,7 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *cmd_dmenu[]              = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *cmd_dmenu[]              = { "dmenu_run", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
 static const char *cmd_volume_raise[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB+", NULL };
@@ -58,11 +60,13 @@ static const char *cmd_mpd_stop[]           = { "mpc", "stop", NULL };
 static const char *cmd_mpd_prev[]           = { "mpc", "prev", NULL };
 static const char *cmd_mpd_next[]           = { "mpc", "next", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
+static const char *cmd_action[]             = { "/home/joj/.actions.d/runaction", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 
 #include "push.c"
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+    { MODKEY,                       XK_a,      spawn,          {.v = cmd_action } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal } },
     { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser } },
@@ -93,9 +97,9 @@ static Key keys[] = {
     { MODKEY,                       XK_period, cycle,          {.i = +1 } },
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,       {.i = -1 } },
     { MODKEY|ShiftMask,             XK_period, tagcycle,       {.i = +1 } },
-    { NULL,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower } },
-    { NULL,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise } },
-    { NULL,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute } },
+    { False,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower } },
+    { False,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise } },
+    { False,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute } },
     { MODKEY,                       XK_End,    spawn,          {.v = cmd_lock } },
     { MODKEY,                       XK_F1,     spawn,          {.v = cmd_mpd_toggle } },
     { MODKEY,                       XK_F2,     spawn,          {.v = cmd_mpd_stop } },
