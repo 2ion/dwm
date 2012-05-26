@@ -269,6 +269,9 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
+static void cycle(const Arg *arg);
+static int shifttag(int dist);
+static void tagcycle(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
@@ -2207,6 +2210,42 @@ zoom(const Arg *arg) {
 		if(!c || !(c = nexttiled(c->next)))
 			return;
 	pop(c);
+}
+
+int
+shifttag(int dist) {
+	int i, curtags;
+	int seltag = 0;
+	int numtags = LENGTH(tags);
+
+	curtags = selmon->tagset[selmon->seltags];
+	for(i = 0; i < LENGTH(tags); i++) {
+		if((curtags & (1 << i)) != 0) {
+			seltag = i;
+			break;
+		}
+	}
+
+	seltag += dist;
+	if(seltag < 0)
+		seltag = numtags - (-seltag) % numtags;
+	else
+		seltag %= numtags;
+
+	return 1 << seltag;
+}
+
+void
+cycle(const Arg *arg) {
+	const Arg a = { .i = shifttag(arg->i) };
+	view(&a);
+}
+
+void
+tagcycle(const Arg *arg) {
+	const Arg a = { .i = shifttag(arg->i) };
+	tag(&a);
+	view(&a);
 }
 
 int
