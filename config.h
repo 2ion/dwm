@@ -2,12 +2,12 @@
 
 /* appearance */
 static const char font[]            = "Terminus 7";
-static const char normbordercolor[] = "#444444";
-static const char normbgcolor[]     = "#222222";
-static const char normfgcolor[]     = "#bbbbbb";
-static const char selbordercolor[]  = "#005577";
-static const char selbgcolor[]      = "#005577";
-static const char selfgcolor[]      = "#eeeeee";
+static const char normbordercolor[] = "#171c12";
+static const char normbgcolor[]     = "#1c1c1c";
+static const char normfgcolor[]     = "#4f4f4f";
+static const char selbordercolor[]  = "#687f50";
+static const char selbgcolor[]      = "#1c1c1c";
+static const char selfgcolor[]      = "#afd787";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
@@ -25,7 +25,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster      = 1;    /* number of clients in master area */
-static const Bool resizehints = True; /* True means respect size hints in tiled resizals */
+static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
