@@ -46,17 +46,26 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "x-terminal-emulator", NULL };
-static const char *webterm[]  = { "x-www-browser", NULL };
+static const char *cmd_dmenu[]              = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
+static const char *cmd_browser[]            = { "x-www-browser", NULL };
+static const char *cmd_volume_raise[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB+", NULL };
+static const char *cmd_volume_lower[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB-", NULL };
+static const char *cmd_volume_mute[]        = { "amixer", "-c", "0", "sset", "Master,0", "0dB", NULL };
+static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
+static const char *cmd_mpd_toggle[]         = { "mpc", "toggle", NULL };
+static const char *cmd_mpd_stop[]           = { "mpc", "stop", NULL };
+static const char *cmd_mpd_prev[]           = { "mpc", "prev", NULL };
+static const char *cmd_mpd_next[]           = { "mpc", "next", NULL };
+static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 
 #include "push.c"
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-    { MODKEY|ControlMask,           XK_Return, spawn,          {.v = webterm } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu } },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal } },
+    { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -84,6 +93,15 @@ static Key keys[] = {
     { MODKEY,                       XK_period, cycle,          {.i = +1 } },
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,       {.i = -1 } },
     { MODKEY|ShiftMask,             XK_period, tagcycle,       {.i = +1 } },
+    { NULL,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower } },
+    { NULL,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise } },
+    { NULL,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute } },
+    { MODKEY,                       XK_End,    spawn,          {.v = cmd_lock } },
+    { MODKEY,                       XK_F1,     spawn,          {.v = cmd_mpd_toggle } },
+    { MODKEY,                       XK_F2,     spawn,          {.v = cmd_mpd_stop } },
+    { MODKEY,                       XK_F3,     spawn,          {.v = cmd_mpd_prev } },
+    { MODKEY,                       XK_F4,     spawn,          {.v = cmd_mpd_next } },
+    { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -103,7 +121,7 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = cmd_terminal } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
