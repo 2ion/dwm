@@ -12,7 +12,7 @@ static const char selbgcolor[]      = "#1c1c1c";
 static const char selfgcolor[]      = "#afd787";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const Bool showbar           = True;     /* False means no bar */
+static const Bool showbar           = False;     /* False means no bar */
 static const Bool topbar            = False;     /* False means bottom bar */
 
 /* tagging */
@@ -25,8 +25,8 @@ static const Rule rules[] = {
     { "MPlayer",                NULL,       NULL,       0,            True,        -1 },
     { "mplayer2",               NULL,       NULL,       0,            True,        -1 },
     { "XChat",                  NULL,       NULL,       1 << 6,       False,       -1 },
-    { "gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
-    { "x-terminal-emulator",    NULL,       "ichi:0",   1 << 0,       False,       -1 }
+    { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
+    { "URxvt",                  NULL,       "ichi:0",   1 << 0,       False,       -1 }
 };
 
 /* layout(s) */
