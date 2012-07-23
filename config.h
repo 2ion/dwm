@@ -16,16 +16,21 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = False;     /* False means bottom bar */
 
 /* tagging */
-static const char *tags[] = { "1:dev", "2:web", "3:mail", "4:mpd", "5:view", "6", "7", "8", "9" };
+static const char *tags[] = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
 
 static const Rule rules[] = {
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            True,        -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       False,       -1 },
+	/* class                    instance    title       tags mask     isfloating   monitor */
+	{ "Gimp",                   NULL,       NULL,       0,            True,        -1 },
+	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1 },
+    { "MPlayer",                NULL,       NULL,       0,            True,        -1 },
+    { "mplayer2",               NULL,       NULL,       0,            True,        -1 },
+    { "XChat",                  NULL,       NULL,       1 << 6,       False,       -1 },
+    { "gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
+    { "x-terminal-emulator",    NULL,       "ichi:0",   1 << 0,       False,       -1 }
 };
 
 /* layout(s) */
-static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact      = 0.62; /* factor of master area size [0.05..0.95] */
 static const int nmaster      = 1;    /* number of clients in master area */
 static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
@@ -33,7 +38,7 @@ static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ "[+]",      monocle }
 };
 
 /* key definitions */
@@ -53,7 +58,7 @@ static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
 static const char *cmd_volume_raise[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB+", NULL };
 static const char *cmd_volume_lower[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB-", NULL };
-static const char *cmd_volume_mute[]        = { "amixer", "-c", "0", "sset", "Master,0", "0", NULL };
+static const char *cmd_volume_mute[]        = { "amixer", "-c", "0", "sset", "Master,0", "0",    NULL };
 static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
 static const char *cmd_mpd_toggle[]         = { "mpc", "toggle", NULL };
 static const char *cmd_mpd_stop[]           = { "mpc", "stop", NULL };
