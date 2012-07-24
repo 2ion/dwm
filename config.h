@@ -24,9 +24,9 @@ static const Rule rules[] = {
 	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1 },
     { "MPlayer",                NULL,       NULL,       0,            True,        -1 },
     { "mplayer2",               NULL,       NULL,       0,            True,        -1 },
-    { "XChat",                  NULL,       NULL,       1 << 6,       False,       -1 },
+    { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1 },
     { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
-    { "URxvt",                  NULL,       "ichi:0",   1 << 0,       False,       -1 }
+    { "URxvt",                  NULL,       "ichi:",   1 << 0,       False,       -1 }
 };
 
 /* layout(s) */
@@ -36,12 +36,11 @@ static const Bool resizehints = False; /* True means respect size hints in tiled
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[+]",      monocle }
+	{ "[+]",      monocle },
+	{ "[]=",      tile },    
+	{ "><>",      NULL } 
 };
 
-/* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -66,6 +65,7 @@ static const char *cmd_mpd_prev[]           = { "mpc", "prev", NULL };
 static const char *cmd_mpd_next[]           = { "mpc", "next", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_action[]             = { "/home/joj/.actions.d/runaction", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *cmd_xkill[]              = { "xkill", NULL };
 
 #include "push.c"
 
@@ -75,6 +75,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal } },
     { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser } },
+    { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill }},
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
