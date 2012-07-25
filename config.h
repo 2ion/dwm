@@ -22,11 +22,12 @@ static const Rule rules[] = {
 	/* class                    instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",                   NULL,       NULL,       0,            True,        -1 },
 	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1 },
+    { "Luakit",                 NULL,       NULL,       1 << 1,       False,       -1 },
     { "MPlayer",                NULL,       NULL,       0,            True,        -1 },
     { "mplayer2",               NULL,       NULL,       0,            True,        -1 },
     { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1 },
     { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
-    { "URxvt",                  NULL,       "ichi:",   1 << 0,       False,       -1 }
+    { "URxvt",                  NULL,       "ichi:",    1 << 0,       False,       -1 }
 };
 
 /* layout(s) */
@@ -66,16 +67,17 @@ static const char *cmd_mpd_next[]           = { "mpc", "next", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_action[]             = { "/home/joj/.actions.d/runaction", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
+static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
 
 #include "push.c"
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-    { MODKEY,                       XK_a,      spawn,          {.v = cmd_action } },
-	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal } },
-    { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser } },
-    { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill }},
+    { MODKEY,                       XK_a,      spawn,          {.v = cmd_action} },
+	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu} },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal} },
+    { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser} },
+    { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -88,9 +90,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -112,6 +114,7 @@ static Key keys[] = {
     { MODKEY,                       XK_F3,     spawn,          {.v = cmd_mpd_prev } },
     { MODKEY,                       XK_F4,     spawn,          {.v = cmd_mpd_next } },
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten } },
+    { MODKEY,                       XK_F6,     spawn,          {.v = cmd_fetchmail} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
