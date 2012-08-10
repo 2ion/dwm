@@ -2,7 +2,7 @@
 
 /* appearance */
 /* use pango font description format */
-static const char font[]            = "Terminus,EPSON 丸ゴシック体Ｍ 7";
+static const char font[]            = "Terminus,Adobe Heiti Std 7";
 static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-16-*-*-*-*-*-*-*";
 static const char normbordercolor[] = "#171c12";
 static const char normbgcolor[]     = "#1c1c1c";
