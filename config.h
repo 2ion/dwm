@@ -1,4 +1,11 @@
+/*
+ * dwm window manager configuration
+ * <2ion@2ion.de>
+ * */
+
 #include "push.c"
+#include "bstack.c"
+
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -30,9 +37,10 @@ static const float mfact            = 0.62;
 static const int nmaster            = 1;   
 static const Bool resizehints       = False;
 static const Layout layouts[]       = {
-    { "[+]",      monocle   },
-    { "[]=",      tile      },    
-    { "><>",      NULL      }};
+    { "[+]", monocle   },
+    { "[]=", tile      },    
+    { "TTT", bstack    },
+    { "><>", NULL      }};
 static const Rule rules[]           = {
 	/* class                    instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",                   NULL,       NULL,       0,            True,        -1 },
@@ -83,9 +91,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0}},
 	{ MODKEY,                       XK_Tab,    view,           {0}},
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0}},
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}},
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]}},
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}},
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}}, // tiled
+    { MODKEY,                       XK_s,      setlayout,      {.v = &layouts[2]}}, // bstack
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[3]}}, // float
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
 	{ MODKEY,                       XK_space,  setlayout,      {0}},
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0}},
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 }},
