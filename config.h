@@ -39,10 +39,9 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define DCMD(cmd) { cmd, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL }
 
-static const char *cmd_dmenu[]              = { "dmenu_run", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
 static const char *cmd_volume_raise[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB+", NULL };
@@ -54,12 +53,13 @@ static const char *cmd_mpd_stop[]           = { "mpc", "stop", NULL };
 static const char *cmd_mpd_prev[]           = { "mpc", "prev", NULL };
 static const char *cmd_mpd_next[]           = { "mpc", "next", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
-static const char *cmd_action[]             = { "/home/joj/.actions.d/runaction", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *cmd_tmux[]               = { "/home/joj/.actions.d/tmux", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
 static const char *cmd_cpu_lower[]          = { "cpufreq-set", "-u", "800Mhz", NULL };
 static const char *cmd_cpu_upper[]          = { "cpufreq-set", "-u", "1.6Ghz", NULL };
+static const char *cmd_action[]             = DCMD("/home/joj/.actions.d/runaction");
+static const char *cmd_tmux[]               = DCMD("/home/joj/.actions.d/tmux");
+static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 
 #include "push.c"
 
