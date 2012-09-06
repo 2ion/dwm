@@ -1,3 +1,18 @@
+#include "push.c"
+#define MODKEY Mod4Mask
+#define TAGKEYS(KEY,TAG) \
+	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+#define DCMD(cmd) { cmd, \
+    "-fn", dmenufont, \
+    "-nb", normbgcolor, \
+    "-nf", normfgcolor, \
+    "-sb", selbgcolor, \
+    "-sf", selfgcolor, \
+    NULL }
+
 static const char font[]            = "Terminus,Adobe Heiti Std 7";
 static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-17-*-*-*-*-*-*-*";
 static const char normbordercolor[] = "#171c12";
@@ -11,8 +26,14 @@ static const unsigned int snap      = 10;
 static const Bool showbar           = False;     
 static const Bool topbar            = False; 
 static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
-
-static const Rule rules[] = {
+static const float mfact            = 0.62; 
+static const int nmaster            = 1;   
+static const Bool resizehints       = False;
+static const Layout layouts[]       = {
+    { "[+]",      monocle   },
+    { "[]=",      tile      },    
+    { "><>",      NULL      }};
+static const Rule rules[]           = {
 	/* class                    instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",                   NULL,       NULL,       0,            True,        -1 },
 	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1 },
@@ -23,24 +44,6 @@ static const Rule rules[] = {
     { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
     { "URxvt",                  NULL,       "ichi:",    1 << 0,       False,       -1 }
 };
-
-static const float mfact      = 0.62; 
-static const int nmaster      = 1;   
-static const Bool resizehints = False;
-static const Layout layouts[] = {
-	{ "[+]",      monocle },
-	{ "[]=",      tile },    
-	{ "><>",      NULL } 
-};
-
-#define MODKEY Mod4Mask
-#define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-#define DCMD(cmd) { cmd, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL }
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
@@ -60,8 +63,6 @@ static const char *cmd_cpu_upper[]          = { "cpufreq-set", "-u", "1.6Ghz", N
 static const char *cmd_action[]             = DCMD("/home/joj/.actions.d/runaction");
 static const char *cmd_tmux[]               = DCMD("/home/joj/.actions.d/tmux");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
-
-#include "push.c"
 
 static Key keys[] = {
     { MODKEY,                       XK_a,      spawn,          {.v = cmd_action}},
