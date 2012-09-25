@@ -43,9 +43,10 @@
 #include <pango/pango.h>
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
+#include <mpd/client.h>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
-#endif /* XINERAMA */
+#endif
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -175,6 +176,8 @@ typedef struct {
 	int monitor;
 } Rule;
 
+typedef struct mpd_connection MpdConnection;
+
 /* function declarations */
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
@@ -275,6 +278,7 @@ static void zoom(const Arg *arg);
 static void cycle(const Arg *arg);
 static int shifttag(int dist);
 static void tagcycle(const Arg *arg);
+static void mpdcmd(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
@@ -307,6 +311,7 @@ static Display *dpy;
 static DC dc;
 static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
+static MpdConnection *mpdc = NULL;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
@@ -2251,6 +2256,23 @@ tagcycle(const Arg *arg) {
 	view(&a);
 }
 
+void
+mpdcmd(const Arg *arg) {
+    if(mpdc == NULL)
+        return;
+    switch(arg->i) {
+        case 1:
+            mpd_run_toggle_pause(mpdc);
+            break;
+        case 2:
+            mpd_run_previous(mpdc);
+            break;
+        case 3:
+            mpd_run_next(mpdc);
+            break;
+    }
+}
+
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
@@ -2261,11 +2283,22 @@ main(int argc, char *argv[]) {
 		fputs("warning: no locale support\n", stderr);
 	if(!(dpy = XOpenDisplay(NULL)))
 		die("dwm: cannot open display\n");
+
+    mpdc = mpd_connection_new("127.0.0.1", 0, 0);
+    if(mpdc != NULL)
+        if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
+            mpd_connection_free(mpdc);
+            mpdc = NULL;
+        }
+
 	checkotherwm();
 	setup();
 	scan();
 	run();
 	cleanup();
 	XCloseDisplay(dpy);
+    if(mpdc != NULL)
+        mpd_connection_free(mpdc);
+
 	return EXIT_SUCCESS;
 }

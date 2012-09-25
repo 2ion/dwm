@@ -1,6 +1,5 @@
 /*
  * dwm window manager configuration
- * <2ion@2ion.de>
  * */
 
 #include "push.c"
@@ -59,10 +58,6 @@ static const char *cmd_volume_raise[]       = { "amixer", "-c", "0", "sset", "Ma
 static const char *cmd_volume_lower[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB-", NULL };
 static const char *cmd_volume_mute[]        = { "amixer", "-c", "0", "sset", "Master,0", "0",    NULL };
 static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
-static const char *cmd_mpd_toggle[]         = { "mpc", "toggle", NULL };
-static const char *cmd_mpd_stop[]           = { "mpc", "stop", NULL };
-static const char *cmd_mpd_prev[]           = { "mpc", "prev", NULL };
-static const char *cmd_mpd_next[]           = { "mpc", "next", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
@@ -97,24 +92,23 @@ static Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
 	{ MODKEY,                       XK_space,  setlayout,      {0}},
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0}},
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 }},
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 }},
-	{ MODKEY,                       XK_minus,  focusmon,       {.i = -1 }},
-	{ MODKEY,                       XK_plus,   focusmon,       {.i = +1 }},
-	{ MODKEY|ShiftMask,             XK_minus,  tagmon,         {.i = -1 }},
-	{ MODKEY|ShiftMask,             XK_plus,   tagmon,         {.i = +1 }},
-    { MODKEY,                       XK_comma,  cycle,          {.i = -1 }},
-    { MODKEY,                       XK_period, cycle,          {.i = +1 }},
-    { MODKEY|ShiftMask,             XK_comma,  tagcycle,       {.i = -1 }},
-    { MODKEY|ShiftMask,             XK_period, tagcycle,       {.i = +1 }},
+	{ MODKEY,                       XK_0,      view,            {.ui = ~0 }},
+	{ MODKEY|ShiftMask,             XK_0,      tag,             {.ui = ~0 }},
+	{ MODKEY,                       XK_minus,  focusmon,        {.i = -1 }},
+	{ MODKEY,                       XK_plus,   focusmon,        {.i = +1 }},
+	{ MODKEY|ShiftMask,             XK_minus,  tagmon,          {.i = -1 }},
+	{ MODKEY|ShiftMask,             XK_plus,   tagmon,          {.i = +1 }},
+    { MODKEY,                       XK_comma,  cycle,           {.i = -1 }},
+    { MODKEY,                       XK_period, cycle,           {.i = +1 }},
+    { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
+    { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
     { False,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower }},
     { False,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise }},
     { False,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute }},
-    { MODKEY,                       XK_End,    spawn,          {.v = cmd_lock }},
-    { MODKEY,                       XK_F1,     spawn,          {.v = cmd_mpd_toggle }},
-    { MODKEY,                       XK_F2,     spawn,          {.v = cmd_mpd_stop }},
-    { MODKEY,                       XK_F3,     spawn,          {.v = cmd_mpd_prev }},
-    { MODKEY,                       XK_F4,     spawn,          {.v = cmd_mpd_next }},
+    { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
+    { MODKEY,                       XK_F1,     mpdcmd,          {.i = 1 }},
+    { MODKEY,                       XK_F2,     mpdcmd,          {.i = 2 }},
+    { MODKEY,                       XK_F3,     mpdcmd,          {.i = 3 }},
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
     { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
     { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
