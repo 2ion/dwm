@@ -2284,8 +2284,7 @@ main(int argc, char *argv[]) {
 	if(!(dpy = XOpenDisplay(NULL)))
 		die("dwm: cannot open display\n");
 
-    mpdc = mpd_connection_new("127.0.0.1", 0, 0);
-    if(mpdc != NULL)
+    if((mpdc = mpd_connection_new("127.0.0.1", 0, 0)) != NULL)
         if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
             mpd_connection_free(mpdc);
             mpdc = NULL;
@@ -2297,8 +2296,7 @@ main(int argc, char *argv[]) {
 	run();
 	cleanup();
 	XCloseDisplay(dpy);
-    if(mpdc != NULL)
-        mpd_connection_free(mpdc);
+    if(mpdc != NULL) mpd_connection_free(mpdc);
 
 	return EXIT_SUCCESS;
 }
