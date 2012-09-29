@@ -533,6 +533,7 @@ cleanup(void) {
 		cleanupmon(mons);
 	XSync(dpy, False);
 	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
+    if(mpdc != NULL) mpd_connection_free(mpdc);
 }
 
 void
@@ -2302,8 +2303,7 @@ main(int argc, char *argv[]) {
 	scan();
 	run();
 	cleanup();
-	XCloseDisplay(dpy);
-    if(mpdc != NULL) mpd_connection_free(mpdc);
+    XCloseDisplay(dpy);
 
 	return EXIT_SUCCESS;
 }
