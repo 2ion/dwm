@@ -1,0 +1,36 @@
+README
+======
+
+This repository contains a patched and further modified version of the
+DWM window manager I use.
+
+Based on dwm 6.0.
+
+PATCHES & MODIFICATIONS
+=======================
+
+    'OFFICIAL' PATCHES
+    ------------------
+        
+        * pango
+        * pertag
+        * savefloats
+        * pushstack
+        * cycletag
+        * bstack
+
+    PERSONAL MODS
+    -------------
+
+        * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
+        * mpdcmd() callback to directly control mpd. Linked against
+          libmpdclient
+        * DCMD() macro for convenient dmenu invocation
+        * Compile with -O2 instead of -Os
+        * wmii-like actions
+
+    WISHLIST
+    --------
+
+        * Use code from tmux for direct control
+        * Let mpdcmd() behave more like the mpc CLI
