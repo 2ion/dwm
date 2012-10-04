@@ -2277,7 +2277,15 @@ mpdcmd(const Arg *arg) {
 MPDCMD_PROCEED:
     switch(arg->i) {
         case 1:
-            mpd_run_toggle_pause(mpdc);
+            {
+                struct mpd_status *s = mpd_run_status(mpdc);
+                if(s == NULL) return;
+                if(mpd_status_get_state(s) == MPD_STATE_PLAY)
+                    mpd_run_pause(mpdc, true);
+                else
+                    mpd_run_play(mpdc);
+                mpd_status_free(s);
+            }
             break;
         case 2:
             mpd_run_previous(mpdc);
