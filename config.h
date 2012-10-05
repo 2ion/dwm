@@ -1,6 +1,13 @@
-/*
- * dwm window manager configuration
- * */
+
+#define LILIUM
+
+#ifdef LILIUM
+#define CPU_LOWER "800Mhz"
+#define CPU_UPPER "1.6Ghz"
+#else
+#define CPU_LOWER "825Mhz"
+#define CPU_UPPER "1.65Ghz"
+#endif
 
 #include "push.c"
 #include "bstack.c"
@@ -18,6 +25,9 @@
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
     NULL }
+#define MPD_TOGGLE 1
+#define MPD_PREV 2
+#define MPD_NEXT 3
 
 static const char font[]            = "Terminus,Adobe Heiti Std 7";
 static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-17-*-*-*-*-*-*-*";
@@ -61,8 +71,8 @@ static const char *cmd_lock[]               = { "xscreensaver-command", "-lock",
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
-static const char *cmd_cpu_lower[]          = { "cpufreq-set", "-u", "800Mhz", NULL };
-static const char *cmd_cpu_upper[]          = { "cpufreq-set", "-u", "1.6Ghz", NULL };
+static const char *cmd_cpu_lower[]          = { "cpufreq-set", "-u", CPU_LOWER , NULL };
+static const char *cmd_cpu_upper[]          = { "cpufreq-set", "-u", CPU_UPPER , NULL };
 static const char *cmd_action[]             = DCMD("/home/joj/.actions.d/runaction");
 static const char *cmd_tmux[]               = DCMD("/home/joj/.actions.d/tmux");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
@@ -106,9 +116,9 @@ static Key keys[] = {
     { False,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise }},
     { False,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
-    { MODKEY,                       XK_F1,     mpdcmd,          {.i = 1 }},
-    { MODKEY,                       XK_F2,     mpdcmd,          {.i = 2 }},
-    { MODKEY,                       XK_F3,     mpdcmd,          {.i = 3 }},
+    { MODKEY,                       XK_F1,     mpdcmd,          {.i = MPD_TOGGLE }},
+    { MODKEY,                       XK_F2,     mpdcmd,          {.i = MPD_PREV }},
+    { MODKEY,                       XK_F3,     mpdcmd,          {.i = MPD_NEXT }},
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
     { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
     { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},

@@ -2276,7 +2276,7 @@ mpdcmd(const Arg *arg) {
 
 MPDCMD_PROCEED:
     switch(arg->i) {
-        case 1:
+        case MPD_TOGGLE:
             {
                 struct mpd_status *s = mpd_run_status(mpdc);
                 if(s == NULL) return;
@@ -2287,10 +2287,10 @@ MPDCMD_PROCEED:
                 mpd_status_free(s);
             }
             break;
-        case 2:
+        case MPD_PREV:
             mpd_run_previous(mpdc);
             break;
-        case 3:
+        case MPD_NEXT:
             mpd_run_next(mpdc);
             break;
     }
