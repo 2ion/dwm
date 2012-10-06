@@ -24,7 +24,7 @@ PATCHES & MODIFICATIONS
 
         * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
         * mpdcmd() callback to directly control mpd. Linked against
-          libmpdclient
+          libmpdclient for playback & volume control
         * DCMD() macro for convenient dmenu invocation
         * Compile with -O2 instead of -Os
         * wmii-like actions
@@ -33,4 +33,4 @@ PATCHES & MODIFICATIONS
     --------
 
         * Use code from tmux for direct control
-        * Let mpdcmd() behave more like the mpc CLI
+        * Volume control via libalsa. For that, add a callback alsa()
