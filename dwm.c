@@ -2293,6 +2293,25 @@ MPDCMD_PROCEED:
         case MPD_NEXT:
             mpd_run_next(mpdc);
             break;
+        case MPD_VOL_LOWER:
+        case MPD_VOL_RAISE:
+            {
+                struct mpd_status *s = mpd_run_status(mpdc);
+                int vol;
+                if(s == NULL) return;
+                vol = mpd_status_get_volume(s);
+                if(arg->i == MPD_VOL_LOWER) {
+                    vol -= MPD_VOL_DELTA;
+                    if(vol < 0) vol = 0;
+                }
+                else {
+                    vol += MPD_VOL_DELTA;
+                    if(vol > 100) vol = 100;
+                }
+                mpd_run_set_volume(mpdc, vol);
+                mpd_status_free(s);
+            }
+            break;
     }
 }
 

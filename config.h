@@ -28,6 +28,9 @@
 #define MPD_TOGGLE 1
 #define MPD_PREV 2
 #define MPD_NEXT 3
+#define MPD_VOL_LOWER 4
+#define MPD_VOL_RAISE 5
+#define MPD_VOL_DELTA 2
 
 static const char font[]            = "Terminus,Adobe Heiti Std 7";
 static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-17-*-*-*-*-*-*-*";
@@ -112,8 +115,10 @@ static Key keys[] = {
     { MODKEY,                       XK_period, cycle,           {.i = +1 }},
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
     { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
-    { False,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower }},
-    { False,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise }},
+//    { False,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower }},
+//    { False,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise }},
+    { False, XF86XK_AudioLowerVolume, mpdcmd, { .i = MPD_VOL_LOWER }},
+    { False, XF86XK_AudioRaiseVolume, mpdcmd, { .i = MPD_VOL_RAISE }},
     { False,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
     { MODKEY,                       XK_F1,     mpdcmd,          {.i = MPD_TOGGLE }},
