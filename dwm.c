@@ -312,6 +312,7 @@ static DC dc;
 static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
+static int unmute2vol = 0;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
@@ -2293,6 +2294,7 @@ MPDCMD_PROCEED:
         case MPD_NEXT:
             mpd_run_next(mpdc);
             break;
+        case MPD_VOL_MUTE:
         case MPD_VOL_LOWER:
         case MPD_VOL_RAISE:
             {
@@ -2300,13 +2302,24 @@ MPDCMD_PROCEED:
                 int vol;
                 if(s == NULL) return;
                 vol = mpd_status_get_volume(s);
-                if(arg->i == MPD_VOL_LOWER) {
-                    vol -= MPD_VOL_DELTA;
-                    if(vol < 0) vol = 0;
-                }
-                else {
-                    vol += MPD_VOL_DELTA;
-                    if(vol > 100) vol = 100;
+                switch(arg->i) {
+                    case MPD_VOL_LOWER:
+                        vol -= MPD_VOL_DELTA;
+                        if(vol < 0) vol = 0;
+                        break;
+                    case MPD_VOL_RAISE:
+                        vol += MPD_VOL_DELTA;
+                        if(vol > 100) vol = 100;
+                        break;
+                    case MPD_VOL_MUTE:
+                        if(unmute2vol != 0) {
+                            vol = unmute2vol;
+                            unmute2vol = 0;
+                        } else {
+                            unmute2vol = vol;
+                            vol = 0;
+                        }
+                        break;
                 }
                 mpd_run_set_volume(mpdc, vol);
                 mpd_status_free(s);

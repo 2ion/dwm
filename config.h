@@ -30,6 +30,7 @@
 #define MPD_NEXT 3
 #define MPD_VOL_LOWER 4
 #define MPD_VOL_RAISE 5
+#define MPD_VOL_MUTE  6
 #define MPD_VOL_DELTA 2
 
 static const char font[]            = "Terminus,Adobe Heiti Std 7";
@@ -68,9 +69,6 @@ static const Rule rules[]           = {
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
-static const char *cmd_volume_raise[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB+", NULL };
-static const char *cmd_volume_lower[]       = { "amixer", "-c", "0", "sset", "Master,0", "1dB-", NULL };
-static const char *cmd_volume_mute[]        = { "amixer", "-c", "0", "sset", "Master,0", "0",    NULL };
 static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
@@ -116,11 +114,9 @@ static Key keys[] = {
     { MODKEY,                       XK_period, cycle,           {.i = +1 }},
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
     { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
-//    { False,                       XF86XK_AudioLowerVolume, spawn, {.v = cmd_volume_lower }},
-//    { False,                       XF86XK_AudioRaiseVolume, spawn, {.v = cmd_volume_raise }},
-    { False, XF86XK_AudioLowerVolume, mpdcmd, { .i = MPD_VOL_LOWER }},
-    { False, XF86XK_AudioRaiseVolume, mpdcmd, { .i = MPD_VOL_RAISE }},
-    { False,                       XF86XK_AudioMute, spawn, {.v = cmd_volume_mute }},
+    { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MPD_VOL_LOWER }},
+    { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MPD_VOL_RAISE }},
+    { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MPD_VOL_MUTE }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
     { MODKEY,                       XK_F1,     mpdcmd,          {.i = MPD_TOGGLE }},
     { MODKEY,                       XK_F2,     mpdcmd,          {.i = MPD_PREV }},
