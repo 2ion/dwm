@@ -1,0 +1,5 @@
+#!/bin/bash
+#exec mupdf "$(zenity --file-selection)"
+
+<(zenity --entry --hide-text --text="ssh-agent: Password for id_rsa") ssh-agent ~/.ssh/id_rsa
+

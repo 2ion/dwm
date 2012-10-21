@@ -1,0 +1,2 @@
+#!/bin/bash
+ps aux | awk '{ if($12 ~ /dwm-status.sh/) { system("kill " $2); } }'

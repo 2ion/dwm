@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec "~/.actions.d/$(ls ~/.actions.d | grep -v runaction | dmenu $@)"

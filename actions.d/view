@@ -1,0 +1,10 @@
+#!/bin/bash
+f=$(zenity --file-selection)
+case "$(file -b --mime-type "$f")" in
+    'image/vnd.djvu')
+        djview "$file" ;;
+    'application/pdf')
+        mupdf "$file" ;;
+    *)
+        eval "$(dmenu_run)" "$f" ;;
+esac
