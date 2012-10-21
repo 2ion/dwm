@@ -24,7 +24,7 @@ PATCHES & MODIFICATIONS
 
         * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
         * mpdcmd() callback to directly control mpd. Linked against
-          libmpdclient for playback & volume control
+          libmpdclient for playback & volume (raise, lower, mute/unmute)
         * DCMD() macro for convenient dmenu invocation
         * Compile with -O2 instead of -Os
         * wmii-like actions

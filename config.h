@@ -18,6 +18,7 @@
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+#define ACTION(action) DCMD("/home/joj/.actions.d/" action)
 #define DCMD(cmd) { cmd, \
     "-fn", dmenufont, \
     "-nb", normbgcolor, \
@@ -75,8 +76,9 @@ static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
 static const char *cmd_cpu_lower[]          = { "cpufreq-set", "-u", CPU_LOWER , NULL };
 static const char *cmd_cpu_upper[]          = { "cpufreq-set", "-u", CPU_UPPER , NULL };
-static const char *cmd_action[]             = DCMD("/home/joj/.actions.d/runaction");
-static const char *cmd_tmux[]               = DCMD("/home/joj/.actions.d/tmux");
+static const char *cmd_action[]             = ACTION("runaction");
+static const char *cmd_tmux[]               = ACTION("tmux");
+static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 
 static Key keys[] = {
@@ -120,6 +122,7 @@ static Key keys[] = {
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
     { MODKEY,                       XK_F1,     mpdcmd,          {.i = MPD_TOGGLE }},
     { MODKEY,                       XK_F2,     mpdcmd,          {.i = MPD_PREV }},
+    { MODKEY|ShiftMask,             XK_F2,     spawn,           {.v = cmd_backlight }},
     { MODKEY,                       XK_F3,     mpdcmd,          {.i = MPD_NEXT }},
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
     { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
