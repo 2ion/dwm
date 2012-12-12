@@ -65,7 +65,8 @@ static const Rule rules[]           = {
     { "mplayer2",               NULL,       NULL,       0,            True,        -1 },
     { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1 },
     { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
-    { "URxvt",                  NULL,       "ichi:",    1 << 0,       False,       -1 }
+    { "URxvt",                  NULL,       "ichi:",    1 << 0,       False,       -1 },
+    { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1 }
 };
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };

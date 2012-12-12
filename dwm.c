@@ -2331,7 +2331,7 @@ MPDCMD_PROCEED:
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-"VERSION", © 2006-2011 dwm engineers, see LICENSE for details\n");
+		die("dwm-"VERSION"\nBuilt for 2ion <https://github.com/2ion/dwm>\n© 2006-2011 dwm engineers, see LICENSE for details\n");
 	else if(argc != 1)
 		die("usage: dwm [-v]\n");
 	if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
