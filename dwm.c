@@ -2261,7 +2261,7 @@ tagcycle(const Arg *arg) {
 void
 mpdcmd(const Arg *arg) {
     if(mpdc == NULL)
-        if((mpdc = mpd_connection_new("127.0.0.1", 0, 0)) != NULL) {
+        if((mpdc = mpd_connection_new("localhost", 0, 0)) != NULL) {
             if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
                 mpd_connection_free(mpdc);
                 mpdc = NULL;

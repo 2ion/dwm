@@ -1,13 +1,5 @@
-
-#define LILIUM
-
-#ifdef LILIUM
-#define CPU_LOWER "800Mhz"
-#define CPU_UPPER "1.6Ghz"
-#else
 #define CPU_LOWER "825Mhz"
 #define CPU_UPPER "1.65Ghz"
-#endif
 
 #include "push.c"
 #include "bstack.c"
@@ -81,6 +73,7 @@ static const char *cmd_action[]             = ACTION("runaction");
 static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
+static const char *cmd_sleep[]              = "";
 
 static Key keys[] = {
     { MODKEY,                       XK_a,      spawn,          {.v = cmd_action}},
@@ -121,10 +114,10 @@ static Key keys[] = {
     { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MPD_VOL_RAISE }},
     { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MPD_VOL_MUTE }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
-    { MODKEY,                       XK_F1,     mpdcmd,          {.i = MPD_TOGGLE }},
-    { MODKEY,                       XK_F2,     mpdcmd,          {.i = MPD_PREV }},
+    { MODKEY,                       XF86XK_AudioPlay,     mpdcmd,          {.i = MPD_TOGGLE }},
+    { MODKEY,                       XF86XK_AudioPrev,     mpdcmd,          {.i = MPD_PREV }},
     { MODKEY|ShiftMask,             XK_F2,     spawn,           {.v = cmd_backlight }},
-    { MODKEY,                       XK_F3,     mpdcmd,          {.i = MPD_NEXT }},
+    { MODKEY,                       XF86XK_AudioNext,     mpdcmd,          {.i = MPD_NEXT }},
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
     { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
     { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
