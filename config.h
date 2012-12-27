@@ -24,7 +24,7 @@
 #define MPD_VOL_LOWER 4
 #define MPD_VOL_RAISE 5
 #define MPD_VOL_MUTE  6
-#define MPD_VOL_DELTA 2
+#define MPD_VOL_DELTA 5
 
 static const char font[]            = "Terminus,Adobe Heiti Std 7";
 static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-17-*-*-*-*-*-*-*";
@@ -73,15 +73,16 @@ static const char *cmd_action[]             = ACTION("runaction");
 static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
-static const char *cmd_sleep[]              = "";
 
 static Key keys[] = {
+    /* Alpha keys */
     { MODKEY,                       XK_a,      spawn,          {.v = cmd_action}},
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu}},
     { MODKEY|ShiftMask,             XK_p,      spawn,          {.v = cmd_tmux}},
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal}},
     { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser}},
     { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill}},
+
 	{ MODKEY,                       XK_b,      togglebar,      {0}},
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 }},
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 }},
@@ -110,18 +111,27 @@ static Key keys[] = {
     { MODKEY,                       XK_period, cycle,           {.i = +1 }},
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
     { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
+    { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
+
+    /* AUDIO CONTROLS */
+
     { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MPD_VOL_LOWER }},
     { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MPD_VOL_RAISE }},
     { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MPD_VOL_MUTE }},
-    { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
-    { MODKEY,                       XF86XK_AudioPlay,     mpdcmd,          {.i = MPD_TOGGLE }},
-    { MODKEY,                       XF86XK_AudioPrev,     mpdcmd,          {.i = MPD_PREV }},
-    { MODKEY|ShiftMask,             XK_F2,     spawn,           {.v = cmd_backlight }},
-    { MODKEY,                       XF86XK_AudioNext,     mpdcmd,          {.i = MPD_NEXT }},
+    { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MPD_TOGGLE }},
+    { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MPD_PREV }},
+    { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MPD_NEXT }},
+
+    /* F ROW */
+
+    { MODKEY|ShiftMask,             XK_F2,     spawn,          {.v = cmd_backlight }},
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
     { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
     { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
     { MODKEY,                       XK_F9,     spawn,          {.v = cmd_fetchmail}},
+
+    /* NUMBER ROW */
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
