@@ -1,3 +1,8 @@
+/*
+ * needs gksudo configured to run
+ *  - /usr/sbin/pm-suspend
+ */
+
 #define CPU_LOWER "825Mhz"
 #define CPU_UPPER "1.65Ghz"
 
@@ -73,6 +78,8 @@ static const char *cmd_action[]             = ACTION("runaction");
 static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
+static const char *cmd_sleep[]              = { "gksudo", "/usr/sbin/pm-suspend", NULL };
+static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
 
 static Key keys[] = {
     /* Alpha keys */
@@ -113,7 +120,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
 
-    /* AUDIO CONTROLS */
+    /* XF86 KEYS */
 
     { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MPD_VOL_LOWER }},
     { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MPD_VOL_RAISE }},
@@ -121,10 +128,12 @@ static Key keys[] = {
     { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MPD_TOGGLE }},
     { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MPD_PREV }},
     { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MPD_NEXT }},
+    { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},
+    { False,                        XF86XK_Display,             spawn,  { .v = cmd_backlight }},
+    { False,                        XF86XK_WebCam,              spawn,  { .v = cmd_webcam }},
 
     /* F ROW */
 
-    { MODKEY|ShiftMask,             XK_F2,     spawn,          {.v = cmd_backlight }},
     { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
     { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
     { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
