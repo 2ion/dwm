@@ -78,7 +78,7 @@ static const char *cmd_action[]             = ACTION("runaction");
 static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
-static const char *cmd_sleep[]              = { "gksudo", "/usr/sbin/pm-suspend", NULL };
+static const char *cmd_sleep[]              = ACTION("sleep");
 static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
 
 static Key keys[] = {
