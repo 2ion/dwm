@@ -31,8 +31,8 @@
 #define MPD_VOL_MUTE  6
 #define MPD_VOL_DELTA 5
 
-static const char font[]            = "Terminus,Adobe Heiti Std 7";
-static const char dmenufont[]       = "-xos4-terminus-medium-r-normal-*-17-*-*-*-*-*-*-*";
+static const char font[]            = "Terminus,Kochi Gothic 7";
+static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
 static const char normbordercolor[] = "#171c12";
 static const char normbgcolor[]     = "#101010";
 static const char normfgcolor[]     = "#4f4f4f";
