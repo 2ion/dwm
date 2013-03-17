@@ -31,23 +31,23 @@
 #define MPD_VOL_MUTE  6
 #define MPD_VOL_DELTA 5
 
-static const char font[]            = "Terminus,Kochi Gothic 7";
-static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
-static const char normbordercolor[] = "#171c12";
-static const char normbgcolor[]     = "#101010";
-static const char normfgcolor[]     = "#4f4f4f";
-static const char selbordercolor[]  = "#687f50";
-static const char selbgcolor[]      = "#101010";
-static const char selfgcolor[]      = "#afd787";
-static const unsigned int borderpx  = 1;        
-static const unsigned int snap      = 10;       
-static const Bool showbar           = False;     
-static const Bool topbar            = False; 
-static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
-static const float mfact            = 0.62; 
-static const int nmaster            = 1;   
-static const Bool resizehints       = False;
-static const Layout layouts[]       = {
+static char font[]            = "Terminus,Kochi Gothic 7";
+static char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
+static char normbordercolor[] = "#171c12";
+static char normbgcolor[]     = "#101010";
+static char normfgcolor[]     = "#4f4f4f";
+static char selbordercolor[]  = "#687f50";
+static char selbgcolor[]      = "#101010";
+static char selfgcolor[]      = "#afd787";
+static unsigned int borderpx  = 1;        
+static unsigned int snap      = 10;       
+static Bool showbar           = False;     
+static Bool topbar            = False; 
+static char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+static float mfact            = 0.62; 
+static int nmaster            = 1;   
+static Bool resizehints       = False;
+static Layout layouts[]       = {
     { "[+]", monocle   },
     { "[]=", tile      },    
     { "TTT", bstack    },
@@ -68,7 +68,7 @@ static const Rule rules[]           = {
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
-static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
+static const char *cmd_lock[]               = { "i3lock", "-i", "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
