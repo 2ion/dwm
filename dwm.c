@@ -2339,11 +2339,16 @@ int
 luarc(void)
 {
     int status;
-    lua_State *L = luaL_newstate();
+    char *homepath, *rcpath;
+    lua_State *L;
 
+    homepath = getenv("HOME");
+    homepath = (char*) realloc((void*) homepath, 255*sizeof(char));
+    rcpath = strcat(homepath, "/.dwmrc.lua");
+    L = luaL_newstate();
     luaL_openlibs(L);
-
-    status = luaL_loadfile(L, "/home/joj/.dwmrc.lua");
+    status = luaL_loadfile(L, (const char*) rcpath);
+    free(rcpath);
     if(status != LUA_OK) {
         fputs("dwm: luarc(): Could not load .dwmrc\n", stderr);
         switch(status) {
@@ -2396,6 +2401,8 @@ luarc(void)
 
     // run the script
     lua_pcall(L, 0, LUA_MULTRET, 0);
+
+    // read back the values
 
     lua_close(L);
     return EXIT_SUCCESS;
