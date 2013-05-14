@@ -31,7 +31,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <math.h>
-// X11
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <X11/XF86keysym.h>
@@ -44,13 +43,10 @@
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif
-// pango
 #include <pango/pango.h>
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
-// MPD
 #include <mpd/client.h>
-// LUA
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>

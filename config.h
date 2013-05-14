@@ -33,12 +33,12 @@
 
 static char font[]            = "Terminus,Kochi Gothic 7";
 static char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
-static char normbordercolor[] = "#171c12";
+static char normbordercolor[] = "#333333";
 static char normbgcolor[]     = "#101010";
 static char normfgcolor[]     = "#4f4f4f";
-static char selbordercolor[]  = "#687f50";
+static char selbordercolor[]  = "#666666";
 static char selbgcolor[]      = "#101010";
-static char selfgcolor[]      = "#afd787";
+static char selfgcolor[]      = "#A94952";
 static unsigned int borderpx  = 1;        
 static unsigned int snap      = 10;       
 static Bool showbar           = False;     
