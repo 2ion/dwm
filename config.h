@@ -30,6 +30,7 @@
 #define MPD_VOL_RAISE 5
 #define MPD_VOL_MUTE  6
 #define MPD_VOL_DELTA 5
+#define MPDCMD_MAX_TRIES 3
 
 static char font[]            = "Terminus,Kochi Gothic 7";
 static char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";

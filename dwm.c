@@ -316,6 +316,7 @@ static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
 static int unmute2vol = 0;
+static int mpdc_retries = 0;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
@@ -2263,22 +2264,26 @@ tagcycle(const Arg *arg) {
 
 void
 mpdcmd(const Arg *arg) {
-    if(mpdc == NULL)
-        if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
-            if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-                mpd_connection_free(mpdc);
-                mpdc = NULL;
-                return;
-            } else
-                goto MPDCMD_PROCEED;
-        }
+MPDCMD_RETRY:
+    if(mpdc_retries > MPDCMD_MAX_TRIES) {
+        mpdc_retries = 0;
+        return;
+    }
+    if(mpdc == NULL &&
+            (mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
+        mpd_connection_free(mpdc);
+        mpdc = NULL;
+        ++mpdc_retries;
+        goto MPDCMD_RETRY;
+    }
+
     if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
         mpd_connection_free(mpdc);
         mpdc = NULL;
-        return;
+        ++mpdc_retries;
+        goto MPDCMD_RETRY;
     }
 
-MPDCMD_PROCEED:
     switch(arg->i) {
         case MPD_TOGGLE:
             {
