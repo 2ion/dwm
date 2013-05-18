@@ -2,9 +2,10 @@ README
 ======
 
 This repository contains a patched and further modified version of the
-DWM window manager I use.
-
-Based on dwm 6.0.
+DWM window manager I use. The code is based on DWM 6.0 and some patches
+(see below). I try to keep the code on the master branch in a
+compileable state. Development is being done on all other branches -
+these are not intended to be used in a production environment!
 
 PATCHES & MODIFICATIONS
 =======================
@@ -28,6 +29,12 @@ PATCHES & MODIFICATIONS
         * DCMD() macro for convenient dmenu invocation
         * Compile with -O2 instead of -Os
         * wmii-like actions
+
+    IN PROGRESS
+    -----------
+
+        * Lua rc interface to modify dwm configuration without restart
+        * Lua interface to pre-defined dwm sessions
 
     WISHLIST
     --------
