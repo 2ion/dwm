@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 6.0
+VERSION = 6.0-kyuu
 
 # Customize below to fit your system
 
