@@ -29,8 +29,9 @@
 #define MPD_VOL_LOWER 4
 #define MPD_VOL_RAISE 5
 #define MPD_VOL_MUTE  6
-#define MPD_VOL_DELTA 5
+#define MPD_VOL_DELTA 4
 #define MPDCMD_MAX_TRIES 3
+#define I3LOCK_WALLPAPER "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png"
 
 static char font[]            = "Terminus,Kochi Gothic 7";
 static char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
@@ -69,7 +70,7 @@ static const Rule rules[]           = {
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
-static const char *cmd_lock[]               = { "i3lock", "-i", "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png", NULL };
+static const char *cmd_lock[]               = { "i3lock", "-i", (I3LOCK_WALLPAPER), NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
