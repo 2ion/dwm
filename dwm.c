@@ -2261,26 +2261,22 @@ tagcycle(const Arg *arg) {
 
 void
 mpdcmd(const Arg *arg) {
-MPDCMD_RETRY:
-    if(mpdc_retries > MPDCMD_MAX_TRIES) {
-        mpdc_retries = 0;
-        return;
-    }
-    if(mpdc == NULL &&
-            (mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
-        mpd_connection_free(mpdc);
-        mpdc = NULL;
-        ++mpdc_retries;
-        goto MPDCMD_RETRY;
-    }
-
+    if(mpdc == NULL)
+        if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
+            if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
+                mpd_connection_free(mpdc);
+                mpdc = NULL;
+                return;
+            } else
+                goto MPDCMD_PROCEED;
+        }
     if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
         mpd_connection_free(mpdc);
         mpdc = NULL;
-        ++mpdc_retries;
-        goto MPDCMD_RETRY;
+        return;
     }
 
+MPDCMD_PROCEED:
     switch(arg->i) {
         case MPD_TOGGLE:
             {
@@ -2332,6 +2328,7 @@ MPDCMD_RETRY:
             break;
     }
 }
+
 
 int
 main(int argc, char *argv[]) {
