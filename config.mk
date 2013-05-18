@@ -19,8 +19,8 @@ LUAINC = `pkg-config --cflags lua5.2`
 LUALIB = `pkg-config --libs lua5.2`
 
 # includes and libs
-INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft pango pangoxft` ${LUAINC}
-LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft pango pangoxft libmpdclient` ${LUALIB}
+INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft pango pangoxft`
+LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft pango pangoxft libmpdclient`
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}

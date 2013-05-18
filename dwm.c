@@ -47,9 +47,9 @@
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
 #include <mpd/client.h>
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+//#include <lua.h>
+//#include <lauxlib.h>
+//#include <lualib.h>
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -2336,6 +2336,7 @@ MPDCMD_RETRY:
     }
 }
 
+/*
 int
 luarc(void)
 {
@@ -2408,6 +2409,8 @@ luarc(void)
     lua_close(L);
     return EXIT_SUCCESS;
 }
+
+*/
 
 int
 main(int argc, char *argv[]) {

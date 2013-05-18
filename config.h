@@ -33,28 +33,28 @@
 #define MPDCMD_MAX_TRIES 3
 #define I3LOCK_WALLPAPER "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png"
 
-static char font[]            = "Terminus,Kochi Gothic 7";
-static char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
-static char normbordercolor[] = "#333333";
-static char normbgcolor[]     = "#101010";
-static char normfgcolor[]     = "#4f4f4f";
-static char selbordercolor[]  = "#666666";
-static char selbgcolor[]      = "#101010";
-static char selfgcolor[]      = "#A94952";
-static unsigned int borderpx  = 1;        
-static unsigned int snap      = 10;       
-static Bool showbar           = False;     
-static Bool topbar            = False; 
-static char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
-static float mfact            = 0.62; 
-static int nmaster            = 1;   
-static Bool resizehints       = False;
-static Layout layouts[]       = {
+static const char font[]            = "Terminus,Kochi Gothic 7";
+static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
+static const char normbordercolor[] = "#333333";
+static const char normbgcolor[]     = "#101010";
+static const char normfgcolor[]     = "#4f4f4f";
+static const char selbordercolor[]  = "#666666";
+static const char selbgcolor[]      = "#101010";
+static const char selfgcolor[]      = "#A94952";
+static const unsigned int borderpx  = 1;        
+static const unsigned int snap      = 10;       
+static const Bool showbar           = False;     
+static const Bool topbar            = False; 
+static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+static const float mfact            = 0.62; 
+static const int nmaster            = 1;   
+static const Bool resizehints       = False;
+static const Layout layouts[]       = {
     { "[+]", monocle   },
     { "[]=", tile      },    
     { "TTT", bstack    },
     { "><>", NULL      }};
-static const Rule rules[]           = {
+static const const Rule rules[]           = {
 	/* class                    instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",                   NULL,       NULL,       0,            True,        -1 },
 	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1 },
