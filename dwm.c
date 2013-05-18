@@ -47,9 +47,6 @@
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
 #include <mpd/client.h>
-//#include <lua.h>
-//#include <lauxlib.h>
-//#include <lualib.h>
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -2335,82 +2332,6 @@ MPDCMD_RETRY:
             break;
     }
 }
-
-/*
-int
-luarc(void)
-{
-    int status;
-    char *homepath, *rcpath;
-    lua_State *L;
-
-    homepath = getenv("HOME");
-    homepath = (char*) realloc((void*) homepath, 255*sizeof(char));
-    rcpath = strcat(homepath, "/.dwmrc.lua");
-    L = luaL_newstate();
-    luaL_openlibs(L);
-    status = luaL_loadfile(L, (const char*) rcpath);
-    free(rcpath);
-    if(status != LUA_OK) {
-        fputs("dwm: luarc(): Could not load .dwmrc\n", stderr);
-        switch(status) {
-            case LUA_ERRFILE:
-                fputs("dwm: .dwmrc: coult not open file\n", stderr);
-                break;
-            case LUA_ERRSYNTAX:
-                fputs("dwm: .dwmrc: syntax error\n", stderr);
-                break;
-            case LUA_ERRMEM:
-                fputs("dwm: .dwmrc: memory allocation error\n", stderr);
-                break;
-            case LUA_ERRGCMM:
-                fputs("dwm: .dwmrc: __gc metamethod error\n", stderr);
-                break;
-        }
-        lua_close(L);
-        return EXIT_FAILURE;
-    }
-
-    lua_newtable(L);
-
-#define KV(x) lua_pushstring(L, #x); lua_pushstring(L, (const char*)(x)); lua_rawset(L, -3);
-    KV(font);
-    KV(dmenufont);
-    KV(normbordercolor);
-    KV(normbgcolor);
-    KV(normfgcolor);
-    KV(selbordercolor);
-    KV(selbgcolor);
-    KV(selfgcolor);
-#undef KV
-#define KV(x) lua_pushstring(L, #x); lua_pushunsigned(L, x); lua_rawset(L, -3);
-    KV(borderpx);
-    KV(snap);
-#undef KV
-#define KV(x) lua_pushstring(L, #x); lua_pushboolean(L, x); lua_rawset(L, -3);
-    KV(showbar);
-    KV(topbar);
-    KV(resizehints);
-#undef KV
-#define KV(x) lua_pushstring(L, #x); lua_pushinteger(L, x); lua_rawset(L, -3);
-    KV(nmaster);
-#undef KV
-#define KV(x) lua_pushstring(L, #x); lua_pushnumber(L, x); lua_rawset(L, -3);
-    KV(mfact);
-#undef KV
-
-    lua_setglobal(L, "dwm"); // _G.dwm
-
-    // run the script
-    lua_pcall(L, 0, LUA_MULTRET, 0);
-
-    // read back the values
-
-    lua_close(L);
-    return EXIT_SUCCESS;
-}
-
-*/
 
 int
 main(int argc, char *argv[]) {
