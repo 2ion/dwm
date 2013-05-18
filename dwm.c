@@ -313,7 +313,6 @@ static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
 static int unmute2vol = 0;
-static int mpdc_retries = 0;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
