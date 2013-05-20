@@ -33,7 +33,7 @@
 #define MPDCMD_MAX_TRIES 3
 #define I3LOCK_WALLPAPER "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png"
 
-static const char font[]            = "Terminus,Kochi Gothic 7";
+static const char font[]            = "Inconsolata,Kochi Gothic 7";
 static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
 static const char normbordercolor[] = "#333333";
 static const char normbgcolor[]     = "#101010";
