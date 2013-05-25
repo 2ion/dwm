@@ -1,10 +1,9 @@
-/*
- * needs gksudo configured to run
- *  - /usr/sbin/pm-suspend
- */
+// dwm - config.h
 
+#ifndef HAVE_CPUFREQ_DEF
 #define CPU_LOWER "825Mhz"
 #define CPU_UPPER "1.65Ghz"
+#endif
 
 #include "push.c"
 #include "bstack.c"
