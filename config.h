@@ -23,14 +23,6 @@
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
     NULL }
-#define MPD_TOGGLE 1
-#define MPD_PREV 2
-#define MPD_NEXT 3
-#define MPD_VOL_LOWER 4
-#define MPD_VOL_RAISE 5
-#define MPD_VOL_MUTE  6
-#define MPD_VOL_DELTA 4
-#define MPDCMD_MAX_TRIES 3
 #define I3LOCK_WALLPAPER "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png"
 
 static const char font[]            = "Inconsolata,Kochi Gothic 7";
@@ -124,12 +116,12 @@ static Key keys[] = {
 
     /* XF86 KEYS */
 
-    { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MPD_VOL_LOWER }},
-    { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MPD_VOL_RAISE }},
-    { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MPD_VOL_MUTE }},
-    { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MPD_TOGGLE }},
-    { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MPD_PREV }},
-    { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MPD_NEXT }},
+    { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MpdLowerVolume }},
+    { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MpdRaiseVolume }},
+    { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MpdMuteVolume }},
+    { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdToggle }},
+    { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MpdPrev }},
+    { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MpdNext }},
     { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},
     { False,                        XF86XK_Display,             spawn,  { .v = cmd_backlight }},
     { False,                        XF86XK_WebCam,              spawn,  { .v = cmd_webcam }},

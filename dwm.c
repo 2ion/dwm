@@ -76,6 +76,8 @@ enum { NetSupported, NetWMName, NetWMState,
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast };             /* clicks */
+enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume, 
+       MpdToggle, MpdPrev, MpdNext };
 
 typedef union {
 	int i;
@@ -313,6 +315,7 @@ static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
 static int unmute2vol = 0;
+static int voldelta = 4;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
@@ -2277,7 +2280,7 @@ mpdcmd(const Arg *arg) {
 
 MPDCMD_PROCEED:
     switch(arg->i) {
-        case MPD_TOGGLE:
+        case MpdToggle:
             {
                 struct mpd_status *s = mpd_run_status(mpdc);
                 if(s == NULL) return;
@@ -2288,30 +2291,30 @@ MPDCMD_PROCEED:
                 mpd_status_free(s);
             }
             break;
-        case MPD_PREV:
+        case MpdPrev:
             mpd_run_previous(mpdc);
             break;
-        case MPD_NEXT:
+        case MpdNext:
             mpd_run_next(mpdc);
             break;
-        case MPD_VOL_MUTE:
-        case MPD_VOL_LOWER:
-        case MPD_VOL_RAISE:
+        case MpdRaiseVolume:
+        case MpdLowerVolume:
+        case MpdMuteVolume:
             {
                 struct mpd_status *s = mpd_run_status(mpdc);
                 int vol;
                 if(s == NULL) return;
                 vol = mpd_status_get_volume(s);
                 switch(arg->i) {
-                    case MPD_VOL_LOWER:
-                        vol -= MPD_VOL_DELTA;
-                        if(vol < 0) vol = 0;
-                        break;
-                    case MPD_VOL_RAISE:
-                        vol += MPD_VOL_DELTA;
+                    case MpdRaiseVolume:
+                        vol += voldelta;
                         if(vol > 100) vol = 100;
                         break;
-                    case MPD_VOL_MUTE:
+                    case MpdLowerVolume:
+                        vol -= voldelta;
+                        if(vol < 0) vol = 0;
+                        break;
+                    case MpdMuteVolume:
                         if(unmute2vol != 0) {
                             vol = unmute2vol;
                             unmute2vol = 0;
