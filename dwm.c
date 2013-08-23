@@ -47,9 +47,6 @@
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
 #include <mpd/client.h>
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -2273,6 +2270,7 @@ mpdcmd_toggle(struct mpd_connection *c,
     
     struct mpd_status *s = mpd_run_status(c);
     setf(c, statf(s)==1?0:1);
+    mpd_status_free(s);
 }
 
 void
