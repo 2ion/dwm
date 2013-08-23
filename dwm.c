@@ -47,6 +47,9 @@
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
 #include <mpd/client.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -68,16 +71,19 @@
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
 
 /* enums */
-enum { CurNormal, CurResize, CurMove, CurLast };        /* cursor */
-enum { ColBorder, ColFG, ColBG, ColLast };              /* color */
+enum { CurNormal, CurResize, CurMove, CurLast };                                /* cursor */
+enum { ColBorder, ColFG, ColBG, ColLast };                                      /* color */
 enum { NetSupported, NetWMName, NetWMState,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
-       NetWMWindowTypeDialog, NetLast };     /* EWMH atoms */
-enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
+       NetWMWindowTypeDialog, NetLast };                                        /* EWMH atoms */
+enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast };                   /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
-       ClkClientWin, ClkRootWin, ClkLast };             /* clicks */
-enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume, 
-       MpdToggle, MpdPrev, MpdNext };
+       ClkClientWin, ClkRootWin, ClkLast };                                     /* clicks */
+
+ /* libmpdclient patch */
+enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume,                           
+       MpdToggle, MpdPrev, MpdNext,
+       MpdToggleRepeat, MpdToggleConsume, MpdToggleRandom, MpdToggleSingle };
 
 typedef union {
 	int i;
@@ -2262,6 +2268,14 @@ tagcycle(const Arg *arg) {
 }
 
 void
+mpdcmd_toggle(struct mpd_connection *c, 
+        bool (*statf)(const struct mpd_status*), bool (*setf)(struct mpd_connection*, bool) ) {
+    
+    struct mpd_status *s = mpd_run_status(c);
+    setf(c, statf(s)==1?0:1);
+}
+
+void
 mpdcmd(const Arg *arg) {
     if(mpdc == NULL)
         if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
@@ -2328,9 +2342,18 @@ MPDCMD_PROCEED:
                 mpd_status_free(s);
             }
             break;
+        case MpdToggleRepeat:
+            mpdcmd_toggle(mpdc, mpd_status_get_repeat, mpd_run_repeat);
+            break;
+        case MpdToggleConsume:
+            mpdcmd_toggle(mpdc, mpd_status_get_consume, mpd_run_consume);
+        case MpdToggleRandom:
+            mpdcmd_toggle(mpdc, mpd_status_get_random, mpd_run_random);
+        case MpdToggleSingle:
+            mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
+            break;
     }
 }
-
 
 int
 main(int argc, char *argv[]) {
