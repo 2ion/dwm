@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 6.0-juu
+VERSION = 6.0-juuichi
 
 # Customize below to fit your system
 
