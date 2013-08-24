@@ -25,19 +25,17 @@ PATCHES & MODIFICATIONS
 
         * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
         * mpdcmd() callback to directly control mpd. Linked against
-          libmpdclient for playback & volume (raise, lower, mute/unmute)
+          libmpdclient. Provides the Following actions:
+            * MpdRaiseVolume
+            * MpdLowerVolume
+            * MpdMuteVolume
+            * MpdToggle (play/pause)
+            * MpdPrev
+            * MpdNext
+            * MpdToggleRepeat
+            * MpdToggleConsume
+            * MpdToggleRandom
+            * MpdToggleSingle
         * DCMD() macro for convenient dmenu invocation
         * Compile with -O2 instead of -Os
         * wmii-like actions
-
-    IN PROGRESS
-    -----------
-
-        * Lua rc interface to modify dwm configuration without restart
-        * Lua interface to pre-defined dwm sessions
-
-    WISHLIST
-    --------
-
-        * Use code from tmux for direct control
-        * Volume control via libalsa. For that, add a callback alsa()
