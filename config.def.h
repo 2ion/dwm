@@ -22,16 +22,22 @@
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
     NULL }
-#define I3LOCK_WALLPAPER "/home/joj/lib/pic/2012-01/debian_colored_wallpaper_by_thales_img-d2ynxub.png"
+#define I3LOCK_WALLPAPER "/home/joj/Pictures/wall.png"
 
-static const char font[]            = "Inconsolata,Kochi Gothic 7";
+#define GREY_10 "#101010"
+#define GREY_33 "#333333"
+#define GREY_66 "#666666"
+#define BRIGHTGREEN "#A99F49"
+#define SKYBLUE "#3262AC"
+
+static const char font[]            = "Adobe Heiti Std 7";
 static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
-static const char normbordercolor[] = "#333333";
-static const char normbgcolor[]     = "#101010";
-static const char normfgcolor[]     = "#4f4f4f";
-static const char selbordercolor[]  = "#666666";
-static const char selbgcolor[]      = "#101010";
-static const char selfgcolor[]      = "#A94952";
+static const char normbordercolor[] = GREY_33;
+static const char normbgcolor[]     = GREY_10;
+static const char normfgcolor[]     = GREY_66;
+static const char selbordercolor[]  = GREY_66;
+static const char selbgcolor[]      = GREY_10;
+static const char selfgcolor[]      = BRIGHTGREEN;
 static const unsigned int borderpx  = 1;        
 static const unsigned int snap      = 10;       
 static const Bool showbar           = False;     
@@ -61,7 +67,7 @@ static const const Rule rules[]           = {
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
-static const char *cmd_lock[]               = { "i3lock", "-i", (I3LOCK_WALLPAPER), NULL };
+static const char *cmd_lock[]               = { "/home/joj/bin/i3lock", "-i", (I3LOCK_WALLPAPER), NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
@@ -118,7 +124,7 @@ static Key keys[] = {
     { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MpdLowerVolume }},
     { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MpdRaiseVolume }},
     { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MpdMuteVolume }},
-    { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdToggle }},
+    { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdTogglePause }},
     { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MpdPrev }},
     { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MpdNext }},
     { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},

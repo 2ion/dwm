@@ -79,7 +79,7 @@ enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
 
  /* libmpdclient patch */
 enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume,                           
-       MpdToggle, MpdPrev, MpdNext,
+       MpdTogglePause, MpdPrev, MpdNext,
        MpdToggleRepeat, MpdToggleConsume, MpdToggleRandom, MpdToggleSingle };
 
 typedef union {
@@ -2292,7 +2292,7 @@ mpdcmd(const Arg *arg) {
 
 MPDCMD_PROCEED:
     switch(arg->i) {
-        case MpdToggle:
+        case MpdTogglePause:
             {
                 struct mpd_status *s = mpd_run_status(mpdc);
                 if(s == NULL) return;
