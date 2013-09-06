@@ -22,7 +22,6 @@
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
     NULL }
-#define I3LOCK_WALLPAPER "/home/joj/Pictures/wall.png"
 
 #define GREY_10 "#101010"
 #define GREY_33 "#333333"
@@ -67,7 +66,7 @@ static const const Rule rules[]           = {
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
 static const char *cmd_browser[]            = { "x-www-browser", NULL };
-static const char *cmd_lock[]               = { "/home/joj/bin/i3lock", "-i", (I3LOCK_WALLPAPER), NULL };
+static const char *cmd_lock[]               = { "xscreenserver-command", "-lock", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
