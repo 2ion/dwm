@@ -1,1 +1,4 @@
 
+[submodule "skippy"]
+	path = skippy
+	url = https://github.com/richardgv/skippy-xd.git
