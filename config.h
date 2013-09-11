@@ -78,6 +78,7 @@ static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 static const char *cmd_sleep[]              = ACTION("sleep");
 static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
+static const char *cmd_skippy[]             = { "/usr/local/bin/skippy-xd", NULL };
 
 static Key keys[] = {
     /* Alpha keys */
@@ -117,6 +118,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
     { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
+    { MODKEY,                       XK_BackSpace, spawn,        {.v = cmd_skippy }},
 
     /* XF86 KEYS */
 

@@ -57,4 +57,7 @@ uninstall:
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
+skippy: dwm
+	$(MAKE) -C skippy-xd
+
 .PHONY: all options clean dist install uninstall
