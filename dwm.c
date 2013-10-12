@@ -2275,6 +2275,7 @@ mpdcmd_toggle(struct mpd_connection *c,
 
 void
 mpdcmd(const Arg *arg) {
+    /*
     if(mpdc == NULL)
         if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
             if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
@@ -2289,6 +2290,24 @@ mpdcmd(const Arg *arg) {
         mpdc = NULL;
         return;
     }
+    */
+
+    if(mpdc == NULL) {
+        if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL)
+            goto MPDCMD_PROCEED;
+        else
+            goto MPDCMD_EXIT;
+    }
+
+    if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS)
+        goto MPDCMD_EXIT;
+    else
+        goto MPDCMD_PROCEED;
+
+MPDCMD_EXIT:
+    mpd_connection_free(mpdc);
+    mpdc = NULL;
+    return;
 
 MPDCMD_PROCEED:
     switch(arg->i) {
