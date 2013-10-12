@@ -19,7 +19,16 @@
  * Keys and tagging rules are organized as arrays and defined in config.h.
  *
  * To understand everything else, start reading main().
+ *
+ * * 
+ *
+ * DWM
+ * Patched and modified by Jens Oliver John <asterisk ! 2ion ! de>
+ * Based on the DWM 6.0 release
+ *
+ * Homepage: https://github.com/2ion/dwm
  */
+
 #include <errno.h>
 #include <locale.h>
 #include <stdarg.h>
