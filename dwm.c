@@ -2284,41 +2284,32 @@ mpdcmd_toggle(struct mpd_connection *c,
 
 void
 mpdcmd(const Arg *arg) {
-    /*
-    if(mpdc == NULL)
-        if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL) {
-            if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-                mpd_connection_free(mpdc);
-                mpdc = NULL;
-                return;
-            } else
-                goto MPDCMD_PROCEED;
-        }
-    if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
+    int conn_retries = cfg_mpdcmd_retries;
+
+    /* get or check connection */
+    {
+        __label__ REPEAT;
+        __label__ PROCEED;
+        __label__ EXIT;
+REPEAT:;
+        if ((--conn_retries) < 0)
+            goto EXIT;
+
+        if(mpdc == NULL)
+            if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL)
+                goto REPEAT;
+
+        if(mpd_connection_get_error(mpdc) == MPD_ERROR_SUCCESS)
+            goto PROCEED;
+        else
+            goto REPEAT;
+EXIT:;
         mpd_connection_free(mpdc);
         mpdc = NULL;
         return;
-    }
-    */
-
-    if(mpdc == NULL) {
-        if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) != NULL)
-            goto MPDCMD_PROCEED;
-        else
-            goto MPDCMD_EXIT;
+PROCEED:;
     }
 
-    if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS)
-        goto MPDCMD_EXIT;
-    else
-        goto MPDCMD_PROCEED;
-
-MPDCMD_EXIT:
-    mpd_connection_free(mpdc);
-    mpdc = NULL;
-    return;
-
-MPDCMD_PROCEED:
     switch(arg->i) {
         case MpdTogglePause:
             {

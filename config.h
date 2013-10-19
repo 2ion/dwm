@@ -44,6 +44,7 @@ static const Bool topbar            = False;
 static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
+static const int cfg_mpdcmd_retries     = 2;
 static const Bool resizehints       = False;
 static const Layout layouts[]       = {
     { "[+]", monocle   },
