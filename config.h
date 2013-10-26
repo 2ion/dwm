@@ -44,7 +44,7 @@ static const Bool topbar            = False;
 static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
-static const int cfg_mpdcmd_retries     = 2;
+static const int cfg_mpdcmd_retries = 2;
 static const Bool resizehints       = False;
 static const Layout layouts[]       = {
     { "[+]", monocle   },
@@ -83,7 +83,7 @@ static const char *cmd_skippy[]             = { "/usr/local/bin/skippy-xd", NULL
 static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
 static const char *cmd_mozc_dic[]           = { "/usr/lib/mozc/mozc_tool", "--mode=dictionary_tool", NULL };
 static const char *cmd_mozc_register[]      = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
-static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mode=handwriting", NULL };
+static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mode=hand_writing", NULL };
 static const char *cmd_mozc_chars[]         = { "/usr/lib/mozc/mozc_tool", "--mode=character_palette", NULL };
 
 static Key keys[] = {
