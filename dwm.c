@@ -296,7 +296,7 @@ static void mpdcmd(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
-static char stext[256];
+static const char stext[] = VERSION;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
@@ -2094,8 +2094,6 @@ updatetitle(Client *c) {
 
 void
 updatestatus(void) {
-	if(!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-		strcpy(stext, "dwm-"VERSION);
 	drawbar(selmon);
 }
 
