@@ -2373,7 +2373,7 @@ PROCEED:;
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-"VERSION"\nBuilt for 2ion <https://github.com/2ion/dwm>\n© 2006-2011 dwm engineers, see LICENSE for details\n");
+		die("DWM〜"VERSION"\nBuilt by 2ion at <https://github.com/2ion/dwm>\nBased on dwm <http://dwm.suckless.org>\n");
 	else if(argc != 1)
 		die("usage: dwm [-v]\n");
 	if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
