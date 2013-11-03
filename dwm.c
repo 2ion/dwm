@@ -2275,8 +2275,10 @@ void
 mpdcmd_toggle(struct mpd_connection *c, 
         bool (*statf)(const struct mpd_status*), bool (*setf)(struct mpd_connection*, bool) ) {
     
-    struct mpd_status *s = mpd_run_status(c);
-    setf(c, statf(s)==1?0:1);
+    struct mpd_status *s;
+    if((s = mpd_run_status(c)) == NULL)
+        return;
+    setf(c, (statf(s) == 1) ? 0 : 1);
     mpd_status_free(s);
 }
 
@@ -2284,7 +2286,7 @@ void
 mpdcmd(const Arg *arg) {
     int conn_retries = cfg_mpdcmd_retries;
 
-    /* get or check connection */
+    /* block: get or check connection */
     {
         __label__ REPEAT;
         __label__ PROCEED;
