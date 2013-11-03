@@ -345,8 +345,8 @@ timer_t mpdcmd_us_timerid;
 struct sigevent mpdcmd_us_se;
 struct sigaction mpdcmd_us_sa;
 struct itimerspec mpdcmd_us_its = {
-    .it_value       = { .tv_sec = 2, .tv_nsec = 0 },
-    .it_interval    = { .tv_sec = 2, .tv_nsec = 0 }};
+    .it_value       = { .tv_sec = 1, .tv_nsec = 0 },
+    .it_interval    = { .tv_sec = 1, .tv_nsec = 0 }};
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
@@ -2483,7 +2483,9 @@ EXIT:;
 
 void
 mpdcmd_sigarlm_handler(int sig) {
-    updatestatus();
+    if(sig == SIGUSR1) {
+        updatempdstatus();
+    }
 }
 
 void
