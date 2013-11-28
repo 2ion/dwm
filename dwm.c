@@ -198,6 +198,8 @@ typedef struct {
 	int monitor;
 } Rule;
 
+int MpdcmdRegister[10][3];
+
 typedef struct mpd_connection MpdConnection;
 
 /* function declarations */
@@ -305,6 +307,8 @@ static int mpdcmd_connect(void);
 static void updatempdstatus(void);
 static void mpdcmd_install_timer(void);
 static void mpdcmd_sigarlm_handler(int sig);
+static void mpdcmd_savepos(const Arg *arg);
+static void mpdcmd_loadpos(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
@@ -2136,7 +2140,7 @@ updatetitle(Client *c) {
 
 void
 updatestatus(void) {
-    updatempdstatus();
+//    updatempdstatus();
 	drawbar(selmon);
 }
 
@@ -2347,6 +2351,42 @@ EXIT:;
 PROCEED:;
     return 0;
 }
+
+void
+mpdcmd_savepos(const Arg *arg)
+{
+    struct mpd_status *s;
+    int reg = arg->i;
+    enum mpd_state st;
+    if(reg < 0 || reg > 9)
+        return;
+    if(mpdcmd_connect() != 0)
+        return;
+    if((s = mpd_run_status(mpdc)) == NULL)
+        return;
+    if((st = mpd_status_get_state(s)) == MPD_STATE_STOP ||
+            st != MPD_STATE_UNKNOWN) {
+        mpd_status_free(s);
+        return;
+    }
+    MpdcmdRegister[reg][0] = 1;
+    MpdcmdRegister[reg][1] = mpd_status_get_song_pos(s);
+    MpdcmdRegister[reg][2] = mpd_status_get_elapsed_time(s);
+    mpd_status_free(s);
+}
+
+void
+mpdcmd_loadpos(const Arg *arg)
+{
+    int reg = arg->i;
+    if(reg < 0 || reg > 9 || MpdcmdRegister[reg][0] != 1)
+        return;
+    if(mpdcmd_connect() != 0)
+        return;
+    mpd_run_seek_pos(mpdc,
+            MpdcmdRegister[reg][1],
+            MpdcmdRegister[reg][2]);
+};
 
 void
 mpdcmd(const Arg *arg) {

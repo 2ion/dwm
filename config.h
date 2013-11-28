@@ -28,15 +28,16 @@
 #define GREY_66 "#666666"
 #define BRIGHTGREEN "#A99F49"
 #define SKYBLUE "#3262AC"
+#define ORANGE "#632A10"
 
 static const char font[]            = "Adobe Heiti Std 7";
 static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
 static const char normbordercolor[] = GREY_33;
 static const char normbgcolor[]     = GREY_10;
 static const char normfgcolor[]     = GREY_66;
-static const char selbordercolor[]  = GREY_66;
+static const char selbordercolor[]  = ORANGE;
 static const char selbgcolor[]      = GREY_10;
-static const char selfgcolor[]      = BRIGHTGREEN;
+static const char selfgcolor[]      = ORANGE;
 static const unsigned int borderpx  = 1;        
 static const unsigned int snap      = 10;       
 static const Bool showbar           = False;     
@@ -44,7 +45,7 @@ static const Bool topbar            = False;
 static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
-static const int cfg_mpdcmd_retries = 2;
+static const int cfg_mpdcmd_retries = 4;
 static const int cfg_mpdstatus_clock = 1;
 static const Bool resizehints       = False;
 static const Layout layouts[]       = {
@@ -82,10 +83,10 @@ static const char *cmd_sleep[]              = ACTION("sleep");
 static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
 static const char *cmd_skippy[]             = { "/usr/local/bin/skippy-xd", NULL };
 static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
-static const char *cmd_mozc_dic[]           = { "/usr/lib/mozc/mozc_tool", "--mode=dictionary_tool", NULL };
+//static const char *cmd_mozc_dic[]           = { "/usr/lib/mozc/mozc_tool", "--mode=dictionary_tool", NULL };
 static const char *cmd_mozc_register[]      = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
 static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mode=hand_writing", NULL };
-static const char *cmd_mozc_chars[]         = { "/usr/lib/mozc/mozc_tool", "--mode=character_palette", NULL };
+//static const char *cmd_mozc_chars[]         = { "/usr/lib/mozc/mozc_tool", "--mode=character_palette", NULL };
 
 static Key keys[] = {
     /* Alpha keys */
