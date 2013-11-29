@@ -343,7 +343,6 @@ static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
 static int unmute2vol = 0;
-static int voldelta = 4;
 
 timer_t mpdcmd_us_timerid;
 struct sigevent mpdcmd_us_se;

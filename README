@@ -10,35 +10,103 @@ these are not intended to be used in a production environment!
 PATCHES & MODIFICATIONS
 =======================
 
-    'OFFICIAL' PATCHES
-    ------------------
-        
-        * pango
-        * pertag
-        * savefloats
-        * pushstack
-        * cycletag
-        * bstack
+'OFFICIAL' PATCHES
+------------------
+    
+    * pango
+    * pertag
+    * savefloats
+    * pushstack
+    * cycletag
+    * bstack
 
-    PERSONAL MODS
-    -------------
+PERSONAL MODS
+-------------
 
-        * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
-        * mpdcmd() callback to directly control mpd. Linked against
-          libmpdclient. Provides the Following actions:
-            * MpdRaiseVolume
-            * MpdLowerVolume
-            * MpdMuteVolume
-            * MpdToggle (play/pause)
-            * MpdPrev
-            * MpdNext
-            * MpdToggleRepeat
-            * MpdToggleConsume
-            * MpdToggleRandom
-            * MpdToggleSingle
-        * mpdcmd_loadpos() and mpdcmd_savepos() callbacks to create and
-          access bookmarks. The state is lost when DWM exits. There are
-          10 registers 0-9 available for storing up to 10 bookmarks.
-        * DCMD() macro for convenient dmenu invocation
-        * Compile with -O2 instead of -Os
-        * wmii-like actions
+    * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
+    * mpdcmd() callback to directly control mpd. Linked against
+      libmpdclient. Provides the Following actions:
+        * MpdRaiseVolume
+        * MpdLowerVolume
+        * MpdMuteVolume
+        * MpdToggle (play/pause)
+        * MpdPrev
+        * MpdNext
+        * MpdToggleRepeat
+        * MpdToggleConsume
+        * MpdToggleRandom
+        * MpdToggleSingle
+    * mpdcmd_loadpos() and mpdcmd_savepos() callbacks to create and
+      access bookmarks. The state is lost when DWM exits. There are
+      10 registers 0-9 available for storing up to 10 bookmarks.
+    * DCMD() macro for convenient dmenu invocation
+    * Compile with -O2 instead of -Os
+    * wmii-like actions
+
+DOCUMENTATION: MPD CLIENT EXTENSIONS
+====================================
+
+The MPD client extension provides the following bindable callbacks:
+
+    void mpdcmd(const Arg *arg);
+    void mpdcmd_playpos(const Arg *arg);
+    void mpdcmd_savepos(const Arg *arg);
+
+mpdcmd(const Arg *arg)
+----------------------
+
+Control MPD player state and volume.
+
+arg needs to have its member i set to one of the following integer
+constants, which are defined as an enum type in dwm.c:
+
+    MpdRaiseVolume
+        Raise the MPD mixer volume by voldelta points. voldelta is set
+        in config.h.
+
+    MpdLowerVolume
+        Opposite of MpdRaiseVolume.
+
+    MpdMuteVolume
+        Toggle mute. If unmuted, the volume will be restored to the
+        previous level.
+
+    MpdTogglePause
+        Toggle play/pause.
+
+    MpdPrev
+        Play the previous song in the queue.
+
+    MpdNext
+        Play the next song in the queue.
+
+    MpdToggleRepeat
+        Toggle the repeat flag.
+
+    MpdToggleConsume
+        Toggle the consume flag.
+
+    MpdToggleRandom
+        Toggle random playback.
+
+    MpdToggleSingle
+        Toggle single player mode.
+
+    MpdUpdate
+        Execute a full database update.
+
+mpdcmd_loadpos(const Arg *arg) / mpdcmd_savepos(const Arg *arg)
+---------------------------------------------------------------
+
+Provides 10 registers to bookmark/restore song and playing position.
+
+args needs to have its member i set to an integer 0 through 9. A call to
+mpdcmd_savepos({.i = n}) saves the playlist index and play position of
+the currently playing song (includes being paused) into register n. A
+corresponding call to mpdcmd_loadpos({.i = n}) plays the song with the
+previously saved playlist index from the saved playing position.
+
+Note that these functions pay no attentions to changes in MPD's queue,
+the song and the later playist index may be a different one, or setting
+the playing position may fail because the exchanged song is shorter than
+the one the parameters of which were stored.
