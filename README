@@ -2,10 +2,13 @@ README
 ======
 
 This repository contains a patched and further modified version of the
-DWM window manager I use. The code is based on DWM 6.0 and some patches
-(see below). I try to keep the code on the master branch in a
-compileable state. Development is being done on all other branches -
-these are not intended to be used in a production environment!
+DWM window manager I use, most notably it is linked against libmpdclient
+to provide MPD playback and volume control as well as the capability to
+bookmark songs and playing times.
+
+Documentation on the MPD patch can be found further down in this file.
+
+The code is based on suckless.org's DWM 6.0 and some patches (see below).
 
 PATCHES & MODIFICATIONS
 =======================
