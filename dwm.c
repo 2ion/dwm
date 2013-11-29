@@ -198,7 +198,7 @@ typedef struct {
 	int monitor;
 } Rule;
 
-int MpdcmdRegister[10][3];
+int MpdcmdRegister[10][4];
 
 typedef struct mpd_connection MpdConnection;
 
@@ -2364,14 +2364,15 @@ mpdcmd_savepos(const Arg *arg)
         return;
     if((s = mpd_run_status(mpdc)) == NULL)
         return;
-    if((st = mpd_status_get_state(s)) == MPD_STATE_STOP ||
-            st != MPD_STATE_UNKNOWN) {
+    st = mpd_status_get_state(s);
+    if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN) {
         mpd_status_free(s);
         return;
     }
     MpdcmdRegister[reg][0] = 1;
-    MpdcmdRegister[reg][1] = mpd_status_get_song_pos(s);
-    MpdcmdRegister[reg][2] = mpd_status_get_elapsed_time(s);
+    MpdcmdRegister[reg][1] = mpd_status_get_song_id(s);
+    MpdcmdRegister[reg][2] = mpd_status_get_song_pos(s);
+    MpdcmdRegister[reg][3] = (int) mpd_status_get_elapsed_time(s);
     mpd_status_free(s);
 }
 
@@ -2383,9 +2384,11 @@ mpdcmd_loadpos(const Arg *arg)
         return;
     if(mpdcmd_connect() != 0)
         return;
-    mpd_run_seek_pos(mpdc,
-            (unsigned int) MpdcmdRegister[reg][1],
-            (unsigned int) MpdcmdRegister[reg][2]);
+    if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
+        mpd_run_seek_pos(mpdc,
+                (unsigned) MpdcmdRegister[reg][2],
+                (unsigned) MpdcmdRegister[reg][3]);
+    return;
 };
 
 void
