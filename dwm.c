@@ -2384,8 +2384,8 @@ mpdcmd_loadpos(const Arg *arg)
     if(mpdcmd_connect() != 0)
         return;
     mpd_run_seek_pos(mpdc,
-            MpdcmdRegister[reg][1],
-            MpdcmdRegister[reg][2]);
+            (unsigned int) MpdcmdRegister[reg][1],
+            (unsigned int) MpdcmdRegister[reg][2]);
 };
 
 void

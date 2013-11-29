@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 十三
+VERSION = 十四
 
 # Customize below to fit your system
 
