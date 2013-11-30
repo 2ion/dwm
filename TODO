@@ -1,0 +1,2 @@
+- mpdcmd_loadpos(): load the n-th last bookmark made, indicated by
+  negative integers
