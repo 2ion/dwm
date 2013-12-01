@@ -2328,6 +2328,7 @@ mpdcmd_toggle(struct mpd_connection *c,
     mpd_status_free(s);
 }
 
+/*
 int
 mpdcmd_connect(void) {
     int conn_retries = cfg_mpdcmd_retries;
@@ -2350,6 +2351,33 @@ EXIT:;
 PROCEED:;
     return 0;
 }
+*/
+
+int
+mpdcmd_connect(void) {
+    int retries = cfg_mpdcmd_retries;
+    do { 
+        retries -= 1;
+        if(mpdc == NULL)
+            if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
+                fprintf(stderr, "mpcmd_connect(): connection attempt %d [%d] failed.\n",
+                        retries, cfg_mpdcmd_retries);
+                continue;
+            }
+        if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
+            fprintf(stderr, "mpdcmd_connect(): connection error: %s\n",
+                    mpd_connection_get_error_message(mpdc));
+            mpd_connection_free(mpdc);
+            mpdc = NULL;
+            continue;
+        } else
+            break;
+    } while(retries >= 0);
+    if(mpdc == NULL)
+        return 1;
+    return 0;
+}
+
 
 void
 mpdcmd_savepos(const Arg *arg)
