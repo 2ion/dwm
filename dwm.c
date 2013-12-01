@@ -2360,12 +2360,12 @@ mpdcmd_connect(void) {
         retries -= 1;
         if(mpdc == NULL)
             if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
-                fprintf(stderr, "mpcmd_connect(): connection attempt %d [%d] failed.\n",
+                fprintf(stderr, "DWM: mpcmd_connect(): connection attempt %d [%d] failed.\n",
                         retries, cfg_mpdcmd_retries);
                 continue;
             }
         if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-            fprintf(stderr, "mpdcmd_connect(): connection error: %s\n",
+            fprintf(stderr, "DWM: mpdcmd_connect(): connection error: %s\n",
                     mpd_connection_get_error_message(mpdc));
             mpd_connection_free(mpdc);
             mpdc = NULL;
@@ -2377,7 +2377,6 @@ mpdcmd_connect(void) {
         return 1;
     return 0;
 }
-
 
 void
 mpdcmd_savepos(const Arg *arg)
@@ -2402,8 +2401,8 @@ mpdcmd_savepos(const Arg *arg)
     MpdcmdRegister[reg][2] = mpd_status_get_song_pos(s);
     MpdcmdRegister[reg][3] = (int) mpd_status_get_elapsed_time(s);
     mpd_status_free(s);
-    sprintf(MpdCmdRegisterPlaylists[reg], "dwm-mpdcmd-%d", reg);
-    mpd_run_save(mpdc, MpdCmdRegisterPlaylists[reg]);
+    //sprintf(MpdCmdRegisterPlaylists[reg], "dwm-mpdcmd-%d", reg);
+    //mpd_run_save(mpdc, MpdCmdRegisterPlaylists[reg]);
 }
 
 void
@@ -2414,7 +2413,7 @@ mpdcmd_loadpos(const Arg *arg)
         return;
     if(mpdcmd_connect() != 0)
         return;
-    mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
+    //mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
     if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
         mpd_run_seek_pos(mpdc,
                 (unsigned) MpdcmdRegister[reg][2],
