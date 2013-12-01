@@ -199,7 +199,7 @@ typedef struct {
 } Rule;
 
 int MpdcmdRegister[10][4];
-
+char MpdCmdRegisterPlaylists[10][256];
 typedef struct mpd_connection MpdConnection;
 
 /* function declarations */
@@ -304,9 +304,9 @@ static int shifttag(int dist);
 static void tagcycle(const Arg *arg);
 static void mpdcmd(const Arg *arg);
 static int mpdcmd_connect(void);
-static void updatempdstatus(void);
-static void mpdcmd_install_timer(void);
-static void mpdcmd_sigarlm_handler(int sig);
+//static void updatempdstatus(void);
+//static void mpdcmd_install_timer(void);
+//static void mpdcmd_sigarlm_handler(int sig);
 static void mpdcmd_savepos(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
 
@@ -2355,8 +2355,9 @@ void
 mpdcmd_savepos(const Arg *arg)
 {
     struct mpd_status *s;
-    int reg = arg->i;
     enum mpd_state st;
+    int reg = arg->i;
+
     if(reg < 0 || reg > 9)
         return;
     if(mpdcmd_connect() != 0)
@@ -2369,10 +2370,12 @@ mpdcmd_savepos(const Arg *arg)
         return;
     }
     MpdcmdRegister[reg][0] = 1;
-    MpdcmdRegister[reg][1] = mpd_status_get_song_id(s);
+/*    MpdcmdRegister[reg][1] = mpd_status_get_song_id(s); */
     MpdcmdRegister[reg][2] = mpd_status_get_song_pos(s);
     MpdcmdRegister[reg][3] = (int) mpd_status_get_elapsed_time(s);
     mpd_status_free(s);
+    sprintf(MpdCmdRegisterPlaylists[reg], "dwm-mpdcmd-%d", reg);
+    mpd_run_save(mpdc, MpdCmdRegisterPlaylists[reg]);
 }
 
 void
@@ -2383,6 +2386,7 @@ mpdcmd_loadpos(const Arg *arg)
         return;
     if(mpdcmd_connect() != 0)
         return;
+    mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
     if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
         mpd_run_seek_pos(mpdc,
                 (unsigned) MpdcmdRegister[reg][2],
@@ -2460,6 +2464,8 @@ mpdcmd(const Arg *arg) {
     }
 }
 
+/*
+
 void
 updatempdstatus(void) {
     char statustext[STEXTSIZE];
@@ -2482,7 +2488,7 @@ updatempdstatus(void) {
     if(s == NULL)
         return;
 
-    /* retrieve status information */
+    // retrieve status information
 
     if((s_state = mpd_status_get_state(s)) == MPD_STATE_STOP ||
         (so = mpd_run_current_song(mpdc)) == NULL)
@@ -2508,7 +2514,8 @@ updatempdstatus(void) {
     title = mpd_song_get_tag(so, MPD_TAG_TITLE, 0);
 
 
-    /* %arist - %title (-%total-%elapsed) [$flags] [#%pos/%queuelength] */
+    //%artist - %title (-%total-%elapsed) [$flags] [#%pos/%queuelength]
+
     snprintf(statustext, STEXTSIZE,
             "%s - %s  (-%d:%02d)",
             artist != NULL ? artist : "名無し",
@@ -2523,6 +2530,7 @@ EXIT:;
     return;
 }
 
+
 void
 mpdcmd_sigarlm_handler(int sig) {
     if(sig == SIGUSR1) {
@@ -2530,9 +2538,10 @@ mpdcmd_sigarlm_handler(int sig) {
     }
 }
 
+
 void
 mpdcmd_install_timer(void) {
-    /* create the signal handler */
+    // create the signal handler
     mpdcmd_us_sa.sa_flags = 0;
     mpdcmd_us_sa.sa_handler = mpdcmd_sigarlm_handler;
     sigemptyset(&mpdcmd_us_sa.sa_mask);
@@ -2541,7 +2550,7 @@ mpdcmd_install_timer(void) {
         return;
     }
 
-    /* create the timer */
+    // create the timer
     mpdcmd_us_se.sigev_notify = SIGEV_SIGNAL;
     mpdcmd_us_se.sigev_signo = SIGUSR1;
     mpdcmd_us_se.sigev_value.sival_ptr = mpdcmd_us_timerid;
@@ -2550,12 +2559,14 @@ mpdcmd_install_timer(void) {
         return;
     }
 
-    /* start the timer */
+    // start the timer
     if(timer_settime(mpdcmd_us_timerid, 0, &mpdcmd_us_its, NULL) == -1) {
         perror("dwm:error:mpdcmd_install_timer:timer_settime()");
         return;
     }
 }
+
+*/
 
 int
 main(int argc, char *argv[]) {
