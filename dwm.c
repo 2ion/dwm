@@ -2328,31 +2328,6 @@ mpdcmd_toggle(struct mpd_connection *c,
     mpd_status_free(s);
 }
 
-/*
-int
-mpdcmd_connect(void) {
-    int conn_retries = cfg_mpdcmd_retries;
-REPEAT:;
-    if ((--conn_retries) < 0)
-        goto EXIT;
-
-    if(mpdc == NULL)
-        if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL)
-            goto REPEAT;
-
-    if(mpd_connection_get_error(mpdc) == MPD_ERROR_SUCCESS)
-        goto PROCEED;
-    else
-        goto REPEAT;
-EXIT:;
-    mpd_connection_free(mpdc);
-    mpdc = NULL;
-    return 1;
-PROCEED:;
-    return 0;
-}
-*/
-
 int
 mpdcmd_connect(void) {
     int retries = cfg_mpdcmd_retries;
