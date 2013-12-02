@@ -2371,13 +2371,16 @@ mpdcmd_savepos(const Arg *arg)
         mpd_status_free(s);
         return;
     }
-    MpdcmdRegister[reg][0] = 1;
-/*    MpdcmdRegister[reg][1] = mpd_status_get_song_id(s); */
+    if(MpdcmdRegister[reg][0] == 1)
+        mpd_run_rm(mpdc, MpdCmdRegisterPlaylists[reg]);
+    else {
+        sprintf(MpdCmdRegisterPlaylists[reg], "dwm-mpdcmd-%d", reg);
+        MpdcmdRegister[reg][0] = 1;
+    }
     MpdcmdRegister[reg][2] = mpd_status_get_song_pos(s);
     MpdcmdRegister[reg][3] = (int) mpd_status_get_elapsed_time(s);
     mpd_status_free(s);
-    //sprintf(MpdCmdRegisterPlaylists[reg], "dwm-mpdcmd-%d", reg);
-    //mpd_run_save(mpdc, MpdCmdRegisterPlaylists[reg]);
+    mpd_run_save(mpdc, MpdCmdRegisterPlaylists[reg]);
 }
 
 void
@@ -2388,7 +2391,8 @@ mpdcmd_loadpos(const Arg *arg)
         return;
     if(mpdcmd_connect() != 0)
         return;
-    //mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
+    mpd_run_clear(mpdc);
+    mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
     if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
         mpd_run_seek_pos(mpdc,
                 (unsigned) MpdcmdRegister[reg][2],
