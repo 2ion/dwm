@@ -309,10 +309,13 @@ static int mpdcmd_connect(void);
 //static void mpdcmd_sigarlm_handler(int sig);
 static void mpdcmd_savepos(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
+static void mpdcmd_cleanup(void);
+static void mpdcmd_init_registers(void);
 
 /* variables */
 static const char broken[] = "broken";
-static char stext[STEXTSIZE];
+//static char stext[STEXTSIZE];
+static const char stext[] = VERSION;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
@@ -571,7 +574,7 @@ cleanup(void) {
 		cleanupmon(mons);
 	XSync(dpy, False);
 	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
-    if(mpdc != NULL) mpd_connection_free(mpdc);
+    mpdcmd_cleanup();
 }
 
 void
@@ -1735,6 +1738,8 @@ setup(void) {
 	updatebars();
 	updatestatus();
    // mpdcmd_install_timer();
+    /* init mpdcmd functionality */
+    mpdcmd_init_registers();
 	/* EWMH support per view */
 	XChangeProperty(dpy, root, netatom[NetSupported], XA_ATOM, 32,
 			PropModeReplace, (unsigned char *) netatom, NetLast);
@@ -2351,6 +2356,30 @@ mpdcmd_connect(void) {
     if(mpdc == NULL)
         return 1;
     return 0;
+}
+
+void
+mpdcmd_init_registers(void)
+{
+    int i;
+    const char pn[] = "dwm-mpdcmd-%d";
+    if(mpdcmd_connect() != 0)
+        return;
+    for(i = 0; i < 10; i++)
+        sprintf(MpdCmdRegisterPlaylists[i], pn, i);
+}
+
+void
+mpdcmd_cleanup(void)
+{
+    int i;
+    if(mpdcmd_connect() != 0)
+        return;
+    for(i = 0; i < 10; i++)
+        if(MpdcmdRegister[i][0] == 1)
+            mpd_run_rm(mpdc, MpdCmdRegisterPlaylists[i]);
+    if(mpdc != NULL)
+        mpd_connection_free(mpdc);
 }
 
 void
