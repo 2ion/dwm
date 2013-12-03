@@ -2402,10 +2402,8 @@ mpdcmd_savepos(const Arg *arg)
     }
     if(MpdcmdRegister[reg][0] == 1)
         mpd_run_rm(mpdc, MpdCmdRegisterPlaylists[reg]);
-    else {
-        sprintf(MpdCmdRegisterPlaylists[reg], "dwm-mpdcmd-%d", reg);
+    else
         MpdcmdRegister[reg][0] = 1;
-    }
     MpdcmdRegister[reg][2] = mpd_status_get_song_pos(s);
     MpdcmdRegister[reg][3] = (int) mpd_status_get_elapsed_time(s);
     mpd_status_free(s);
