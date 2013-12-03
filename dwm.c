@@ -2340,12 +2340,12 @@ mpdcmd_connect(void) {
         retries -= 1;
         if(mpdc == NULL)
             if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
-                fprintf(stderr, "DWM: mpcmd_connect(): connection attempt %d [%d] failed.\n",
+                fprintf(stderr, "dwm: mpcmd_connect(): connection attempt %d [%d] failed.\n",
                         retries, cfg_mpdcmd_retries);
                 continue;
             }
         if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-            fprintf(stderr, "DWM: mpdcmd_connect(): connection error: %s\n",
+            fprintf(stderr, "dwm: mpdcmd_connect(): connection error: %s\n",
                     mpd_connection_get_error_message(mpdc));
             mpd_connection_free(mpdc);
             mpdc = NULL;
