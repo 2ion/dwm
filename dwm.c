@@ -271,6 +271,7 @@ static void setmfact(const Arg *arg);
 static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
+static void sigterm(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -1692,7 +1693,8 @@ setup(void) {
 
 	/* clean up any zombies immediately */
 	sigchld(0);
-
+    if(signal(SIGTERM, sigterm) == SIG_ERR)
+        die("Can't install SIGTERM handler");
 	/* init screen */
 	screen = DefaultScreen(dpy);
 	root = RootWindow(dpy, screen);
@@ -1773,6 +1775,11 @@ sigchld(int unused) {
 	if(signal(SIGCHLD, sigchld) == SIG_ERR)
 		die("Can't install SIGCHLD handler");
 	while(0 < waitpid(-1, NULL, WNOHANG));
+}
+
+void
+sigterm(int unused) {
+    running = False;
 }
 
 void
