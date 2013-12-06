@@ -73,11 +73,12 @@
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 #endif
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
-#define WIDTH(X)                ((X)->w + 2 * (X)->bw)
-#define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-#define TAGMASK                 ((1 << LENGTH(tags)) - 1)
-#define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
-#define STEXTSIZE               512
+#define WIDTH(X)                    ((X)->w + 2 * (X)->bw)
+#define HEIGHT(X)                   ((X)->h + 2 * (X)->bw)
+#define TAGMASK                     ((1 << LENGTH(tags)) - 1)
+#define TEXTW(X)                    (textnw(X, strlen(X)) + dc.font.height)
+#define STEXTSIZE                   512
+#define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) return;
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast };                                /* cursor */
@@ -2370,8 +2371,7 @@ mpdcmd_init_registers(void)
 {
     int i;
     const char pn[] = "dwm-mpdcmd-%d";
-    if(mpdcmd_connect() != 0)
-        return;
+    MPDCMD_BE_CONNECTED;
     for(i = 0; i < 10; i++)
         sprintf(MpdCmdRegisterPlaylists[i], pn, i);
 }
@@ -2380,8 +2380,7 @@ void
 mpdcmd_cleanup(void)
 {
     int i;
-    if(mpdcmd_connect() != 0)
-        return;
+    MPDCMD_BE_CONNECTED;
     for(i = 0; i < 10; i++)
         if(MpdcmdRegister[i][0] == 1)
             mpd_run_rm(mpdc, MpdCmdRegisterPlaylists[i]);
@@ -2396,10 +2395,10 @@ mpdcmd_savepos(const Arg *arg)
     enum mpd_state st;
     int reg = arg->i;
 
+
     if(reg < 0 || reg > 9)
         return;
-    if(mpdcmd_connect() != 0)
-        return;
+    MPDCMD_BE_CONNECTED;
     if((s = mpd_run_status(mpdc)) == NULL)
         return;
     st = mpd_status_get_state(s);
@@ -2423,8 +2422,7 @@ mpdcmd_loadpos(const Arg *arg)
     int reg = arg->i;
     if(reg < 0 || reg > 9 || MpdcmdRegister[reg][0] != 1)
         return;
-    if(mpdcmd_connect() != 0)
-        return;
+    MPDCMD_BE_CONNECTED;
     mpd_run_clear(mpdc);
     mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
     if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
@@ -2436,8 +2434,7 @@ mpdcmd_loadpos(const Arg *arg)
 
 void
 mpdcmd(const Arg *arg) {
-    if(mpdcmd_connect() != 0)
-        return;
+    MPDCMD_BE_CONNECTED;
     switch(arg->i) {
         case MpdTogglePause:
             {
