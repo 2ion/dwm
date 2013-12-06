@@ -55,18 +55,17 @@ static const Layout layouts[]       = {
     { "TTT", bstack    },
     { "><>", NULL      }};
 static const const Rule rules[]           = {
-	/* class                    instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",                   NULL,       NULL,       0,            True,        -1 },
-	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1 },
-    { "Iceweasel",              NULL,       NULL,       1 << 1,       False,       -1 },
-    { "Luakit",                 NULL,       NULL,       1 << 1,       False,       -1 },
-    { "MPlayer",                NULL,       NULL,       0,            True,        -1 },
-    { "mplayer2",               NULL,       NULL,       0,            True,        -1 },
-    { "mpv",                    NULL,       NULL,       0,            True,        -1 },
-    { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1 },
-    { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1 },
-    { "URxvt",                  NULL,       "ichi:",    1 << 0,       False,       -1 },
-    { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1 }
+	/* class                    instance    title       tags mask     isfloating   monitor  opacity */
+	{ "Gimp",                   NULL,       NULL,       1,            True,        -1,      1.0 },
+	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
+    { "Iceweasel",              NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
+    { "MPlayer",                NULL,       NULL,       1,            True,        -1,      1.0 },
+    { "mplayer2",               NULL,       NULL,       1,            True,        -1,      1.0 },
+    { "mpv",                    NULL,       NULL,       1,            True,        -1,      1.0 },
+    { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1,      1.0 },
+    { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1,      1.0 },
+    { "URxvt",                  NULL,       "ichi:",    1 << 1,       False,       -1,      1.0 },
+    { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1,      1.0 }
 };
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };

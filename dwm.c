@@ -60,25 +60,27 @@
 #include <mpd/client.h>
 
 /* macros */
-#define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
-#define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-#define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
-                               * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
-#define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
-#define LENGTH(X)               (sizeof X / sizeof X[0])
+#define BUTTONMASK                  (ButtonPressMask|ButtonReleaseMask)
+#define CLEANMASK(mask)             (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
+#define INTERSECT(x,y,w,h,m)        (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
+                                    * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+#define ISVISIBLE(C)                ((C->tags & C->mon->tagset[C->mon->seltags]))
+#define LENGTH(X)                   (sizeof X / sizeof X[0])
 #ifndef MAX
-#define MAX(A, B)		((A) > (B) ? (A) : (B))
+#define MAX(A, B)		            ((A) > (B) ? (A) : (B))
 #endif
 #ifndef MIN
-#define MIN(A, B)               ((A) < (B) ? (A) : (B))
+#define MIN(A, B)                   ((A) < (B) ? (A) : (B))
 #endif
-#define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
+#define MOUSEMASK                   (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                    ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)                   ((X)->h + 2 * (X)->bw)
 #define TAGMASK                     ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                    (textnw(X, strlen(X)) + dc.font.height)
 #define STEXTSIZE                   512
 #define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) return;
+#define OPAQUE	                    0xffffffff
+#define OPACITY	                    "_NET_WM_WINDOW_OPACITY"
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast };                                /* cursor */
@@ -197,6 +199,7 @@ typedef struct {
 	unsigned int tags;
 	Bool isfloating;
 	int monitor;
+    double opacity;
 } Rule;
 
 int MpdcmdRegister[10][4];
@@ -313,6 +316,7 @@ static void mpdcmd_savepos(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_cleanup(void);
 static void mpdcmd_init_registers(void);
+static void setopacity(Window w, double opacity);
 
 /* variables */
 static const char broken[] = "broken";
@@ -397,6 +401,7 @@ applyrules(Client *c) {
 			for(m = mons; m && m->num != r->monitor; m = m->next);
 			if(m)
 				c->mon = m;
+            setopacity(c->w, r->opacity);
 		}
 	}
 	if(ch.res_class)
@@ -404,6 +409,27 @@ applyrules(Client *c) {
 	if(ch.res_name)
 		XFree(ch.res_name);
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
+}
+
+void
+setopacity(Window w, double op)
+{
+    double d = op;
+    unsigned int opacity;
+    
+    if(d > 1.0)
+        d = 1.0;
+    if(d < 0.0)
+        d = 0.0;
+
+    opacity = (unsigned int) (d * OPAQUE);
+
+    if(opacity == OPAQUE)
+        XDeleteProperty(dpy, w, XInternAtom(dpy, OPACITY, False));
+    else
+        XChangeProperty(dpy, w, XInternAtom(dpy, OPACITY, False),
+                XA_CARDINAL, 32, PropModeReplace,
+                (unsigned char*) &opacity, 1L);
 }
 
 Bool
@@ -2423,12 +2449,8 @@ mpdcmd_loadpos(const Arg *arg)
     if(reg < 0 || reg > 9 || MpdcmdRegister[reg][0] != 1)
         return;
     MPDCMD_BE_CONNECTED;
-    if(!mpd_command_list_begin(mpdc, 0))
-        return;
     mpd_run_clear(mpdc);
     mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
-    if(!mpd_command_list_end(mpdc))
-        return;
     if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
         mpd_run_seek_pos(mpdc,
                 (unsigned) MpdcmdRegister[reg][2],
