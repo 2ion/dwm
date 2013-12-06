@@ -129,7 +129,7 @@ opacity of clients matching a certain rule. The filter table now
 looks like this:
 
 static const const Rule rules[] = {
-	/* class                    instance    title       tags mask     isfloating   monitor  opacity */
+    /* class                    instance    title       tags mask     isfloating   monitor  opacity */
     { "Iceweasel",              NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
     { "mplayer2",               NULL,       NULL,       1,            True,        -1,      1.0 },
     { "mpv",                    NULL,       NULL,       1,            True,        -1,      1.0 },
