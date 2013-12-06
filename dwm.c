@@ -133,6 +133,7 @@ struct Client {
 	Client *snext;
 	Monitor *mon;
 	Window win;
+    unsigned int opacity;
 };
 
 typedef struct {
@@ -292,6 +293,7 @@ static Bool updategeom(void);
 static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updatenumlockmask(void);
+static void updateopacity(Client *c);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
 static void updatewindowtype(Client *c);
@@ -316,7 +318,6 @@ static void mpdcmd_savepos(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_cleanup(void);
 static void mpdcmd_init_registers(void);
-static void setopacity(Window w, double opacity);
 
 /* variables */
 static const char broken[] = "broken";
@@ -380,6 +381,7 @@ void
 applyrules(Client *c) {
 	const char *class, *instance;
 	unsigned int i;
+    double d;
 	const Rule *r;
 	Monitor *m;
 	XClassHint ch = { NULL, NULL };
@@ -401,7 +403,12 @@ applyrules(Client *c) {
 			for(m = mons; m && m->num != r->monitor; m = m->next);
 			if(m)
 				c->mon = m;
-            setopacity(c->w, r->opacity);
+            d = r->opacity;
+            if(r->opacity > 1.0)
+                d = 1.0;
+            if(r->opacity < 0.0)
+                d = 0.0;
+            c->opacity = (unsigned int) (d * OPAQUE);
 		}
 	}
 	if(ch.res_class)
@@ -412,24 +419,17 @@ applyrules(Client *c) {
 }
 
 void
-setopacity(Window w, double op)
+updateopacity(Client *c)
 {
-    double d = op;
-    unsigned int opacity;
-    
-    if(d > 1.0)
-        d = 1.0;
-    if(d < 0.0)
-        d = 0.0;
-
-    opacity = (unsigned int) (d * OPAQUE);
-
-    if(opacity == OPAQUE)
-        XDeleteProperty(dpy, w, XInternAtom(dpy, OPACITY, False));
-    else
-        XChangeProperty(dpy, w, XInternAtom(dpy, OPACITY, False),
+    if(c->opacity == OPAQUE) {
+        XDeleteProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False));
+    }
+    else {
+        XChangeProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False),
                 XA_CARDINAL, 32, PropModeReplace,
-                (unsigned char*) &opacity, 1L);
+                (unsigned char*) &c->opacity, 1L);
+    }
+//    XSync(dpy, False);
 }
 
 Bool
@@ -1221,6 +1221,7 @@ manage(Window w, XWindowAttributes *wa) {
 	if(!(c = calloc(1, sizeof(Client))))
 		die("fatal: could not malloc() %u bytes\n", sizeof(Client));
 	c->win = w;
+    c->opacity = OPAQUE;
 	updatetitle(c);
 	if(XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
 		c->mon = t->mon;
@@ -1254,6 +1255,7 @@ manage(Window w, XWindowAttributes *wa) {
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
+    updateopacity(c);
 	c->sfx = c->x;
 	c->sfy = c->y;
 	c->sfw = c->w;
