@@ -2423,8 +2423,12 @@ mpdcmd_loadpos(const Arg *arg)
     if(reg < 0 || reg > 9 || MpdcmdRegister[reg][0] != 1)
         return;
     MPDCMD_BE_CONNECTED;
+    if(!mpd_command_list_begin(mpdc, 0))
+        return;
     mpd_run_clear(mpdc);
     mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
+    if(!mpd_command_list_end(mpdc))
+        return;
     if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
         mpd_run_seek_pos(mpdc,
                 (unsigned) MpdcmdRegister[reg][2],
