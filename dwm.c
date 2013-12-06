@@ -403,11 +403,10 @@ applyrules(Client *c) {
 			for(m = mons; m && m->num != r->monitor; m = m->next);
 			if(m)
 				c->mon = m;
+            // opacity; see updateopacity()
             d = r->opacity;
-            if(r->opacity > 1.0)
+            if(r->opacity > 1.0 || r->opacity < 0.0)
                 d = 1.0;
-            if(r->opacity < 0.0)
-                d = 0.0;
             c->opacity = (unsigned int) (d * OPAQUE);
 		}
 	}
