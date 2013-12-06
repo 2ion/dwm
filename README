@@ -26,7 +26,11 @@ PATCHES & MODIFICATIONS
 PERSONAL MODS
 -------------
 
+    * You can define filter rules to automatically set the opacity of
+      clients (see the section further down)
+
     * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
+
     * mpdcmd() callback to directly control mpd. Linked against
       libmpdclient. Provides the Following actions:
         * MpdRaiseVolume
@@ -39,11 +43,15 @@ PERSONAL MODS
         * MpdToggleConsume
         * MpdToggleRandom
         * MpdToggleSingle
+
     * mpdcmd_loadpos() and mpdcmd_savepos() callbacks to create and
       access bookmarks. The state is lost when DWM exits. There are
       10 registers 0-9 available for storing up to 10 bookmarks.
+
     * DCMD() macro for convenient dmenu invocation
+
     * Compile with -O2 instead of -Os
+
     * wmii-like actions
 
 DOCUMENTATION: MPD CLIENT EXTENSIONS
@@ -109,7 +117,25 @@ the currently playing song (includes being paused) into register n. A
 corresponding call to mpdcmd_loadpos({.i = n}) plays the song with the
 previously saved playlist index from the saved playing position.
 
-Note that these functions pay no attentions to changes in MPD's queue,
-the song and the later playist index may be a different one, or setting
-the playing position may fail because the exchanged song is shorter than
-the one the parameters of which were stored.
+The current playlist will also be saved and restored in order to ensure
+that the bookmark is being played correctly even if the underlying
+playlist has changed in the meantime.
+
+Setting the window opacity / transparency
+-----------------------------------------
+
+The client filter rules have been extended and now allow setting the
+opacity of clients matching a certain rule. The filter table now 
+looks like this:
+
+static const const Rule rules[] = {
+	/* class                    instance    title       tags mask     isfloating   monitor  opacity */
+    { "Iceweasel",              NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
+    { "mplayer2",               NULL,       NULL,       1,            True,        -1,      1.0 },
+    { "mpv",                    NULL,       NULL,       1,            True,        -1,      1.0 },
+    { "URxvt",                  NULL,       NULL,       1 << 0,       False,       -1,      0.9 }};
+
+Note the new "opacity" field. The number here must be a double d 0.0 <=
+d <= 1.0 with 0.0 meaning 100% transparent (=invisible) and 1.0 opaque
+(=no transparency). Values which are out of bounds will be sanitized and
+default to 1.0, though.
