@@ -122,7 +122,7 @@ that the bookmark is being played correctly even if the underlying
 playlist has changed in the meantime.
 
 Setting the window opacity / transparency
------------------------------------------
+=========================================
 
 The client filter rules have been extended and now allow setting the
 opacity of clients matching a certain rule. The filter table now 
@@ -139,3 +139,22 @@ Note the new "opacity" field. The number here must be a double d 0.0 <=
 d <= 1.0 with 0.0 meaning 100% transparent (=invisible) and 1.0 opaque
 (=no transparency). Values which are out of bounds will be sanitized and
 default to 1.0, though.
+
+The default opacity for clients not matching any rule is = 1.0.
+
+changeopacity(const Arg *arg)
+----------------------------
+
+This callback can be used in keybindings. arg needs to have its float
+member set to a positive or negative number; when called, the value will
+be added to the client's opacity as explained above. Values f > 0.0 will
+increase the opacity until its value reaches 1.0, values f < 0.0 will
+decrease the opacity. Out of bound values will default to 1.0 (fully
+opaque). Example configuration snippet:
+
+    *snip*
+
+    { MODKEY,                       XK_o,      changeopacity,   {.f = +0.05 }},
+    { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
+
+    *snip*
