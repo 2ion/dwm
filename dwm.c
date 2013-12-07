@@ -295,6 +295,7 @@ static void updatebars(void);
 static void updatenumlockmask(void);
 static void updateopacity(Client *c);
 static void changeopacity(const Arg *arg);
+static void setopacity(const Arg *arg);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
 static void updatewindowtype(Client *c);
@@ -445,6 +446,18 @@ changeopacity(const Arg *arg)
     if(opacity > 1.0 || opacity < 0.0) {
         opacity = 1.0;
     }
+    c->opacity = (unsigned int) (opacity * (double) OPAQUE);
+    updateopacity(c);
+}
+
+void
+setopacity(const Arg *arg)
+{
+    Client *c;
+    double opacity = (arg->f <= 1.0 && arg->f >= 0.0) ? arg->f : 1.0;
+    
+    if(!(c = selmon->sel))
+        return;
     c->opacity = (unsigned int) (opacity * (double) OPAQUE);
     updateopacity(c);
 }

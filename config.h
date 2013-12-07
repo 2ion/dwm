@@ -29,6 +29,7 @@
 #define BRIGHTGREEN "#A99F49"
 #define SKYBLUE "#3262AC"
 #define ORANGE "#632A10"
+#define SUSEGREEN "#97CD56"
 
 static const char font[]            = "Adobe Heiti Std 7";
 static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
@@ -37,7 +38,7 @@ static const char normbgcolor[]     = GREY_10;
 static const char normfgcolor[]     = GREY_66;
 static const char selbordercolor[]  = ORANGE;
 static const char selbgcolor[]      = GREY_10;
-static const char selfgcolor[]      = ORANGE;
+static const char selfgcolor[]      = SUSEGREEN;
 static const unsigned int borderpx  = 1;        
 static const unsigned int snap      = 10;       
 static const Bool showbar           = False;     
@@ -130,6 +131,7 @@ static Key keys[] = {
     { MODKEY,                       XK_BackSpace, spawn,        {.v = cmd_skippy }},
     { MODKEY,                       XK_o,      changeopacity,   {.f = +0.05 }},
     { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
+    { MODKEY|ControlMask,           XK_o,      setopacity,      {.f = 1.0 }},
 
     /* XF86 KEYS */
 
