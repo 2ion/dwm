@@ -158,3 +158,9 @@ opaque). Example configuration snippet:
     { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
 
     *snip*
+
+setopacity(const Arg *arg)
+--------------------------
+
+Like changeopacity(), but sets the opacity of the focus client to a fix
+value.
