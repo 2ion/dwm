@@ -64,7 +64,6 @@ static const const Rule rules[]           = {
     { "mpv",                    NULL,       NULL,       1,            True,        -1,      1.0 },
     { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1,      1.0 },
     { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1,      1.0 },
-    { "URxvt",                  NULL,       "ichi:",    1 << 0,       False,       -1,      1.0 },
     { "URxvt",                  NULL,       NULL,       1 << 0,       False,       -1,      0.9 },
     { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1,      1.0 }
 };
