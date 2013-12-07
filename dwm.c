@@ -294,6 +294,7 @@ static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updatenumlockmask(void);
 static void updateopacity(Client *c);
+static void changeopacity(const Arg *arg);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
 static void updatewindowtype(Client *c);
@@ -429,6 +430,23 @@ updateopacity(Client *c)
                 (unsigned char*) &c->opacity, 1L);
     }
 //    XSync(dpy, False);
+}
+
+void
+changeopacity(const Arg *arg)
+{
+    Client *c;
+    double opacity;
+    double delta = (double) arg->f;
+    
+    if(!(c = selmon->sel))
+        return;
+    opacity = ((double) c->opacity / OPAQUE) + delta;
+    if(opacity > 1.0 || opacity < 0.0) {
+        opacity = 1.0;
+    }
+    c->opacity = (unsigned int) (opacity * (double) OPAQUE);
+    updateopacity(c);
 }
 
 Bool

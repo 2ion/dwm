@@ -128,6 +128,8 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
     { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
     { MODKEY,                       XK_BackSpace, spawn,        {.v = cmd_skippy }},
+    { MODKEY,                       XK_o,      changeopacity,   {.f = +0.05 }},
+    { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
 
     /* XF86 KEYS */
 
