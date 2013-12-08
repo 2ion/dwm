@@ -274,7 +274,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
-//static unsigned long getcolor(const char *colstr);
+static unsigned long getcolor(const char *colstr, XftColor *color);
 static Bool getrootptr(int *x, int *y);
 static long getstate(Window w);
 static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
@@ -936,7 +936,7 @@ drawbar(Monitor *m) {
 			dc.x = x;
 			dc.w = m->ww - x;
 		}
-		drawtext(stext, dc.norm, False);
+		drawtext(stext, dc.sel, False);
 	}
 	else
 		dc.x = m->ww;
