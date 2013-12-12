@@ -282,6 +282,7 @@ static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
+static void changeopacity(const Arg *arg);
 static void checkotherwm(void);
 static void cleanup(void);
 static void cleanupmon(Monitor *mon);
@@ -298,7 +299,6 @@ static void die(const char *errstr, ...);
 static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
-static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
@@ -322,6 +322,15 @@ static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
+static void mpdcmd(const Arg *arg);
+static void mpdcmd_cleanup(void);
+static int mpdcmd_connect(void);
+static void mpdcmd_init_registers(void);
+//static void mpdcmd_install_timer(void);
+static void mpdcmd_loadpos(const Arg *arg);
+static void mpdcmd_savepos(const Arg *arg);
+//static void mpdcmd_sigarlm_handler(int sig);
+//static void updatempdstatus(void);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -361,7 +370,6 @@ static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updatenumlockmask(void);
 static void updateopacity(Client *c);
-static void changeopacity(const Arg *arg);
 static void setopacity(const Arg *arg);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
@@ -378,15 +386,6 @@ static void zoom(const Arg *arg);
 static void cycle(const Arg *arg);
 static int shifttag(int dist);
 static void tagcycle(const Arg *arg);
-static void mpdcmd(const Arg *arg);
-static int mpdcmd_connect(void);
-//static void updatempdstatus(void);
-//static void mpdcmd_install_timer(void);
-//static void mpdcmd_sigarlm_handler(int sig);
-static void mpdcmd_savepos(const Arg *arg);
-static void mpdcmd_loadpos(const Arg *arg);
-static void mpdcmd_cleanup(void);
-static void mpdcmd_init_registers(void);
 
 /* variables */
 static const char broken[] = "broken";
@@ -953,8 +952,6 @@ drawbar(Monitor *m) {
 		dc.w = TEXTW(tags[i]);
 		col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.norm;
 		drawtext(tags[i], col, urg & 1 << i);
-		drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-		           occ & 1 << i, urg & 1 << i, col);
 		dc.x += dc.w;
 	}
 	dc.w = blw = TEXTW(m->ltsymbol);
@@ -977,7 +974,6 @@ drawbar(Monitor *m) {
 		if(m->sel) {
 			col = m == selmon ? dc.sel : dc.norm;
 			drawtext(m->sel->name, col, False);
-			drawsquare(m->sel->isfixed, m->sel->isfloating, False, col);
 		}
 		else
 			drawtext(NULL, dc.norm, False);
@@ -992,18 +988,6 @@ drawbars(void) {
 
 	for(m = mons; m; m = m->next)
 		drawbar(m);
-}
-
-void
-drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]) {
-	int x;
-
-	XSetForeground(dpy, dc.gc, col[invert ? ColBG : ColFG]);
-	x = (dc.font.ascent + dc.font.descent + 2) / 4;
-	if(filled)
-		XFillRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+1, x+1, x+1);
-	else if(empty)
-		XDrawRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+1, x, x);
 }
 
 void

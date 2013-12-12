@@ -31,7 +31,7 @@
 #define ORANGE "#632A10"
 #define SUSEGREEN "#97CD56"
 
-static const char font[]            = "Adobe Heiti Std 7";
+static const char font[]            = "Ubuntu Mono 9";
 static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
 static const char normbordercolor[] = GREY_33;
 static const char normbgcolor[]     = GREY_10;
@@ -43,7 +43,7 @@ static const unsigned int borderpx  = 1;
 static const unsigned int snap      = 10;       
 static const Bool showbar           = False;     
 static const Bool topbar            = False; 
-static const char *tags[]           = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+static const char *tags[]           = { ".", ":", "...", ".:.", ".::", ":::", ".:::", ".:::.", ".::::" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
 static const int cfg_mpdcmd_retries = 4;
