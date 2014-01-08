@@ -43,7 +43,7 @@ static const unsigned int borderpx  = 1;
 static const unsigned int snap      = 10;       
 static const Bool showbar           = False;     
 static const Bool topbar            = False; 
-static const char *tags[]           = { ".", ":", "...", ".:.", ".::", ":::", ".:::", ".:::.", ".::::" };
+static const char *tags[]           = { "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
 static const int cfg_mpdcmd_retries = 4;
@@ -54,7 +54,8 @@ static const Layout layouts[]       = {
     { "[+]", monocle   },
     { "[]=", tile      },    
     { "TTT", bstack    },
-    { "><>", NULL      }};
+    { "><>", NULL      },
+    { "[O]", deck      }};
 static const const Rule rules[]           = {
 	/* class                    instance    title       tags mask     isfloating   monitor  opacity */
 	{ "Gimp",                   NULL,       NULL,       1,            True,        -1,      1.0 },
@@ -105,13 +106,14 @@ static Key keys[] = {
     { MODKEY|ControlMask,           XK_j,      pushdown,       {0}},
     { MODKEY|ControlMask,           XK_k,      pushup,         {0}},
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 }},
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 }},
+	{ MODKEY,                      XK_d,      incnmaster,     {.i = -1 }},
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05}},
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05}},
 	{ MODKEY,                       XK_Return, zoom,           {0}},
 	{ MODKEY,                       XK_Tab,    view,           {0}},
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0}},
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}}, // tiled
+    { MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[4]}}, // deck
     { MODKEY,                       XK_s,      setlayout,      {.v = &layouts[2]}}, // bstack
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[3]}}, // float
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
