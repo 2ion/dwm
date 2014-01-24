@@ -97,6 +97,7 @@
  */
 
 #include <errno.h>
+#include <error.h>
 #include <locale.h>
 #include <stdarg.h>
 #include <signal.h>
@@ -148,6 +149,8 @@
 #define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) return;
 #define OPAQUE	                    0xffffffff
 #define OPACITY	                    "_NET_WM_WINDOW_OPACITY"
+#define LERROR(status, errnum, ...) error_at_line((status), (errnum), \
+        (__func__), (__LINE__), __VA_ARGS__)
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast };                                /* cursor */
@@ -490,12 +493,27 @@ void
 updateopacity(Client *c)
 {
     if(c->opacity == OPAQUE) {
-        XDeleteProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False));
+        switch(XDeleteProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False))) {
+          case BadAtom:
+          case BadWindow:
+            LERROR(0,0, "XDeleteProperty() failed");
+          default:
+            break;
+        }
     }
     else {
-        XChangeProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False),
+        switch(XChangeProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False),
                 XA_CARDINAL, 32, PropModeReplace,
-                (unsigned char*) &c->opacity, 1L);
+                (unsigned char*) &c->opacity, 1L)) {
+          case BadAlloc:
+          case BadAtom:
+          case BadMatch:
+          case BadValue:
+          case BadWindow:
+            LERROR(0,0, "XChangeProperty() failed");
+          default:
+            break;
+        }
     }
 //    XSync(dpy, False);
 }
@@ -2487,13 +2505,11 @@ mpdcmd_connect(void) {
         retries -= 1;
         if(mpdc == NULL)
             if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
-                fprintf(stderr, "dwm: mpcmd_connect(): connection attempt %d [%d] failed.\n",
-                        retries, cfg_mpdcmd_retries);
+                LERROR(0,0, "connection attempt %d (of %d) failed", retries, cfg_mpdcmd_retries);
                 continue;
             }
         if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-            fprintf(stderr, "dwm: mpdcmd_connect(): connection error: %s\n",
-                    mpd_connection_get_error_message(mpdc));
+            LERROR(0,0, "mpd error: %s", mpd_connection_get_error_message(mpdc));
             mpd_connection_free(mpdc);
             mpdc = NULL;
             continue;
