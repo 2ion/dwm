@@ -146,12 +146,14 @@
 #define TAGMASK                     ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                    (textnw(X, strlen(X)) + dc.font.height)
 #define STEXTSIZE                   512
-#define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) return;
-#define OPAQUE	                    0xffffffff
-#define OPACITY	                    "_NET_WM_WINDOW_OPACITY"
 #define LERROR(status, errnum, ...) error_at_line((status), (errnum), \
         (__func__), (__LINE__), __VA_ARGS__)
-
+#define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) { \
+  LERROR(0,0, "mpd_connect() failed"); \
+  return; \
+}
+#define OPAQUE	                    0xffffffff
+#define OPACITY	                    "_NET_WM_WINDOW_OPACITY"
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast };                                /* cursor */
 enum { ColBorder, ColFG, ColBG, ColLast };                                      /* color */
@@ -2502,25 +2504,25 @@ mpdcmd_toggle(struct mpd_connection *c,
 
 int
 mpdcmd_connect(void) {
-    int retries = cfg_mpdcmd_retries;
-    do { 
-        retries -= 1;
-        if(mpdc == NULL)
-            if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
-                LERROR(0,0, "connection attempt %d (of %d) failed", retries, cfg_mpdcmd_retries);
-                continue;
-            }
-        if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-            LERROR(0,0, "mpd error: %s", mpd_connection_get_error_message(mpdc));
-            mpd_connection_free(mpdc);
-            mpdc = NULL;
-            continue;
-        } else
-            break;
-    } while(retries >= 0);
+  int retries = cfg_mpdcmd_retries;
+  do { 
+    retries -= 1;
     if(mpdc == NULL)
-        return 1;
-    return 0;
+      if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
+          LERROR(0,0, "connection attempt %d (of %d) failed", retries, cfg_mpdcmd_retries);
+          continue;
+      }
+    if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
+      LERROR(0,0, "mpd error: %s", mpd_connection_get_error_message(mpdc));
+      mpd_connection_free(mpdc);
+      mpdc = NULL;
+      continue;
+    } else
+      break;
+  } while(retries >= 0);
+  if(mpdc == NULL)
+    return 1;
+  return 0;
 }
 
 void
