@@ -329,6 +329,8 @@ static void mpdcmd(const Arg *arg);
 static void mpdcmd_cleanup(void);
 static int mpdcmd_connect(void);
 static void mpdcmd_init_registers(void);
+static void mpdcmd_toggle_pause(void);
+static void mpdcmd_volume(const Arg *arg);
 //static void mpdcmd_install_timer(void);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_savepos(const Arg *arg);
@@ -2572,91 +2574,93 @@ mpdcmd_savepos(const Arg *arg)
 }
 
 void
-mpdcmd_loadpos(const Arg *arg)
-{
-    int reg = arg->i;
-    if(reg < 0 || reg > 9 || MpdcmdRegister[reg][0] != 1)
-        return;
-    MPDCMD_BE_CONNECTED;
-    mpd_run_clear(mpdc);
-    mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
-    if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
-        mpd_run_seek_pos(mpdc,
-                (unsigned) MpdcmdRegister[reg][2],
-                (unsigned) MpdcmdRegister[reg][3]);
-    return;
+mpdcmd_loadpos(const Arg *arg) {
+  int reg = arg->i;
+  if(reg < 0 || reg > 9 || MpdcmdRegister[reg][0] != 1)
+      return;
+  MPDCMD_BE_CONNECTED;
+  mpd_run_clear(mpdc);
+  mpd_run_load(mpdc, MpdCmdRegisterPlaylists[reg]);
+  if(mpd_run_play_pos(mpdc, (unsigned) MpdcmdRegister[reg][2]))
+    mpd_run_seek_pos(mpdc,
+        (unsigned) MpdcmdRegister[reg][2],
+        (unsigned) MpdcmdRegister[reg][3]);
+  return;
 };
 
 void
-mpdcmd(const Arg *arg) {
-    MPDCMD_BE_CONNECTED;
-    switch(arg->i) {
-        case MpdTogglePause:
-            {
-                struct mpd_status *s = mpd_run_status(mpdc);
-                if(s == NULL) return;
-                if(mpd_status_get_state(s) == MPD_STATE_PLAY)
-                    mpd_run_pause(mpdc, true);
-                else
-                    mpd_run_play(mpdc);
-                mpd_status_free(s);
-            }
-            break;
-        case MpdPrev:
-            mpd_run_previous(mpdc);
-            break;
-        case MpdNext:
-            mpd_run_next(mpdc);
-            break;
-        case MpdRaiseVolume:
-        case MpdLowerVolume:
-        case MpdMuteVolume:
-            {
-                struct mpd_status *s = mpd_run_status(mpdc);
-                int vol;
-                if(s == NULL) return;
-                vol = mpd_status_get_volume(s);
-                switch(arg->i) {
-                    case MpdRaiseVolume:
-                        vol += voldelta;
-                        if(vol > 100) vol = 100;
-                        break;
-                    case MpdLowerVolume:
-                        vol -= voldelta;
-                        if(vol < 0) vol = 0;
-                        break;
-                    case MpdMuteVolume:
-                        if(unmute2vol != 0) {
-                            vol = unmute2vol;
-                            unmute2vol = 0;
-                        } else {
-                            unmute2vol = vol;
-                            vol = 0;
-                        }
-                        break;
-                }
-                mpd_run_set_volume(mpdc, vol);
-                mpd_status_free(s);
-            }
-            break;
-        case MpdToggleRepeat:
-            mpdcmd_toggle(mpdc, mpd_status_get_repeat, mpd_run_repeat);
-            break;
-        case MpdToggleConsume:
-            mpdcmd_toggle(mpdc, mpd_status_get_consume, mpd_run_consume);
-        case MpdToggleRandom:
-            mpdcmd_toggle(mpdc, mpd_status_get_random, mpd_run_random);
-        case MpdToggleSingle:
-            mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
-            break;
-        case MpdUpdate:
-            /* $2==NULL -> update all of the music directory */
-            mpd_run_update(mpdc, NULL);
-            break;
-    }
+mpdcmd_volume(const Arg *arg) {
+  struct mpd_status *s = mpd_run_status(mpdc);
+  int vol;
+  if(s == NULL) return;
+  vol = mpd_status_get_volume(s);
+  switch(arg->i) {
+    case MpdRaiseVolume:
+      vol += voldelta;
+      if(vol > 100) vol = 100;
+      break;
+    case MpdLowerVolume:
+      vol -= voldelta;
+      if(vol < 0) vol = 0;
+      break;
+    case MpdMuteVolume:
+      if(unmute2vol != 0) {
+          vol = unmute2vol;
+          unmute2vol = 0;
+      } else {
+          unmute2vol = vol;
+          vol = 0;
+      }
+      break;
+  }
+  mpd_run_set_volume(mpdc, vol);
+  mpd_status_free(s);
 }
 
+void
+mpdcmd_toggle_pause(void) {
+  struct mpd_status *s = mpd_run_status(mpdc);
+  if(s == NULL) return;
+  if(mpd_status_get_state(s) == MPD_STATE_PLAY)
+    mpd_run_pause(mpdc, true);
+  else
+    mpd_run_play(mpdc);
+  mpd_status_free(s);
+}
 
+void
+mpdcmd(const Arg *arg) {
+  MPDCMD_BE_CONNECTED;
+  switch(arg->i) {
+    case MpdTogglePause:
+        mpdcmd_toggle_pause();
+        break;
+    case MpdPrev:
+        mpd_run_previous(mpdc);
+        break;
+    case MpdNext:
+        mpd_run_next(mpdc);
+        break;
+    case MpdRaiseVolume:
+    case MpdLowerVolume:
+    case MpdMuteVolume:
+        mpdcmd_volume(arg);
+        break;
+    case MpdToggleRepeat:
+        mpdcmd_toggle(mpdc, mpd_status_get_repeat, mpd_run_repeat);
+        break;
+    case MpdToggleConsume:
+        mpdcmd_toggle(mpdc, mpd_status_get_consume, mpd_run_consume);
+    case MpdToggleRandom:
+        mpdcmd_toggle(mpdc, mpd_status_get_random, mpd_run_random);
+    case MpdToggleSingle:
+        mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
+        break;
+    case MpdUpdate:
+        mpd_run_update(mpdc, NULL);
+        break;
+  }
+}
 
 /*
 
