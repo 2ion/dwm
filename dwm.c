@@ -285,6 +285,7 @@ static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
+static void bstack(Monitor *m);
 static void buttonpress(XEvent *e);
 static void changeopacity(const Arg *arg);
 static void checkotherwm(void);
@@ -337,6 +338,9 @@ static void mpdcmd_savepos(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
+static Client* prevtiled(Client *c);
+static void pushup(const Arg *arg);
+static void pushdown(const Arg *arg);
 static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
@@ -439,6 +443,99 @@ struct Pertag {
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
 /* function implementations */
+static void
+bstack(Monitor *m) {
+	int w, h, mh, mx, tx, ty, tw;
+	unsigned int i, n;
+	Client *c;
+
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if(n == 0)
+		return;
+	if(n > m->nmaster) {
+		mh = m->nmaster ? m->mfact * m->wh : 0;
+		tw = m->ww / (n - m->nmaster);
+		ty = m->wy + mh;
+	} 
+	else {
+		mh = m->wh;
+		tw = m->ww;
+		ty = m->wy;
+	}
+	for(i = mx = 0, tx = m->wx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+		if(i < m->nmaster) {
+			w = (m->ww - mx) / (MIN(n, m->nmaster) - i);
+			resize(c, m->wx + mx, m->wy, w - (2 * c->bw), mh - (2 * c->bw), False);
+			mx += WIDTH(c);
+		} 
+		else {
+			h = m->wh - mh;
+			resize(c, tx, ty, tw - (2 * c->bw), h - (2 * c->bw), False);
+			if(tw != m->ww)
+				tx += WIDTH(c);
+		}
+	}
+}
+
+static Client *
+prevtiled(Client *c) {
+	Client *p, *r;
+
+	for(p = selmon->clients, r = NULL; p && p != c; p = p->next)
+		if(!p->isfloating && ISVISIBLE(p))
+			r = p;
+	return r;
+}
+
+static void
+pushup(const Arg *arg) {
+	Client *sel = selmon->sel;
+	Client *c;
+
+	if(!sel || sel->isfloating)
+		return;
+	if((c = prevtiled(sel))) {
+		/* attach before c */
+		detach(sel);
+		sel->next = c;
+		if(selmon->clients == c)
+			selmon->clients = sel;
+		else {
+			for(c = selmon->clients; c->next != sel->next; c = c->next);
+			c->next = sel;
+		}
+	} else {
+		/* move to the end */
+		for(c = sel; c->next; c = c->next);
+		detach(sel);
+		sel->next = NULL;
+		c->next = sel;
+	}
+	focus(sel);
+	arrange(selmon);
+}
+
+static void
+pushdown(const Arg *arg) {
+	Client *sel = selmon->sel;
+	Client *c;
+
+	if(!sel || sel->isfloating)
+		return;
+	if((c = nexttiled(sel->next))) {
+		/* attach after c */
+		detach(sel);
+		sel->next = c->next;
+		c->next = sel;
+	} else {
+		/* move to the front */
+		detach(sel);
+		attach(sel);
+	}
+	focus(sel);
+	arrange(selmon);
+}
+
 void
 applyrules(Client *c) {
 	const char *class, *instance;

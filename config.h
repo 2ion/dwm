@@ -4,10 +4,6 @@
 #define CPU_LOWER "825Mhz"
 #define CPU_UPPER "1.65Ghz"
 #endif
-
-#include "push.c"
-#include "bstack.c"
-
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
