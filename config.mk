@@ -21,7 +21,7 @@ LIBS = -L/usr/lib -lc -lrt -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs 
 # flags
 CPPFLAGS = -march=native -pipe -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
 #CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-CFLAGS = -std=gnu99 -Wall -O3 ${INCS} ${CPPFLAGS}
+CFLAGS = -std=gnu99 -Wall -O2 ${INCS} ${CPPFLAGS}
 #LDFLAGS = -g ${LIBS}
 LDFLAGS = -s ${LIBS}
 

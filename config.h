@@ -56,22 +56,23 @@ static int voldelta                 = 4;
 static const Bool resizehints       = False;
 static const Layout layouts[]       = {
     { "[+]", monocle   },
-    { "[]=", tile      },    
+    { ">>=", tile      },    
     { "TTT", bstack    },
     { "><>", NULL      },
-    { "[O]", deck      }};
+    { ">>-", deck      }};
 static const const Rule rules[]           = {
 	/* class                    instance    title       tags mask     isfloating   monitor  opacity */
-	{ "Gimp",                   NULL,       NULL,       1,            True,        -1,      1.0 },
-	{ "Firefox",                NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
+	  { "Gimp",                   NULL,       NULL,       1,            True,        -1,      1.0 },
+	  { "Firefox",                NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
     { "Iceweasel",              NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
+    { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
     { "MPlayer",                NULL,       NULL,       1,            True,        -1,      1.0 },
     { "mplayer2",               NULL,       NULL,       1,            True,        -1,      1.0 },
     { "mpv",                    NULL,       NULL,       1,            True,        -1,      1.0 },
-    { "Xchat",                  NULL,       NULL,       1 << 6,       False,       -1,      1.0 },
     { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1,      1.0 },
-    { "URxvt",                  NULL,       NULL,       1 << 0,       False,       -1,      0.9 },
-    { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1,      1.0 }
+    { "URxvt",                  NULL,       NULL,       1 << 0,       False,       -1,      1.0 },
+    { "Okular",                 NULL,       NULL,       1 << 4,       False,       -1,      1.0 },
+    { "MuPDF",                  NULL,       NULL,       1 << 4,       False,       -1,      1.0 }
 };
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
