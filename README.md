@@ -10,7 +10,7 @@ Documentation on the MPD patch can be found further down in this file.
 
 The code is based on suckless.org's DWM 6.0 and some patches (see below).
 
-And here is how it looks like (of course, the cool stuff is under the
+And here is what it looks like (of course, the cool stuff is under the
 hood):
 
 ![Screenshot](/screenshot.png)
