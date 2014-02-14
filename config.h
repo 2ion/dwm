@@ -35,7 +35,7 @@
 #define MUTECYAN "#21917D"
 #define CRYCYAN "#17C3A5"
 
-static const char font[]            = "Ubuntu Mono 9";
+static const char font[]            = "Inconsolata 9";
 static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-17-*-*-*-*-*-*-*";
 static const char normbordercolor[] = GREY_33;
 static const char selbordercolor[]  = ORANGE;
@@ -46,7 +46,17 @@ static const char selfgcolor[]      = "#ededed";
 static const unsigned int borderpx  = 1;        
 static const unsigned int snap      = 5;       
 static const Bool showbar           = False;     
-static const Bool topbar            = False; 
+static const Bool topbar            = True; 
+enum {
+  TagTerm   = 0,
+  TagWeb    = 1,
+  TagDic    = 2,
+  TagPdf    = 3,
+  TagMisc   = 4,
+  TagStash  = 5,
+  TagIota   = 6,
+  TagKappa  = 7,
+  TagLambda = 8};
 static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
@@ -60,19 +70,19 @@ static const Layout layouts[]       = {
     { "TTT", bstack    },
     { "><>", NULL      },
     { ">>-", deck      }};
-static const const Rule rules[]           = {
-	/* class                    instance    title       tags mask     isfloating   monitor  opacity */
-	  { "Gimp",                   NULL,       NULL,       1,            True,        -1,      1.0 },
-	  { "Firefox",                NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
-    { "Iceweasel",              NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
-    { "Chromium",               NULL,       NULL,       1 << 1,       False,       -1,      1.0 },
-    { "MPlayer",                NULL,       NULL,       1,            True,        -1,      1.0 },
-    { "mplayer2",               NULL,       NULL,       1,            True,        -1,      1.0 },
-    { "mpv",                    NULL,       NULL,       1,            True,        -1,      1.0 },
-    { "Gjiten",                 NULL,       NULL,       1 << 2,       False,       -1,      1.0 },
-    { "URxvt",                  NULL,       NULL,       1 << 0,       False,       -1,      1.0 },
-    { "Okular",                 NULL,       NULL,       1 << 4,       False,       -1,      1.0 },
-    { "MuPDF",                  NULL,       NULL,       1 << 4,       False,       -1,      1.0 }
+static const const Rule rules[] = {
+	/* class                      instance    title       tags mask          isfloating   monitor  opacity */
+	  { "Gimp",                   NULL,       NULL,       1 << TagTerm,      True,        -1,      1.0 },
+	  { "Firefox",                NULL,       NULL,       1 << TagWeb,       False,       -1,      1.0 },
+    { "Iceweasel",              NULL,       NULL,       1 << TagWeb,       False,       -1,      1.0 },
+    { "Chromium",               NULL,       NULL,       1 << TagWeb,       False,       -1,      1.0 },
+    { "MPlayer",                NULL,       NULL,       1 << TagTerm,      True,        -1,      1.0 },
+    { "mplayer2",               NULL,       NULL,       1 << TagTerm,      True,        -1,      1.0 },
+    { "mpv",                    NULL,       NULL,       1 << TagTerm,      True,        -1,      1.0 },
+    { "Gjiten",                 NULL,       NULL,       1 << TagDic,       False,       -1,      1.0 },
+    { "URxvt",                  NULL,       NULL,       1 << TagTerm,      False,       -1,      1.0 },
+    { "Okular",                 NULL,       NULL,       1 << TagPdf,       False,       -1,      1.0 },
+    { "MuPDF",                  NULL,       NULL,       1 << TagPdf,       False,       -1,      1.0 }
 };
 
 static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };

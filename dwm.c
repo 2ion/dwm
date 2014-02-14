@@ -397,7 +397,6 @@ static void tagcycle(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
-//static char stext[STEXTSIZE];
 static const char stext[] = VERSION;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
@@ -1824,7 +1823,7 @@ setup(void) {
 	initfont(font);
 	sw = DisplayWidth(dpy, screen);
 	sh = DisplayHeight(dpy, screen);
-	bh = dc.h = dc.font.height + 2;
+	bh = dc.h = dc.font.height + 3;
 	updategeom();
 	/* init atoms */
 	wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
