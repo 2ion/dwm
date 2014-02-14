@@ -11,7 +11,7 @@
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 #define ACTION(action) DCMD("/home/joj/.actions.d/" action)
-#define DCMD(cmd) { cmd, \
+#define DCMD(cmd) { cmd, "-b", \
     "-fn", dmenufont, \
     "-nb", normbgcolor, \
     "-nf", normfgcolor, \

@@ -10,6 +10,11 @@ Documentation on the MPD patch can be found further down in this file.
 
 The code is based on suckless.org's DWM 6.0 and some patches (see below).
 
+And here is how it looks like (of course, the cool stuff is under the
+hood):
+
+![Screenshot](/screenshot.png)
+
 PATCHES & MODIFICATIONS
 =======================
 
@@ -63,7 +68,7 @@ The MPD client extension provides the following bindable callbacks:
     void mpdcmd_playpos(const Arg *arg);
     void mpdcmd_savepos(const Arg *arg);
 
-mpdcmd(const Arg *arg)
+mpdcmd(const Arg \*arg)
 ----------------------
 
 Control MPD player state and volume.
@@ -106,8 +111,8 @@ constants, which are defined as an enum type in dwm.c:
     MpdUpdate
         Execute a full database update.
 
-mpdcmd_loadpos(const Arg *arg) / mpdcmd_savepos(const Arg *arg)
----------------------------------------------------------------
+mpdcmd_loadpos(const Arg \*arg) / mpdcmd_savepos(const Arg \*arg)
+----------------------------------------------------------------
 
 Provides 10 registers to bookmark/restore song and playing position.
 
@@ -142,7 +147,7 @@ default to 1.0, though.
 
 The default opacity for clients not matching any rule is = 1.0.
 
-changeopacity(const Arg *arg)
+changeopacity(const Arg \*arg)
 ----------------------------
 
 This callback can be used in keybindings. arg needs to have its float
@@ -159,7 +164,7 @@ opaque). Example configuration snippet:
 
     *snip*
 
-setopacity(const Arg *arg)
+setopacity(const Arg \*arg)
 --------------------------
 
 Like changeopacity(), but sets the opacity of the focus client to a fix
