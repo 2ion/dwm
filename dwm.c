@@ -423,13 +423,6 @@ static Window root;
 static MpdConnection *mpdc = NULL;
 static int unmute2vol = 0;
 
-timer_t mpdcmd_us_timerid;
-struct sigevent mpdcmd_us_se;
-struct sigaction mpdcmd_us_sa;
-struct itimerspec mpdcmd_us_its = {
-    .it_value       = { .tv_sec = 1, .tv_nsec = 0 },
-    .it_interval    = { .tv_sec = 1, .tv_nsec = 0 }};
-
 /* configuration, allows nested code to access above variables */
 #include "config.h"
 
@@ -1829,8 +1822,7 @@ setup(void) {
 
 	/* init bar */
 	updatebars();
-   // mpdcmd_install_timer();
-    /* init mpdcmd functionality */
+  /* init mpdcmd functionality */
     mpdcmd_init_registers();
 	/* EWMH support per view */
 	XChangeProperty(dpy, root, netatom[NetSupported], XA_ATOM, 32,
