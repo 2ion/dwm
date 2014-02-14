@@ -981,17 +981,7 @@ drawbar(Monitor *m) {
 	drawtext(m->ltsymbol, dc.norm, False);
 	dc.x += dc.w;
 	x = dc.x;
-	if(m == selmon) { /* status is only drawn on selected monitor */
-		dc.w = TEXTW(stext);
-		dc.x = m->ww - dc.w;
-		if(dc.x < x) {
-			dc.x = x;
-			dc.w = m->ww - x;
-		}
-		drawtext(stext, dc.sel, False);
-	}
-	else
-		dc.x = m->ww;
+  dc.x = m->ww;
 	if((dc.w = dc.x - x) > bh) {
 		dc.x = x;
 		if(m->sel) {

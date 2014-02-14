@@ -30,20 +30,24 @@
 #define SKYBLUE "#3262AC"
 #define ORANGE "#632A10"
 #define SUSEGREEN "#97CD56"
+#define SMARTBLUE "#33485D"
+#define SMARTGREY "#5d5d5d"
+#define MUTECYAN "#21917D"
+#define CRYCYAN "#17C3A5"
 
 static const char font[]            = "Ubuntu Mono 9";
-static const char dmenufont[]       = "-misc-fixed-medium-r-normal-*-18-*-*-*-*-*-iso10646-1";
+static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-17-*-*-*-*-*-*-*";
 static const char normbordercolor[] = GREY_33;
-static const char normbgcolor[]     = GREY_10;
-static const char normfgcolor[]     = GREY_66;
 static const char selbordercolor[]  = ORANGE;
-static const char selbgcolor[]      = GREY_10;
-static const char selfgcolor[]      = SUSEGREEN;
+static const char normbgcolor[]     = SMARTGREY;
+static const char normfgcolor[]     = "#ededed";
+static const char selbgcolor[]      = SMARTBLUE;
+static const char selfgcolor[]      = "#ededed";
 static const unsigned int borderpx  = 1;        
-static const unsigned int snap      = 10;       
+static const unsigned int snap      = 5;       
 static const Bool showbar           = False;     
 static const Bool topbar            = False; 
-static const char *tags[]           = { "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" };
+static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
 static const int cfg_mpdcmd_retries = 4;
