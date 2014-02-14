@@ -145,7 +145,6 @@
 #define HEIGHT(X)                   ((X)->h + 2 * (X)->bw)
 #define TAGMASK                     ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                    (textnw(X, strlen(X)) + dc.font.height)
-#define STEXTSIZE                   512
 #define LERROR(status, errnum, ...) error_at_line((status), (errnum), \
         (__func__), (__LINE__), __VA_ARGS__)
 #define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) { \
@@ -161,7 +160,7 @@ enum { NetSupported, NetWMName, NetWMState,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetLast };                                        /* EWMH atoms */
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast };                   /* default atoms */
-enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
+enum { ClkTagBar, ClkLtSymbol, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast };                                     /* clicks */
 
  /* libmpdclient patch */
@@ -333,11 +332,8 @@ static int mpdcmd_connect(void);
 static void mpdcmd_init_registers(void);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
-//static void mpdcmd_install_timer(void);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_savepos(const Arg *arg);
-//static void mpdcmd_sigarlm_handler(int sig);
-//static void updatempdstatus(void);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -380,7 +376,6 @@ static void updatenumlockmask(void);
 static void updateopacity(Client *c);
 static void setopacity(const Arg *arg);
 static void updatesizehints(Client *c);
-static void updatestatus(void);
 static void updatewindowtype(Client *c);
 static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
@@ -397,7 +392,6 @@ static void tagcycle(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
-static const char stext[] = VERSION;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
@@ -674,8 +668,6 @@ buttonpress(XEvent *e) {
 		}
 		else if(ev->x < x + blw)
 			click = ClkLtSymbol;
-		else if(ev->x > selmon->ww - TEXTW(stext))
-			click = ClkStatusText;
 		else
 			click = ClkWinTitle;
 	}
@@ -1497,9 +1489,7 @@ propertynotify(XEvent *e) {
 	Window trans;
 	XPropertyEvent *ev = &e->xproperty;
 
-	if((ev->window == root) && (ev->atom == XA_WM_NAME))
-		updatestatus();
-	else if(ev->state == PropertyDelete)
+	if(ev->state == PropertyDelete)
 		return; /* ignore */
 	else if((c = wintoclient(ev->window))) {
 		switch(ev->atom) {
@@ -1648,27 +1638,6 @@ run(void) {
 		if(handler[ev.type])
 			handler[ev.type](&ev);
     }
-        /*
-        if((time(NULL)-us_clock0) >= 1) {
-            updatestatus();
-            us_clock0 = time(NULL);
-        }
-        */
-//    }
-    /*
-    while(running) {
-        FD_ZERO(&ums_fds);
-        FD_SET(ums_x11_fd, &ums_fds);
-        ums_interval.tv_usec = 500;
-        ums_interval.tv_sec = 0;
-        if(select(ums_x11_fd+1, &ums_fds, NULL, NULL, &ums_interval))
-            while(!XNextEvent(dpy, &ev))
-                if(handler[ev.type])
-                    handler[ev.type](&ev);
-        else
-            updatestatus();
-    }
-    */
 }
 
 void
@@ -1860,7 +1829,6 @@ setup(void) {
 
 	/* init bar */
 	updatebars();
-	updatestatus();
    // mpdcmd_install_timer();
     /* init mpdcmd functionality */
     mpdcmd_init_registers();
@@ -2300,11 +2268,6 @@ updatetitle(Client *c) {
 		strcpy(c->name, broken);
 }
 
-void
-updatestatus(void) {
-//    updatempdstatus();
-	drawbar(selmon);
-}
 
 void
 updatewindowtype(Client *c) {
@@ -2652,111 +2615,6 @@ mpdcmd(const Arg *arg) {
         break;
   }
 }
-
-/*
-
-void
-updatempdstatus(void) {
-    char statustext[STEXTSIZE];
-    struct mpd_status *s = NULL;
-    struct mpd_song *so = NULL;
-    int s_volume,
-        s_flagmask,
-        s_queuelength,
-        s_songpos,
-        s_state,
-        s_songlen,
-        s_songtime;
-    int s_time_r, s_time_min, s_time_sec;
-    const char *artist, *title;
-
-    if(mpdcmd_connect() != 0)
-        return;
-
-    s = mpd_run_status(mpdc);
-    if(s == NULL)
-        return;
-
-    // retrieve status information
-
-    if((s_state = mpd_status_get_state(s)) == MPD_STATE_STOP ||
-        (so = mpd_run_current_song(mpdc)) == NULL)
-        goto EXIT;
-
-    s_volume = mpd_status_get_volume(s);
-    s_queuelength = mpd_status_get_queue_length(s);
-    s_songpos = mpd_status_get_song_pos(s);
-    s_songlen = mpd_status_get_total_time(s);
-    s_songtime = mpd_status_get_elapsed_time(s);
-    s_time_r = s_songlen - s_songtime;
-    s_time_sec = s_time_r % 60;
-    s_time_min = (s_time_r - s_time_sec) / 60;
-    if(mpd_status_get_consume(s) == 1)
-        s_flagmask |= MpdFlag_Consume;
-    if(mpd_status_get_single(s) == 1)
-        s_flagmask |= MpdFlag_Single;
-    if(mpd_status_get_random(s) == 1)
-        s_flagmask |= MpdFlag_Random;
-    if(mpd_status_get_repeat(s) == 1)
-        s_flagmask |= MpdFlag_Repeat;
-    artist = mpd_song_get_tag(so, MPD_TAG_ARTIST, 0);
-    title = mpd_song_get_tag(so, MPD_TAG_TITLE, 0);
-
-
-    //%artist - %title (-%total-%elapsed) [$flags] [#%pos/%queuelength]
-
-    snprintf(statustext, STEXTSIZE,
-            "%s - %s  (-%d:%02d)",
-            artist != NULL ? artist : "名無し",
-            title != NULL ? title : "曲名無し",
-            s_time_min,
-            s_time_sec);
-    strncpy(stext, statustext, STEXTSIZE);
-
-EXIT:;
-    mpd_song_free(so);
-    mpd_status_free(s);
-    return;
-}
-
-
-void
-mpdcmd_sigarlm_handler(int sig) {
-    if(sig == SIGUSR1) {
-        updatempdstatus();
-    }
-}
-
-
-void
-mpdcmd_install_timer(void) {
-    // create the signal handler
-    mpdcmd_us_sa.sa_flags = 0;
-    mpdcmd_us_sa.sa_handler = mpdcmd_sigarlm_handler;
-    sigemptyset(&mpdcmd_us_sa.sa_mask);
-    if(sigaction(SIGUSR1, &mpdcmd_us_sa, NULL) == -1) {
-        perror("dwm:error:mpdcmd_install_timer:sigaction()");
-        return;
-    }
-
-    // create the timer
-    mpdcmd_us_se.sigev_notify = SIGEV_SIGNAL;
-    mpdcmd_us_se.sigev_signo = SIGUSR1;
-    mpdcmd_us_se.sigev_value.sival_ptr = mpdcmd_us_timerid;
-    if(timer_create(CLOCK_REALTIME, &mpdcmd_us_se, &mpdcmd_us_timerid) == -1) {
-        perror("dwm:error:mpdcmd_install_timer:timer_create()");
-        return;
-    }
-
-    // start the timer
-    if(timer_settime(mpdcmd_us_timerid, 0, &mpdcmd_us_its, NULL) == -1) {
-        perror("dwm:error:mpdcmd_install_timer:timer_settime()");
-        return;
-    }
-}
-
-*/
-
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
