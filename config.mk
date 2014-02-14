@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 十六
+VERSION = 6.17
 
 # Customize below to fit your system
 
