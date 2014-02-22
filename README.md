@@ -54,6 +54,27 @@ access bookmarks. The state is lost when DWM exits. There are
 
 * wmii-like actions
 
+## Extra dependencies
+
+Due to the extensions, we need the following extra libraries:
+
+* libxft
+* libpango
+* libpangoxft
+* libmpdclient
+
+## Building and installing
+
+The Makefile uses pkg-config to obtain CFLAGS and LDFLAGS. If you don't
+have pkg-config insalled, you need to adjust the Make config. Then,
+
+```sh
+make
+make install PREFIX=$PREFIX
+```
+
+builds and installs dwm into $PREFIX.
+
 ## MPD client extensions
 
 The MPD client extension provides the following bindable callbacks:

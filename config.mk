@@ -15,7 +15,7 @@ XINERAMALIBS = -L${X11LIB} -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
 # includes and libs
-INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft pango pangoxft lua5.2`
+INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft pango pangoxft`
 LIBS = -L/usr/lib -lc -lrt -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft pango pangoxft libmpdclient`
 
 # flags
