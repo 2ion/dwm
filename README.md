@@ -24,6 +24,7 @@ hood):
 * pushstack
 * cycletag
 * bstack
+* deck layout
 
 ### PERSONAL MODS
 
