@@ -29,9 +29,7 @@ hood):
 
 * You can define filter rules to automatically set the opacity of
 clients (see the section further down)
-
 * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
-
 * mpdcmd() callback to directly control mpd. Linked against
 libmpdclient. Provides the Following actions:
   * MpdRaiseVolume
@@ -47,11 +45,8 @@ libmpdclient. Provides the Following actions:
 * mpdcmd\_loadpos() and mpdcmd\_savepos() callbacks to create and
 access bookmarks. The state is lost when DWM exits. There are
 10 registers 0-9 available for storing up to 10 bookmarks.
-
 * DCMD() macro for convenient dmenu invocation
-
 * Compile with -O2 instead of -Os
-
 * wmii-like actions
 
 ## Extra dependencies
