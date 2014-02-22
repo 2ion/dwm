@@ -1,5 +1,4 @@
-README
-======
+# README
 
 This repository contains a patched and further modified version of the
 DWM window manager I use, most notably it is linked against libmpdclient
@@ -15,52 +14,47 @@ hood):
 
 ![Screenshot](/screenshot.png)
 
-PATCHES & MODIFICATIONS
-=======================
+# PATCHES & MODIFICATIONS
 
-'OFFICIAL' PATCHES
-------------------
+## 'OFFICIAL' PATCHES
     
-    * pango
-    * pertag
-    * savefloats
-    * pushstack
-    * cycletag
-    * bstack
+* pango
+* pertag
+* savefloats
+* pushstack
+* cycletag
+* bstack
 
-PERSONAL MODS
--------------
+## PERSONAL MODS
 
-    * You can define filter rules to automatically set the opacity of
-      clients (see the section further down)
+* You can define filter rules to automatically set the opacity of
+clients (see the section further down)
 
-    * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
+* Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
 
-    * mpdcmd() callback to directly control mpd. Linked against
-      libmpdclient. Provides the Following actions:
-        * MpdRaiseVolume
-        * MpdLowerVolume
-        * MpdMuteVolume
-        * MpdToggle (play/pause)
-        * MpdPrev
-        * MpdNext
-        * MpdToggleRepeat
-        * MpdToggleConsume
-        * MpdToggleRandom
-        * MpdToggleSingle
+* mpdcmd() callback to directly control mpd. Linked against
+libmpdclient. Provides the Following actions:
+  * MpdRaiseVolume
+  * MpdLowerVolume
+  * MpdMuteVolume
+  * MpdToggle (play/pause)
+  * MpdPrev
+  * MpdNext
+  * MpdToggleRepeat
+  * MpdToggleConsume
+  * MpdToggleRandom
+  * MpdToggleSingle
+* mpdcmd\_loadpos() and mpdcmd\_savepos() callbacks to create and
+access bookmarks. The state is lost when DWM exits. There are
+10 registers 0-9 available for storing up to 10 bookmarks.
 
-    * mpdcmd_loadpos() and mpdcmd_savepos() callbacks to create and
-      access bookmarks. The state is lost when DWM exits. There are
-      10 registers 0-9 available for storing up to 10 bookmarks.
+* DCMD() macro for convenient dmenu invocation
 
-    * DCMD() macro for convenient dmenu invocation
+* Compile with -O2 instead of -Os
 
-    * Compile with -O2 instead of -Os
+* wmii-like actions
 
-    * wmii-like actions
-
-DOCUMENTATION: MPD CLIENT EXTENSIONS
-====================================
+# MPD client extensions
 
 The MPD client extension provides the following bindable callbacks:
 
@@ -70,8 +64,7 @@ The MPD client extension provides the following bindable callbacks:
     void mpdcmd_savepos(const Arg *arg);
 ```
 
-mpdcmd(const Arg \*arg)
-----------------------
+## mpdcmd(const Arg \*arg)
 
 Control MPD player state and volume.
 
@@ -113,23 +106,21 @@ constants, which are defined as an enum type in dwm.c:
     MpdUpdate
         Execute a full database update.
 
-mpdcmd_loadpos(const Arg \*arg) / mpdcmd_savepos(const Arg \*arg)
-----------------------------------------------------------------
+## mpdcmd\_loadpos(const Arg \*arg) / mpdcmd\_savepos(const Arg \*arg)
 
 Provides 10 registers to bookmark/restore song and playing position.
 
 args needs to have its member i set to an integer 0 through 9. A call to
-mpdcmd_savepos({.i = n}) saves the playlist index and play position of
+mpdcmd\_savepos({.i = n}) saves the playlist index and play position of
 the currently playing song (includes being paused) into register n. A
-corresponding call to mpdcmd_loadpos({.i = n}) plays the song with the
+corresponding call to mpdcmd\_loadpos({.i = n}) plays the song with the
 previously saved playlist index from the saved playing position.
 
 The current playlist will also be saved and restored in order to ensure
 that the bookmark is being played correctly even if the underlying
 playlist has changed in the meantime.
 
-Setting the window opacity / transparency
-=========================================
+# Setting the window opacity / transparency
 
 The client filter rules have been extended and now allow setting the
 opacity of clients matching a certain rule. The filter table now 
@@ -151,8 +142,7 @@ default to 1.0, though.
 
 The default opacity for clients not matching any rule is = 1.0.
 
-changeopacity(const Arg \*arg)
-----------------------------
+## changeopacity(const Arg \*arg)
 
 This callback can be used in keybindings. arg needs to have its float
 member set to a positive or negative number; when called, the value will
@@ -167,8 +157,7 @@ opaque). Example configuration snippet:
     { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
 ```
 
-setopacity(const Arg \*arg)
---------------------------
+## setopacity(const Arg \*arg)
 
 Like changeopacity(), but sets the opacity of the focus client to a fix
 value.
