@@ -1,4 +1,4 @@
-# README
+## README
 
 This repository contains a patched and further modified version of the
 DWM window manager I use, most notably it is linked against libmpdclient
@@ -14,9 +14,9 @@ hood):
 
 ![Screenshot](/screenshot.png)
 
-# PATCHES & MODIFICATIONS
+## PATCHES & MODIFICATIONS
 
-## 'OFFICIAL' PATCHES
+### 'OFFICIAL' PATCHES
     
 * pango
 * pertag
@@ -25,7 +25,7 @@ hood):
 * cycletag
 * bstack
 
-## PERSONAL MODS
+### PERSONAL MODS
 
 * You can define filter rules to automatically set the opacity of
 clients (see the section further down)
@@ -54,7 +54,7 @@ access bookmarks. The state is lost when DWM exits. There are
 
 * wmii-like actions
 
-# MPD client extensions
+## MPD client extensions
 
 The MPD client extension provides the following bindable callbacks:
 
@@ -64,7 +64,7 @@ The MPD client extension provides the following bindable callbacks:
     void mpdcmd_savepos(const Arg *arg);
 ```
 
-## mpdcmd(const Arg \*arg)
+### mpdcmd(const Arg \*arg)
 
 Control MPD player state and volume.
 
@@ -106,7 +106,7 @@ constants, which are defined as an enum type in dwm.c:
     MpdUpdate
         Execute a full database update.
 
-## mpdcmd\_loadpos(const Arg \*arg) / mpdcmd\_savepos(const Arg \*arg)
+### mpdcmd\_loadpos(const Arg \*arg) / mpdcmd\_savepos(const Arg \*arg)
 
 Provides 10 registers to bookmark/restore song and playing position.
 
@@ -120,7 +120,7 @@ The current playlist will also be saved and restored in order to ensure
 that the bookmark is being played correctly even if the underlying
 playlist has changed in the meantime.
 
-# Setting the window opacity / transparency
+## Setting the window opacity / transparency
 
 The client filter rules have been extended and now allow setting the
 opacity of clients matching a certain rule. The filter table now 
@@ -142,7 +142,7 @@ default to 1.0, though.
 
 The default opacity for clients not matching any rule is = 1.0.
 
-## changeopacity(const Arg \*arg)
+### changeopacity(const Arg \*arg)
 
 This callback can be used in keybindings. arg needs to have its float
 member set to a positive or negative number; when called, the value will
@@ -157,7 +157,7 @@ opaque). Example configuration snippet:
     { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
 ```
 
-## setopacity(const Arg \*arg)
+### setopacity(const Arg \*arg)
 
 Like changeopacity(), but sets the opacity of the focus client to a fix
 value.
