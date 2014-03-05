@@ -2534,8 +2534,8 @@ tagcycle(const Arg *arg) {
 
 void
 mpdcmd_toggle(struct mpd_connection *c, 
-        bool (*statf)(const struct mpd_status*), bool (*setf)(struct mpd_connection*, bool) ) {
-    
+        bool (*statf)(const struct mpd_status*),
+        bool (*setf)(struct mpd_connection*, bool) ) {
     struct mpd_status *s;
     if((s = mpd_run_status(c)) == NULL)
         return;
@@ -2550,11 +2550,13 @@ mpdcmd_connect(void) {
     retries -= 1;
     if(mpdc == NULL)
       if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
-          LERROR(0,0, "connection attempt %d (of %d) failed", retries, cfg_mpdcmd_retries);
+          LERROR(0,0, "connection attempt %d (of %d) failed",
+              retries, cfg_mpdcmd_retries);
           continue;
       }
     if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-      LERROR(0,0, "mpd error: %s", mpd_connection_get_error_message(mpdc));
+      LERROR(0,0, "mpd error: %s",
+          mpd_connection_get_error_message(mpdc));
       mpd_connection_free(mpdc);
       mpdc = NULL;
       continue;

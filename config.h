@@ -31,7 +31,7 @@
 #define MUTECYAN "#21917D"
 #define CRYCYAN "#17C3A5"
 
-static const char font[]            = "Inconsolata 9";
+static const char font[]            = "Noto Sans 8";
 static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-17-*-*-*-*-*-*-*";
 static const char normbordercolor[] = GREY_33;
 static const char selbordercolor[]  = ORANGE;
