@@ -96,6 +96,7 @@
  * Homepage: https://github.com/2ion/dwm
  */
 
+#include <assert.h>
 #include <errno.h>
 #include <error.h>
 #include <locale.h>
@@ -126,6 +127,7 @@
 #include <pango/pangoxft.h>
 #include <pango/pango-font.h>
 #include <mpd/client.h>
+#include <libnotify/notify.h>
 
 /* macros */
 #define BUTTONMASK                  (ButtonPressMask|ButtonReleaseMask)
@@ -276,7 +278,12 @@ typedef struct {
 
 int MpdcmdRegister[10][4];
 char MpdCmdRegisterPlaylists[10][256];
+int MpdcmdCanNotify = 0;
 typedef struct mpd_connection MpdConnection;
+typedef struct {
+  char *title;
+  char *txt;
+} MpdcmdNotification;
 
 /* function declarations */
 static void applyrules(Client *c);
@@ -330,7 +337,13 @@ static void movemouse(const Arg *arg);
 static void mpdcmd(const Arg *arg);
 static void mpdcmd_cleanup(void);
 static int mpdcmd_connect(void);
+static void mpdcmd_init(void);
 static void mpdcmd_init_registers(void);
+static void mpdcmd_init_notify(void);
+static void mpdcmd_notify(const MpdcmdNotification*);
+static char* mpdcmd_notify_mkmsg(const char *msg, va_list argp);
+static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *fmt, ...);
+static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *fmt, ...);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
@@ -393,6 +406,7 @@ static void zoom(const Arg *arg);
 static void cycle(const Arg *arg);
 static int shifttag(int dist);
 static void tagcycle(const Arg *arg);
+
 
 /* variables */
 static const char broken[] = "broken";
@@ -802,7 +816,7 @@ cleanup(void) {
 		cleanupmon(mons);
 	XSync(dpy, False);
 	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
-    mpdcmd_cleanup();
+  mpdcmd_cleanup();
 }
 
 void
@@ -1920,7 +1934,7 @@ setup(void) {
 	/* init bar */
 	updatebars();
   /* init mpdcmd functionality */
-    mpdcmd_init_registers();
+  mpdcmd_init();
 	/* EWMH support per view */
 	XChangeProperty(dpy, root, netatom[NetSupported], XA_ATOM, 32,
 			PropModeReplace, (unsigned char *) netatom, NetLast);
@@ -2588,6 +2602,8 @@ mpdcmd_cleanup(void)
             mpd_run_rm(mpdc, MpdCmdRegisterPlaylists[i]);
     if(mpdc != NULL)
         mpd_connection_free(mpdc);
+    if(MpdcmdCanNotify == 1)
+      notify_uninit();
 }
 
 void
@@ -2706,6 +2722,67 @@ mpdcmd(const Arg *arg) {
         break;
   }
 }
+
+void
+mpdcmd_init(void) {
+  mpdcmd_init_registers();
+  mpdcmd_init_notify();
+}
+
+void
+mpdcmd_init_notify(void) {
+  if(notify_init("dwm-mpdclient"))
+    MpdcmdCanNotify = 1;
+}
+
+char* mpdcmd_notify_mkmsg(const char *msg, va_list argp) {
+  assert(msg != NULL);
+  char *txt = NULL;
+  size_t txtlen = vsnprintf(txt, 0, msg, argp);
+  txt = malloc(sizeof(char) * txtlen);
+  assert(txt != NULL);
+  vsnprintf(txt, txtlen, msg, argp);
+  return txt;
+}
+
+void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *fmt, ...) {
+  assert(n != NULL);
+  assert(fmt != NULL);
+  va_list argp;
+  char *msg = NULL;
+  va_start(argp, fmt);
+  msg = mpdcmd_notify_mkmsg(fmt, argp);
+  va_end(argp);
+  assert(msg != NULL);
+  n->title = msg;
+}
+
+void mpdcmd_notify_settext(MpdcmdNotification *n, const char* fmt, ...) {
+  assert(n != NULL);
+  assert(fmt != NULL);
+  va_list argp;
+  char *msg = NULL;
+  va_start(argp, fmt);
+  msg = mpdcmd_notify_mkmsg(fmt, argp);
+  va_end(argp);
+  assert(msg != NULL);
+  n->txt = msg;
+}
+
+void mpdcmd_notify(const MpdcmdNotification *n) {
+  assert(n != NULL);
+  NotifyNotification *nn = NULL;
+  int  rc = cfg_mpdcmd_notify_retries;
+  GError *nerror;
+  // recover an eventually lost connection
+  while(MpdcmdCanNotify != 1 && --rc > 0)
+    mpdcmd_init_notify();
+  nn = notify_notification_new(n->title, n->txt, NULL);
+  assert(nn != NULL);
+  notify_notification_set_timeout(nn, cfg_mpdcmd_notify_timeout);
+  notify_notification_show(nn, &nerror);
+}
+
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
