@@ -342,8 +342,10 @@ static void mpdcmd_init(void);
 static void mpdcmd_init_registers(void);
 static void mpdcmd_init_notify(void);
 static void mpdcmd_notify(const MpdcmdNotification*);
-static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds);
-static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title);
+static void mpdcmd_notify_settext(MpdcmdNotification *n,
+    const char *album, int pos, int queuelen, int minutes, int seconds);
+static void mpdcmd_notify_settitle(MpdcmdNotification *n,
+    const char *artist, const char *title);
 static void mpdcmd_free_notification(MpdcmdNotification *n);
 static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_toggle_pause(void);
@@ -2797,23 +2799,25 @@ mpdcmd_init_notify(void) {
     MpdcmdCanNotify = 1;
 }
 
-void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title) {
+void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist,
+    const char *title) {
   assert(n != NULL);
   assert(artist != NULL);
   assert(title != NULL);
   char *msg = NULL;
-  const char *fmt = "%s - %s";
+  const char *fmt = "%s · %s";
   int msglen = snprintf(NULL, 0, fmt, artist, title) + 1;
   msg = malloc(sizeof(wchar_t)*(msglen));
   assert(msg != NULL);
-  snprintf(msg, msglen, "%s - %s", artist, title);
+  snprintf(msg, msglen, fmt, artist, title);
   n->title = msg;
 }
 
-void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds) {
+void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album,
+    int pos, int queuelen, int minutes, int seconds) {
   assert(n != NULL);
   assert(album != NULL);
-  const char *fmt = "%s - #%d/%d - %d/%02d";
+  const char *fmt = "%s · #%d/%d · %d:%02d";
   char *msg = NULL;
   int msglen = snprintf(NULL, 0, fmt, album, pos, queuelen, minutes,
       seconds) + 1;
