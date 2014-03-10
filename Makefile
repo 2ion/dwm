@@ -27,7 +27,6 @@ dwm: ${OBJ}
 clean:
 	@echo cleaning
 	@rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
-	$(MAKE) -C skippy clean
 
 dist: clean
 	@echo creating dist tarball
@@ -47,19 +46,11 @@ install: all
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	@sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
-	$(MAKE) -C skippy install
 
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/dwm
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/dwm.1
-
-submodules:
-	-git submodule init
-	-git submodule update
-
-skippy: submodules
-	$(MAKE) -C skippy
 
 .PHONY: all options clean dist install uninstall
