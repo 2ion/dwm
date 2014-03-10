@@ -106,6 +106,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -341,9 +342,8 @@ static void mpdcmd_init(void);
 static void mpdcmd_init_registers(void);
 static void mpdcmd_init_notify(void);
 static void mpdcmd_notify(const MpdcmdNotification*);
-static char* mpdcmd_notify_mkmsg(const char *msg, va_list argp);
-static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *fmt, ...);
-static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *fmt, ...);
+static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds);
+static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title);
 static void mpdcmd_free_notification(MpdcmdNotification *n);
 static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_toggle_pause(void);
@@ -2699,14 +2699,13 @@ void mpdcmd_prevnext(int which) {
       mpd_run_previous(mpdc);
       break;
   }
-  if(cfg_mpdcmd_notify_enable == 1)
+  if(cfg_mpdcmd_notify_enable == 1) {
     mpdcmd_prevnext_notify(which);
+  }
 }
 
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
-  const char *fmt_title = "%s - %s";
-  const char *fmt_txt = "%s · # %d/%d · %d:%02d";
   const char *song_title = NULL;
   const char *song_artist = NULL;
   const char *song_album = NULL;
@@ -2719,13 +2718,17 @@ void mpdcmd_prevnext_notify(int which) {
   struct mpd_status *s = NULL;
   struct mpd_song *so = NULL;
   // prepare notification
-  if((s = mpd_run_status(mpdc)) == NULL)
+  if((s = mpd_run_status(mpdc)) == NULL) {
       return;
+  }
   st = mpd_status_get_state(s);
-  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN)
+  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN) {
     goto cleanup;
-  if((so = mpd_recv_song(mpdc)) == NULL)
+  }
+  mpd_send_current_song(mpdc);
+  if((so = mpd_recv_song(mpdc)) == NULL) { 
     goto cleanup;
+  }
   song_title = mpd_song_get_tag((const struct mpd_song*)so,
       MPD_TAG_TITLE, 0);
   song_artist = mpd_song_get_tag((const struct mpd_song*)so,
@@ -2737,8 +2740,8 @@ void mpdcmd_prevnext_notify(int which) {
   song_totaltime = mpd_status_get_total_time(s);
   song_seconds = song_totaltime % 60;
   song_minutes = (song_totaltime - song_seconds) / 60;
-  mpdcmd_notify_settitle(&n, fmt_title, song_artist, song_title);
-  mpdcmd_notify_settext(&n, fmt_txt, song_album, song_pos, song_listlen,
+  mpdcmd_notify_settitle(&n, song_artist, song_title);
+  mpdcmd_notify_settext(&n, song_album, song_pos, song_listlen,
       song_minutes, song_seconds);
   mpdcmd_notify(&n);
   mpdcmd_free_notification(&n);
@@ -2794,54 +2797,46 @@ mpdcmd_init_notify(void) {
     MpdcmdCanNotify = 1;
 }
 
-char* mpdcmd_notify_mkmsg(const char *msg, va_list argp) {
-  assert(msg != NULL);
-  char *txt = NULL;
-  size_t txtlen = vsnprintf(txt, 0, msg, argp);
-  txt = malloc(sizeof(char) * txtlen);
-  assert(txt != NULL);
-  vsnprintf(txt, txtlen, msg, argp);
-  return txt;
-}
-
-void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *fmt, ...) {
+void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title) {
   assert(n != NULL);
-  assert(fmt != NULL);
-  va_list argp;
+  assert(artist != NULL);
+  assert(title != NULL);
   char *msg = NULL;
-  va_start(argp, fmt);
-  msg = mpdcmd_notify_mkmsg(fmt, argp);
-  va_end(argp);
+  const char *fmt = "%s - %s";
+  int msglen = snprintf(NULL, 0, fmt, artist, title) + 1;
+  msg = malloc(sizeof(wchar_t)*(msglen));
   assert(msg != NULL);
+  snprintf(msg, msglen, "%s - %s", artist, title);
   n->title = msg;
 }
 
-void mpdcmd_notify_settext(MpdcmdNotification *n, const char* fmt, ...) {
+void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds) {
   assert(n != NULL);
-  assert(fmt != NULL);
-  va_list argp;
+  assert(album != NULL);
+  const char *fmt = "%s - #%d/%d - %d/%02d";
   char *msg = NULL;
-  va_start(argp, fmt);
-  msg = mpdcmd_notify_mkmsg(fmt, argp);
-  va_end(argp);
+  int msglen = snprintf(NULL, 0, fmt, album, pos, queuelen, minutes,
+      seconds) + 1;
+  msg = malloc(sizeof(wchar_t)*(msglen));
   assert(msg != NULL);
+  snprintf(msg, msglen, fmt, album, pos, queuelen, minutes, seconds);
   n->txt = msg;
 }
 
 void mpdcmd_notify(const MpdcmdNotification *n) {
   assert(n != NULL);
   NotifyNotification *nn = NULL;
+  GError *er = NULL;
   int  rc = cfg_mpdcmd_notify_retries;
-  GError *nerror;
   // recover an eventually lost connection
   while(MpdcmdCanNotify != 1 && --rc > 0)
     mpdcmd_init_notify();
   nn = notify_notification_new(n->title, n->txt, NULL);
   assert(nn != NULL);
   notify_notification_set_timeout(nn, cfg_mpdcmd_notify_timeout);
-  notify_notification_show(nn, &nerror);
+  notify_notification_show(nn, &er); 
   //FIXME: is this method to free nn the right one?
-  free(nn);
+  // free(nn); <- THIS is NOT right. fucking retarded notification interface.
 }
 
 void mpdcmd_free_notification(MpdcmdNotification *n) {
