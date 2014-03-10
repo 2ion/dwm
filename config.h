@@ -57,6 +57,7 @@ static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "st
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
 static const int cfg_mpdcmd_retries = 4;
+static const int cfg_mpdcmd_notify_enable = 1;
 static const int cfg_mpdcmd_notify_retries = 2;
 static const int cfg_mpdcmd_notify_timeout = 5;
 static int voldelta                 = 4;

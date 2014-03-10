@@ -344,6 +344,8 @@ static void mpdcmd_notify(const MpdcmdNotification*);
 static char* mpdcmd_notify_mkmsg(const char *msg, va_list argp);
 static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *fmt, ...);
 static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *fmt, ...);
+static void mpdcmd_free_notification(MpdcmdNotification *n);
+static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
@@ -2613,7 +2615,6 @@ mpdcmd_savepos(const Arg *arg)
     enum mpd_state st;
     int reg = arg->i;
 
-
     if(reg < 0 || reg > 9)
         return;
     MPDCMD_BE_CONNECTED;
@@ -2689,6 +2690,62 @@ mpdcmd_toggle_pause(void) {
   mpd_status_free(s);
 }
 
+void mpdcmd_prevnext(int which) {
+  switch(which) {
+    case MpdNext:
+      mpd_run_next(mpdc);
+      break;
+    case MpdPrev:
+      mpd_run_previous(mpdc);
+      break;
+  }
+  if(cfg_mpdcmd_notify_enable == 1)
+    mpdcmd_prevnext_notify(which);
+}
+
+void mpdcmd_prevnext_notify(int which) {
+  MpdcmdNotification n;
+  const char *fmt_title = "%s - %s";
+  const char *fmt_txt = "%s · # %d/%d · %d:%02d";
+  const char *song_title = NULL;
+  const char *song_artist = NULL;
+  const char *song_album = NULL;
+  int song_pos = 0;
+  int song_listlen = 0;
+  int song_totaltime = 0;
+  int song_minutes = 0;
+  int song_seconds = 0;
+  enum mpd_state st;
+  struct mpd_status *s = NULL;
+  struct mpd_song *so = NULL;
+  // prepare notification
+  if((s = mpd_run_status(mpdc)) == NULL)
+      return;
+  st = mpd_status_get_state(s);
+  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN)
+    goto cleanup;
+  if((so = mpd_recv_song(mpdc)) == NULL)
+    goto cleanup;
+  song_title = mpd_song_get_tag((const struct mpd_song*)so,
+      MPD_TAG_TITLE, 0);
+  song_artist = mpd_song_get_tag((const struct mpd_song*)so,
+      MPD_TAG_ARTIST, 0);
+  song_album = mpd_song_get_tag((const struct mpd_song*)so,
+      MPD_TAG_ALBUM, 0);
+  song_pos = mpd_status_get_song_pos(s);
+  song_listlen = mpd_status_get_queue_length(s);
+  song_totaltime = mpd_status_get_total_time(s);
+  song_seconds = song_totaltime % 60;
+  song_minutes = (song_totaltime - song_seconds) / 60;
+  mpdcmd_notify_settitle(&n, fmt_title, song_artist, song_title);
+  mpdcmd_notify_settext(&n, fmt_txt, song_album, song_pos, song_listlen,
+      song_minutes, song_seconds);
+  mpdcmd_notify(&n);
+  mpdcmd_free_notification(&n);
+cleanup:
+  mpd_status_free(s);
+}
+
 void
 mpdcmd(const Arg *arg) {
   MPDCMD_BE_CONNECTED;
@@ -2697,10 +2754,10 @@ mpdcmd(const Arg *arg) {
         mpdcmd_toggle_pause();
         break;
     case MpdPrev:
-        mpd_run_previous(mpdc);
+        mpdcmd_prevnext(MpdPrev);
         break;
     case MpdNext:
-        mpd_run_next(mpdc);
+        mpdcmd_prevnext(MpdNext);
         break;
     case MpdRaiseVolume:
     case MpdLowerVolume:
@@ -2731,6 +2788,8 @@ mpdcmd_init(void) {
 
 void
 mpdcmd_init_notify(void) {
+  if(cfg_mpdcmd_notify_enable == 0)
+    return;
   if(notify_init("dwm-mpdclient"))
     MpdcmdCanNotify = 1;
 }
@@ -2781,6 +2840,14 @@ void mpdcmd_notify(const MpdcmdNotification *n) {
   assert(nn != NULL);
   notify_notification_set_timeout(nn, cfg_mpdcmd_notify_timeout);
   notify_notification_show(nn, &nerror);
+  //FIXME: is this method to free nn the right one?
+  free(nn);
+}
+
+void mpdcmd_free_notification(MpdcmdNotification *n) {
+  assert(n != NULL);
+  if(n->title != NULL) free(n->title);
+  if(n->txt != NULL) free(n->txt);
 }
 
 int
