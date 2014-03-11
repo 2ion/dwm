@@ -58,6 +58,7 @@ Due to the extensions, we need the following extra libraries:
 * libpango
 * libpangoxft
 * libmpdclient
+* libnotify
 The Makefile uses pkg-config to obtain CFLAGS and LDFLAGS. If you don't
 have pkg-config insalled, you need to adjust the Make config. Then,
 ```sh
