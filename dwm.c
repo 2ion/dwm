@@ -2720,17 +2720,14 @@ void mpdcmd_prevnext_notify(int which) {
   struct mpd_status *s = NULL;
   struct mpd_song *so = NULL;
   // prepare notification
-  if((s = mpd_run_status(mpdc)) == NULL) {
+  if((s = mpd_run_status(mpdc)) == NULL)
       return;
-  }
   st = mpd_status_get_state(s);
-  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN) {
+  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN)
     goto cleanup;
-  }
   mpd_send_current_song(mpdc);
-  if((so = mpd_recv_song(mpdc)) == NULL) { 
+  if((so = mpd_recv_song(mpdc)) == NULL)
     goto cleanup;
-  }
   song_title = mpd_song_get_tag((const struct mpd_song*)so,
       MPD_TAG_TITLE, 0);
   song_artist = mpd_song_get_tag((const struct mpd_song*)so,
@@ -2852,7 +2849,9 @@ void mpdcmd_free_notification(MpdcmdNotification *n) {
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
-		die("DWM〜"VERSION"\nBuilt by 2ion at <https://github.com/2ion/dwm>\nBased on dwm <http://dwm.suckless.org>\n");
+		die("dwm〜"VERSION"\n"
+        "Built by 2ion at <https://github.com/2ion/dwm>\n"
+        "Based on dwm <http://dwm.suckless.org>\n");
 	else if(argc != 1)
 		die("usage: dwm [-v]\n");
 	if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
@@ -2864,7 +2863,7 @@ main(int argc, char *argv[]) {
 	scan();
 	run();
 	cleanup();
-    XCloseDisplay(dpy);
+  XCloseDisplay(dpy);
 
 	return EXIT_SUCCESS;
 }
