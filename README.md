@@ -46,6 +46,7 @@ libmpdclient. Provides the Following actions:
 * mpdcmd\_loadpos() and mpdcmd\_savepos() callbacks to create and
 access bookmarks. The state is lost when DWM exits. There are
 10 registers 0-9 available for storing up to 10 bookmarks.
+* libnotify notifications triggered by mpdcmd() actions!
 * DCMD() macro for convenient dmenu invocation
 * Compile with -O2 instead of -Os
 * wmii-like actions
@@ -130,6 +131,75 @@ previously saved playlist index from the saved playing position.
 The current playlist will also be saved and restored in order to ensure
 that the bookmark is being played correctly even if the underlying
 playlist has changed in the meantime.
+
+### Notifications
+
+Notifications with information on the newly selected song are being
+displayed if notifications are enabled in config.h. Notifications are
+triggered on mpdcmd()'s MpdNext and MpdPrev actions. Naturally, dwm must
+have access to a running notification service via dbus. An example
+configuration for the lightweight dunst notification daemon can be found
+in /resources.
+
+In config.h, the following switches can be set:
+
+```C
+// set to 0 or 1 to disable/enable the libnotify codepath
+static const int cfg_mpdcmd_notify_enable  = 1;
+
+// times the libnotify code should try to re-initialize if
+// a connection attempt to the notification service failed
+static const int cfg_mpdcmd_notify_retries = 2;
+
+// seconds how long a single notification should be kept visible
+static const int cfg_mpdcmd_notify_timeout = 5;
+```
+
+Modifying the notification contents takes a little more effort because
+I decided to avoid allowing user templates in order to keep things
+simple. You have to re-implement the functions
+
+```C
+static void mpdcmd_prevnext_notify(int mpdaction);
+static void mpdcmd_notify_settext(MpdcmdNotification *n,
+    const char *album, int pos, int queuelen, int minutes, int seconds);
+static void mpdcmd_notify_settitle(MpdcmdNotification *n,
+    const char *artist, const char *title);
+```
+
+where MpdcmdNotification is a defined as
+
+```C
+typedef struct {
+  char *title;
+  char *txt;
+} MpdcmdNotification;
+```
+
+The function
+
+```C
+static void mpdcmd_prevnext_notify(int mpdaction);
+```
+
+retrieves the metadata via libmpdclient calls and allocates a
+MpdcmdNotification struct. It can decide to take different actions
+depending on the mpdaction it was triggered by (MpdPrev|MpdNext). It
+then passes the data to
+
+```C
+static void mpdcmd_notify_settext(MpdcmdNotification *n, <metadata>);
+static void mpdcmd_notify_settitle(MpdcmdNotification *n, <metadata>);
+```
+
+which set up the title and txt fields of the MpdcmdNotification as
+NULL-terminated strings. They currently use snprintf() and a simple
+printf-style format spec to format notification title (field: title) and
+body (field: txt).
+
+Finally, mpdcmd\_prevnext\_notify() calls mpdcmd\_notify() with the
+notification data as the argument. This function takes care of
+everything needed to show the notification.
 
 ## Setting the window opacity / transparency
 
