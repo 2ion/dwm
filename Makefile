@@ -47,6 +47,18 @@ install: all
 	@sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
+installresources:
+	@echo installing actions to $(HOME)/.actions.d
+	@cp -rf resources/actions.d $(HOME)/.actions.d
+	@chmod 700 -R $(HOME)/.actions.d
+	@echo installing dunstrc to $(HOME)/.config/dunst
+	@mkdir -p $(HOME)/.config/dunst
+	@chmod 700 $(HOME)/.config/dunst
+	@cp -rf resources/dunstrc $(HOME)/.config/dunst
+	@chmod 600 $(HOME)/.config/dunst
+	@echo setting wallpaper
+	@feh --bg-fill resources/wallpaper.png
+
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/dwm
