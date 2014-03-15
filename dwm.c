@@ -363,8 +363,10 @@ static void mpdcmd_notify_settext(MpdcmdNotification *n,
     const char *album, int pos, int queuelen, int minutes, int seconds);
 static void mpdcmd_notify_settitle(MpdcmdNotification *n,
     const char *artist, const char *title);
+static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
 static void mpdcmd_free_notification(MpdcmdNotification *n);
 static void mpdcmd_prevnext_notify(int which);
+static void mpdcmd_prevnext_notify2(int which);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
@@ -2757,6 +2759,16 @@ exit_undone:
   return -1;
 }
 
+void mpdcmd_prevnext_notify2(int which) {
+  MpdcmdNotification n;
+  MpdcmdSongInfo s;
+  if(mpdcmd_query_song(&s) != 0)
+    return;
+  mpdcmd_notify_make(&n, &s);
+  mpdcmd_notify(&n);
+  mpdcmd_free_notification(&n);
+}
+
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
   const char *song_title = NULL;
@@ -2860,6 +2872,24 @@ void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist,
   assert(msg != NULL);
   snprintf(msg, msglen, fmt, artist, title);
   n->title = msg;
+}
+
+void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s) {
+  assert(n != NULL);
+  assert(s != NULL);
+  const char *title_fmt = "%s · %s";
+  const char *text_fmt = "%s · #%d/%d · %d:%02d";
+  // make the title
+  int msglen = snprintf(NULL, 0, title_fmt, s->artist, s->title) + 1;
+  char *msg = malloc(sizeof(wchar_t)*msglen);
+  assert(msg != NULL);
+  n->title = msg;
+  // make the text body
+  msglen = snprintf(NULL, 0, text_fmt, s->album, s->queue_pos,
+      s->queue_len, s->len.mins, s->len.secs) + 1;
+  msg = malloc(sizeof(wchar_t)*msglen);
+  assert(msg != NULL);
+  n->txt = msg;
 }
 
 void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album,
