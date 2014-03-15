@@ -280,11 +280,28 @@ typedef struct {
 int MpdcmdRegister[10][4];
 char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
+
 typedef struct mpd_connection MpdConnection;
+
 typedef struct {
   char *title;
   char *txt;
 } MpdcmdNotification;
+
+typedef struct {
+  int total;
+  int mins;
+  int secs;
+} MpdcmdSongLength;
+
+typedef struct {
+  const char *artist;
+  const char *title;
+  const char *album;
+  int queue_len;
+  int queue_pos;
+  MpdcmdSongLength len;
+} MpdcmdSongInfo;
 
 /* function declarations */
 static void applyrules(Client *c);
@@ -352,6 +369,7 @@ static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_savepos(const Arg *arg);
+static int mpdcmd_query_song(MpdcmdSongInfo *si);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -2706,6 +2724,39 @@ void mpdcmd_prevnext(int which) {
   }
 }
 
+int mpdcmd_query_song(MpdcmdSongInfo *si) {
+  if(mpdcmd_connect() != 0)
+    return -1;
+  enum mpd_state st;
+  struct mpd_status *s = NULL;
+  struct mpd_song *so = NULL;
+  if((s = mpd_run_status(mpdc)) == NULL)
+    return -1;
+  st = mpd_status_get_state(s);
+  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN)
+    goto exit_undone;
+  mpd_send_current_song(mpdc);
+  if((so = mpd_recv_song(mpdc)) == NULL)
+    goto exit_undone;
+  si->artist = mpd_song_get_tag((const struct mpd_song*) so,
+      MPD_TAG_ARTIST, 0);
+  si->title = mpd_song_get_tag((const struct mpd_song*) so,
+      MPD_TAG_TITLE, 0);
+  si->album = mpd_song_get_tag((const struct mpd_song*) so,
+      MPD_TAG_ALBUM, 0);
+  si->queue_pos = mpd_status_get_song_pos(s);
+  si->queue_len = mpd_status_get_queue_length(s);
+  si->len.total = mpd_status_get_total_time(s);
+  si->len.secs = si->len.total % 60;
+  si->len.mins = (si->len.total - si->len.secs) / 60;
+  mpd_song_free(so);
+  mpd_status_free(s);
+  return 0;
+exit_undone:
+  mpd_status_free(s);
+  return -1;
+}
+
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
   const char *song_title = NULL;
@@ -2745,6 +2796,7 @@ void mpdcmd_prevnext_notify(int which) {
   mpdcmd_notify(&n);
   mpdcmd_free_notification(&n);
 cleanup:
+  mpd_song_free(so);
   mpd_status_free(s);
 }
 
