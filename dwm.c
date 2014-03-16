@@ -2771,9 +2771,10 @@ void mpdcmd_prevnext_notify2(int which) {
 
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
-  const char *song_title = "";
-  const char *song_artist = "";
-  const char *song_album = "";
+  const char *song_title = "名無し";
+  const char *song_artist = "名無し";
+  const char *song_album = "名無し";
+  const char *r = NULL;
   int song_pos = 0;
   int song_listlen = 0;
   int song_totaltime = 0;
@@ -2791,12 +2792,15 @@ void mpdcmd_prevnext_notify(int which) {
   mpd_send_current_song(mpdc);
   if((so = mpd_recv_song(mpdc)) == NULL)
     goto cleanup;
-  song_title = mpd_song_get_tag((const struct mpd_song*)so,
-      MPD_TAG_TITLE, 0);
-  song_artist = mpd_song_get_tag((const struct mpd_song*)so,
-      MPD_TAG_ARTIST, 0);
-  song_album = mpd_song_get_tag((const struct mpd_song*)so,
-      MPD_TAG_ALBUM, 0);
+  if((r = mpd_song_get_tag((const struct mpd_song*)so,
+      MPD_TAG_TITLE, 0)) != NULL)
+    song_title = r;
+  if((r = mpd_song_get_tag((const struct mpd_song*)so,
+      MPD_TAG_ARTIST, 0)) != NULL)
+    song_artist = r;
+  if((r = mpd_song_get_tag((const struct mpd_song*)so,
+      MPD_TAG_ALBUM, 0)) != NULL)
+    song_album = r;
   song_pos = mpd_status_get_song_pos(s);
   song_listlen = mpd_status_get_queue_length(s);
   song_totaltime = mpd_status_get_total_time(s);
@@ -2808,8 +2812,9 @@ void mpdcmd_prevnext_notify(int which) {
   mpdcmd_notify(&n);
   mpdcmd_free_notification(&n);
 cleanup:
-  if(so != NULL) mpd_song_free(so);
   mpd_status_free(s);
+  if(so != NULL)
+    mpd_song_free(so);
 }
 
 void
