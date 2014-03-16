@@ -2771,9 +2771,9 @@ void mpdcmd_prevnext_notify2(int which) {
 
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
-  const char *song_title = NULL;
-  const char *song_artist = NULL;
-  const char *song_album = NULL;
+  const char *song_title = "";
+  const char *song_artist = "";
+  const char *song_album = "";
   int song_pos = 0;
   int song_listlen = 0;
   int song_totaltime = 0;
@@ -2808,7 +2808,7 @@ void mpdcmd_prevnext_notify(int which) {
   mpdcmd_notify(&n);
   mpdcmd_free_notification(&n);
 cleanup:
-  mpd_song_free(so);
+  if(so != NULL) mpd_song_free(so);
   mpd_status_free(s);
 }
 
@@ -2883,12 +2883,15 @@ void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s) {
   int msglen = snprintf(NULL, 0, title_fmt, s->artist, s->title) + 1;
   char *msg = malloc(sizeof(wchar_t)*msglen);
   assert(msg != NULL);
+  snprintf(msg, msglen, title_fmt, s->artist, s->title);
   n->title = msg;
   // make the text body
   msglen = snprintf(NULL, 0, text_fmt, s->album, s->queue_pos,
       s->queue_len, s->len.mins, s->len.secs) + 1;
   msg = malloc(sizeof(wchar_t)*msglen);
   assert(msg != NULL);
+  snprintf(msg, msglen, text_fmt, s->album, s->queue_pos,
+      s->queue_len, s->len.mins, s->len.secs);
   n->txt = msg;
 }
 
