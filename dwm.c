@@ -2675,7 +2675,7 @@ mpdcmd_loadpos(const Arg *arg) {
 void
 mpdcmd_volume(const Arg *arg) {
   struct mpd_status *s = mpd_run_status(mpdc);
-  int vol;
+  int vol = 0;
   if(s == NULL) return;
   vol = mpd_status_get_volume(s);
   switch(arg->i) {
