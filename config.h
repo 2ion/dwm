@@ -6,10 +6,10 @@
 #endif
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+  { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+  { MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+  { MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+  { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 #define ACTION(action) DCMD("/home/joj/.actions.d/" action)
 #define DCMD(cmd) { cmd, "-b", \
     "-fn", dmenufont, \
@@ -95,37 +95,37 @@ static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mo
 static Key keys[] = {
     /* Alpha keys */
     { MODKEY,                       XK_a,      spawn,          {.v = cmd_action}},
-	{ MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu}},
+  { MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu}},
     { MODKEY|ShiftMask,             XK_p,      spawn,          {.v = cmd_tmux}},
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal}},
+  { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal}},
     { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser}},
     { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill}},
 
-	{ MODKEY,                       XK_b,      togglebar,      {0}},
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 }},
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 }},
+  { MODKEY,                       XK_b,      togglebar,      {0}},
+  { MODKEY,                       XK_j,      focusstack,     {.i = +1 }},
+  { MODKEY,                       XK_k,      focusstack,     {.i = -1 }},
     { MODKEY|ControlMask,           XK_j,      pushdown,       {0}},
     { MODKEY|ControlMask,           XK_k,      pushup,         {0}},
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 }},
-	{ MODKEY,                      XK_d,      incnmaster,     {.i = -1 }},
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05}},
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05}},
-	{ MODKEY,                       XK_Return, zoom,           {0}},
-	{ MODKEY,                       XK_Tab,    view,           {0}},
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0}},
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}}, // tiled
+  { MODKEY,                       XK_i,      incnmaster,     {.i = +1 }},
+  { MODKEY,                      XK_d,      incnmaster,     {.i = -1 }},
+  { MODKEY,                       XK_h,      setmfact,       {.f = -0.05}},
+  { MODKEY,                       XK_l,      setmfact,       {.f = +0.05}},
+  { MODKEY,                       XK_Return, zoom,           {0}},
+  { MODKEY,                       XK_Tab,    view,           {0}},
+  { MODKEY|ShiftMask,             XK_c,      killclient,     {0}},
+  { MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}}, // tiled
     { MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[4]}}, // deck
     { MODKEY,                       XK_s,      setlayout,      {.v = &layouts[2]}}, // bstack
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[3]}}, // float
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
-	{ MODKEY,                       XK_space,  setlayout,      {0}},
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0}},
-	{ MODKEY,                       XK_0,      view,            {.ui = ~0 }},
-	{ MODKEY|ShiftMask,             XK_0,      tag,             {.ui = ~0 }},
-	{ MODKEY,                       XK_minus,  focusmon,        {.i = -1 }},
-	{ MODKEY,                       XK_plus,   focusmon,        {.i = +1 }},
-	{ MODKEY|ShiftMask,             XK_minus,  tagmon,          {.i = -1 }},
-	{ MODKEY|ShiftMask,             XK_plus,   tagmon,          {.i = +1 }},
+  { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[3]}}, // float
+  { MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
+  { MODKEY,                       XK_space,  setlayout,      {0}},
+  { MODKEY|ShiftMask,             XK_space,  togglefloating, {0}},
+  { MODKEY,                       XK_0,      view,            {.ui = ~0 }},
+  { MODKEY|ShiftMask,             XK_0,      tag,             {.ui = ~0 }},
+  { MODKEY,                       XK_minus,  focusmon,        {.i = -1 }},
+  { MODKEY,                       XK_plus,   focusmon,        {.i = +1 }},
+  { MODKEY|ShiftMask,             XK_minus,  tagmon,          {.i = -1 }},
+  { MODKEY|ShiftMask,             XK_plus,   tagmon,          {.i = +1 }},
     { MODKEY,                       XK_comma,  cycle,           {.i = -1 }},
     { MODKEY,                       XK_period, cycle,           {.i = +1 }},
     { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
@@ -166,30 +166,30 @@ static Key keys[] = {
 
     /* NUMBER ROW */
 
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0}},
+  TAGKEYS(                        XK_1,                      0)
+  TAGKEYS(                        XK_2,                      1)
+  TAGKEYS(                        XK_3,                      2)
+  TAGKEYS(                        XK_4,                      3)
+  TAGKEYS(                        XK_5,                      4)
+  TAGKEYS(                        XK_6,                      5)
+  TAGKEYS(                        XK_7,                      6)
+  TAGKEYS(                        XK_8,                      7)
+  TAGKEYS(                        XK_9,                      8)
+  { MODKEY|ShiftMask,             XK_q,      quit,           {0}},
 };
 
 /* click can be ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
-	/* click                event mask      button          function        argument */
-	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0}},
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]}},
-	{ ClkWinTitle,          0,              Button2,        zoom,           {0}},
-	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0}},
-	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0}},
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0}},
-	{ ClkTagBar,            0,              Button1,        view,           {0}},
-	{ ClkTagBar,            0,              Button3,        toggleview,     {0}},
-	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0}},
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0}},
+  /* click                event mask      button          function        argument */
+  { ClkLtSymbol,          0,              Button1,        setlayout,      {0}},
+  { ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]}},
+  { ClkWinTitle,          0,              Button2,        zoom,           {0}},
+  { ClkClientWin,         MODKEY,         Button1,        movemouse,      {0}},
+  { ClkClientWin,         MODKEY,         Button2,        togglefloating, {0}},
+  { ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0}},
+  { ClkTagBar,            0,              Button1,        view,           {0}},
+  { ClkTagBar,            0,              Button3,        toggleview,     {0}},
+  { ClkTagBar,            MODKEY,         Button1,        tag,            {0}},
+  { ClkTagBar,            MODKEY,         Button3,        toggletag,      {0}},
 };
 
