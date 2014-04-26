@@ -2801,7 +2801,7 @@ void mpdcmd_prevnext_notify(int which) {
   if((r = mpd_song_get_tag((const struct mpd_song*)so,
       MPD_TAG_ALBUM, 0)) != NULL)
     song_album = r;
-  song_pos = mpd_status_get_song_pos(s);
+  song_pos = mpd_status_get_song_pos(s) + 1;
   song_listlen = mpd_status_get_queue_length(s);
   song_totaltime = mpd_status_get_total_time(s);
   song_seconds = song_totaltime % 60;
