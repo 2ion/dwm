@@ -149,14 +149,16 @@
 #define TAGMASK                     ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                    (textnw(X, strlen(X)) + dc.font.height)
 #define LERROR(status, errnum, ...) error_at_line((status), (errnum), \
-        (__func__), (__LINE__), __VA_ARGS__)
+                                    (__func__), (__LINE__), __VA_ARGS__)
 #define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) { \
-  LERROR(0,0, "mpd_connect() failed"); \
-  return; \
-}
+                                      LERROR(0,0, "mpd_connect() failed"); \
+                                      return; \
+                                    }
 #define OPAQUE                      0xffffffff
 #define OPACITY                     "_NET_WM_WINDOW_OPACITY"
+
 /* enums */
+
 enum { CurNormal, CurResize, CurMove, CurLast };                                /* cursor */
 enum { ColBorder, ColFG, ColBG, ColLast };                                      /* color */
 enum { NetSupported, NetWMName, NetWMState,
@@ -304,6 +306,7 @@ typedef struct {
 } MpdcmdSongInfo;
 
 /* function declarations */
+
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void arrange(Monitor *m);
@@ -431,8 +434,8 @@ static void cycle(const Arg *arg);
 static int shifttag(int dist);
 static void tagcycle(const Arg *arg);
 
-
 /* variables */
+
 static const char broken[] = "broken";
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
