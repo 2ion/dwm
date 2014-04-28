@@ -204,6 +204,11 @@ Finally, mpdcmd\_prevnext\_notify() calls mpdcmd\_notify() with the
 notification data as the argument. This function takes care of
 everything needed to show the notification.
 
+Here is a screenshot of a notification produced by the default
+configuration (using the dunst notification daemon):
+
+![Notification example](https://raw.githubusercontent.com/2ion/dwm/master/screenshot-notification.png)
+
 ## Setting the window opacity / transparency
 
 The client filter rules have been extended and now allow setting the
