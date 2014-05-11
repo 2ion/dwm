@@ -2596,7 +2596,7 @@ mpdcmd_connect(void) {
           continue;
       }
     if(mpd_connection_get_error(mpdc) != MPD_ERROR_SUCCESS) {
-      LERROR(0,0, "mpd error: %s",
+      LERROR(0,0, "mpd: %s",
           mpd_connection_get_error_message(mpdc));
       mpd_connection_free(mpdc);
       mpdc = NULL;
