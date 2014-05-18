@@ -130,6 +130,12 @@
 #include <mpd/client.h>
 #include <libnotify/notify.h>
 
+#ifndef DEBUG
+#define DEBUG 0
+#else
+#define DEBUG 1
+#endif
+
 /* macros */
 #define BUTTONMASK                  (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)             (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
@@ -148,8 +154,10 @@
 #define HEIGHT(X)                   ((X)->h + 2 * (X)->bw)
 #define TAGMASK                     ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                    (textnw(X, strlen(X)) + dc.font.height)
-#define LERROR(status, errnum, ...) error_at_line((status), (errnum), \
-                                    (__func__), (__LINE__), __VA_ARGS__)
+#define LERROR(status, errnum, ...) if((DEBUG)==1){\
+                                      error_at_line((status), (errnum), \
+                                        (__func__), (__LINE__), __VA_ARGS__);\
+                                    }
 #define MPDCMD_BE_CONNECTED         if(mpdcmd_connect() != 0) { \
                                       LERROR(0,0, "mpd_connect() failed"); \
                                       return; \
