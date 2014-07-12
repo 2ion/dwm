@@ -94,28 +94,28 @@ static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mo
 
 static Key keys[] = {
     /* Alpha keys */
-    { MODKEY,                       XK_a,      spawn,          {.v = cmd_action}},
+  { MODKEY,                       XK_a,      spawn,          {.v = cmd_action}},
   { MODKEY,                       XK_p,      spawn,          {.v = cmd_dmenu}},
-    { MODKEY|ShiftMask,             XK_p,      spawn,          {.v = cmd_tmux}},
+  { MODKEY|ShiftMask,             XK_p,      spawn,          {.v = cmd_tmux}},
   { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal}},
-    { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser}},
-    { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill}},
+  { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser}},
+  { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill}},
 
   { MODKEY,                       XK_b,      togglebar,      {0}},
   { MODKEY,                       XK_j,      focusstack,     {.i = +1 }},
   { MODKEY,                       XK_k,      focusstack,     {.i = -1 }},
-    { MODKEY|ControlMask,           XK_j,      pushdown,       {0}},
-    { MODKEY|ControlMask,           XK_k,      pushup,         {0}},
+  { MODKEY|ControlMask,           XK_j,      pushdown,       {0}},
+  { MODKEY|ControlMask,           XK_k,      pushup,         {0}},
   { MODKEY,                       XK_i,      incnmaster,     {.i = +1 }},
-  { MODKEY,                      XK_d,      incnmaster,     {.i = -1 }},
+  { MODKEY,                       XK_d,      incnmaster,     {.i = -1 }},
   { MODKEY,                       XK_h,      setmfact,       {.f = -0.05}},
   { MODKEY,                       XK_l,      setmfact,       {.f = +0.05}},
   { MODKEY,                       XK_Return, zoom,           {0}},
   { MODKEY,                       XK_Tab,    view,           {0}},
   { MODKEY|ShiftMask,             XK_c,      killclient,     {0}},
   { MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}}, // tiled
-    { MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[4]}}, // deck
-    { MODKEY,                       XK_s,      setlayout,      {.v = &layouts[2]}}, // bstack
+  { MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[4]}}, // deck
+  { MODKEY,                       XK_s,      setlayout,      {.v = &layouts[2]}}, // bstack
   { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[3]}}, // float
   { MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
   { MODKEY,                       XK_space,  setlayout,      {0}},
@@ -126,45 +126,45 @@ static Key keys[] = {
   { MODKEY,                       XK_plus,   focusmon,        {.i = +1 }},
   { MODKEY|ShiftMask,             XK_minus,  tagmon,          {.i = -1 }},
   { MODKEY|ShiftMask,             XK_plus,   tagmon,          {.i = +1 }},
-    { MODKEY,                       XK_comma,  cycle,           {.i = -1 }},
-    { MODKEY,                       XK_period, cycle,           {.i = +1 }},
-    { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
-    { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
-    { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
-    { MODKEY,                       XK_BackSpace, spawn,        {.v = cmd_skippy }},
-    { MODKEY,                       XK_o,      changeopacity,   {.f = +0.05 }},
-    { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
-    { MODKEY|ControlMask,           XK_o,      setopacity,      {.f = 1.0 }},
+  { MODKEY,                       XK_comma,  cycle,           {.i = -1 }},
+  { MODKEY,                       XK_period, cycle,           {.i = +1 }},
+  { MODKEY|ShiftMask,             XK_comma,  tagcycle,        {.i = -1 }},
+  { MODKEY|ShiftMask,             XK_period, tagcycle,        {.i = +1 }},
+  { MODKEY,                       XK_End,    spawn,           {.v = cmd_lock }},
+  { MODKEY,                       XK_BackSpace, spawn,        {.v = cmd_skippy }},
+  { MODKEY,                       XK_o,      changeopacity,   {.f = +0.05 }},
+  { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.f = -0.05 }},
+  { MODKEY|ControlMask,           XK_o,      setopacity,      {.f = 1.0 }},
 
-    /* XF86 KEYS */
+  /* XF86 KEYS */
 
-    { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MpdLowerVolume }},
-    { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MpdRaiseVolume }},
-    { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MpdMuteVolume }},
-    { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdTogglePause }},
-    { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MpdPrev }},
-    { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MpdNext }},
-    { MODKEY,                       XK_c,                       mpdcmd_savepos, { .i = 0 }},
-    { MODKEY,                       XK_v,                       mpdcmd_loadpos, { .i = 0 }},
-    { MODKEY|ShiftMask,             XK_c,                       mpdcmd_savepos, { .i = 1 }},
-    { MODKEY|ShiftMask,             XK_v,                       mpdcmd_loadpos, { .i = 1 }},
-    { MODKEY|ControlMask,           XK_c,                       mpdcmd_savepos, { .i = 2 }},
-    { MODKEY|ControlMask,           XK_v,                       mpdcmd_loadpos, { .i = 2 }},
-    { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},
-    { False,                        XF86XK_Display,             spawn,  { .v = cmd_backlight }},
-    { False,                        XF86XK_WebCam,              spawn,  { .v = cmd_webcam }},
+  { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MpdLowerVolume }},
+  { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MpdRaiseVolume }},
+  { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MpdMuteVolume }},
+  { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdTogglePause }},
+  { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MpdPrev }},
+  { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MpdNext }},
+  { MODKEY,                       XK_c,                       mpdcmd_savepos, { .i = 0 }},
+  { MODKEY,                       XK_v,                       mpdcmd_loadpos, { .i = 0 }},
+  { MODKEY|ShiftMask,             XK_c,                       mpdcmd_savepos, { .i = 1 }},
+  { MODKEY|ShiftMask,             XK_v,                       mpdcmd_loadpos, { .i = 1 }},
+  { MODKEY|ControlMask,           XK_c,                       mpdcmd_savepos, { .i = 2 }},
+  { MODKEY|ControlMask,           XK_v,                       mpdcmd_loadpos, { .i = 2 }},
+  { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},
+  { False,                        XF86XK_Display,             spawn,  { .v = cmd_backlight }},
+  { False,                        XF86XK_WebCam,              spawn,  { .v = cmd_webcam }},
 
-    /* F ROW */
+  /* F ROW */
 
-    { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
-    { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
-    { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
-    { MODKEY,                       XK_F9,     spawn,          {.v = cmd_fetchmail}},
-    { MODKEY,                       XK_F10,    spawn,          {.v = cmd_mozc_config}},
-    { MODKEY,                       XK_F11,    spawn,          {.v = cmd_mozc_register}},
-    { MODKEY,                       XK_F12,    spawn,          {.v = cmd_mozc_pad}},
+  { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
+  { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
+  { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
+  { MODKEY,                       XK_F9,     spawn,          {.v = cmd_fetchmail}},
+  { MODKEY,                       XK_F10,    spawn,          {.v = cmd_mozc_config}},
+  { MODKEY,                       XK_F11,    spawn,          {.v = cmd_mozc_register}},
+  { MODKEY,                       XK_F12,    spawn,          {.v = cmd_mozc_pad}},
 
-    /* NUMBER ROW */
+  /* NUMBER ROW */
 
   TAGKEYS(                        XK_1,                      0)
   TAGKEYS(                        XK_2,                      1)
