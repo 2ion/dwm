@@ -287,10 +287,6 @@ typedef struct {
     double opacity;
 } Rule;
 
-int MpdcmdRegister[10][4];
-char MpdCmdRegisterPlaylists[10][256];
-int MpdcmdCanNotify = 0;
-
 typedef struct mpd_connection MpdConnection;
 
 typedef struct {
@@ -475,6 +471,9 @@ static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
 static int unmute2vol = 0;
+int MpdcmdRegister[10][4];
+char MpdCmdRegisterPlaylists[10][256];
+int MpdcmdCanNotify = 0;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
