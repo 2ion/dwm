@@ -56,7 +56,7 @@
  *
  * DWM
  *
- * Patched and modified by Jens Oliver John <asterisk ! 2ion ! de>
+ * Patched and modified by Jens Oliver John <dev ! 2ion ! de>
  * Based on the DWM 6.0 release
  *
  * The code for setting/changing the X11 client opacity property was
