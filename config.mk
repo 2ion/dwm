@@ -1,4 +1,4 @@
-VERSION = 6.19
+VERSION = 6.20
 
 PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/share/man
