@@ -180,11 +180,14 @@ enum { ClkTagBar, ClkLtSymbol, ClkWinTitle,
 enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume,                           
        MpdTogglePause, MpdPrev, MpdNext,
        MpdToggleRepeat, MpdToggleConsume, MpdToggleRandom, MpdToggleSingle,
-       MpdUpdate };
+       MpdUpdate, MpdPlayAgain };
 enum { MpdFlag_Consume  = 1<<0,
        MpdFlag_Repeat   = 1<<1,
        MpdFlag_Single   = 1<<2,
-       MpdFlag_Random   = 1<<3  };
+       MpdFlag_Random   = 1<<3,
+       MpdFlag_Config_Respect = 1<<4,
+       MpdFlag_Config_ForceOn = 1<<5,
+       MpdFlag_Config_ForceOff = 1<<6 };
 
 typedef union {
   int i;
@@ -374,11 +377,13 @@ static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
 static void mpdcmd_free_notification(MpdcmdNotification *n);
 static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_prevnext_notify2(int which);
+static void mpdcmd_prevnext(int which, int override_notify);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_savepos(const Arg *arg);
 static int mpdcmd_query_song(MpdcmdSongInfo *si);
+static int mpdcmd_eval_forceflag(int, int);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -2722,7 +2727,21 @@ mpdcmd_toggle_pause(void) {
   mpd_status_free(s);
 }
 
-void mpdcmd_prevnext(int which) {
+int mpdcmd_eval_forceflag(int value, int flag)
+{
+  switch(flag) {
+    case MpdFlag_Config_Respect:
+      return value;
+    case MpdFlag_Config_ForceOff:
+      return 0;
+    case MpdFlag_Config_ForceOn:
+      return 1;
+  }
+  return value;
+}
+
+
+void mpdcmd_prevnext(int which, int override_notify) {
   switch(which) {
     case MpdNext:
       mpd_run_next(mpdc);
@@ -2731,7 +2750,7 @@ void mpdcmd_prevnext(int which) {
       mpd_run_previous(mpdc);
       break;
   }
-  if(cfg_mpdcmd_notify_enable == 1) {
+  if(mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1) {
     mpdcmd_prevnext_notify(which);
   }
 }
@@ -2835,10 +2854,14 @@ mpdcmd(const Arg *arg) {
         mpdcmd_toggle_pause();
         break;
     case MpdPrev:
-        mpdcmd_prevnext(MpdPrev);
+        mpdcmd_prevnext(MpdPrev, MpdFlag_Config_Respect);
         break;
     case MpdNext:
-        mpdcmd_prevnext(MpdNext);
+        mpdcmd_prevnext(MpdNext, MpdFlag_Config_Respect);
+        break;
+    case MpdPlayAgain:
+        mpdcmd_prevnext(MpdPrev, MpdFlag_Config_ForceOff);
+        mpdcmd_prevnext(MpdNext, MpdFlag_Config_Respect);
         break;
     case MpdRaiseVolume:
     case MpdLowerVolume:
