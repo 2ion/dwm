@@ -37,6 +37,7 @@ libmpdclient. Provides the Following actions:
   * MpdLowerVolume
   * MpdMuteVolume
   * MpdToggle (play/pause)
+  * MpdPlayAgain
   * MpdPrev
   * MpdNext
   * MpdToggleRepeat
