@@ -144,6 +144,7 @@ static Key keys[] = {
   { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdTogglePause }},
   { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MpdPrev }},
   { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MpdNext }},
+  { MODKEY,                       XK_Delete,                  mpdcmd, { .i = MpdPlayAgain }},
   { MODKEY,                       XK_c,                       mpdcmd_savepos, { .i = 0 }},
   { MODKEY,                       XK_v,                       mpdcmd_loadpos, { .i = 0 }},
   { MODKEY|ShiftMask,             XK_c,                       mpdcmd_savepos, { .i = 1 }},
