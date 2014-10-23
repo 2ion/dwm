@@ -87,6 +87,9 @@ Control MPD player state and volume.
 arg needs to have its member i set to one of the following integer
 constants, which are defined as an enum type in dwm.c:
 
+    MpdPlayAgain
+        Re-play the currently playing song from the beginning.
+
     MpdRaiseVolume
         Raise the MPD mixer volume by voldelta points. voldelta is set
         in config.h.
