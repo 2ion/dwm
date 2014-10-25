@@ -19,25 +19,13 @@
     "-sf", selfgcolor, \
     NULL }
 
-#define GREY_10 "#101010"
-#define GREY_33 "#333333"
-#define GREY_66 "#666666"
-#define BRIGHTGREEN "#A99F49"
-#define SKYBLUE "#3262AC"
-#define ORANGE "#632A10"
-#define SUSEGREEN "#97CD56"
-#define SMARTBLUE "#33485D"
-#define SMARTGREY "#5d5d5d"
-#define MUTECYAN "#21917D"
-#define CRYCYAN "#17C3A5"
-
 static const char font[]            = "Noto Sans 8";
 static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-17-*-*-*-*-*-*-*";
-static const char normbordercolor[] = GREY_33;
-static const char selbordercolor[]  = ORANGE;
-static const char normbgcolor[]     = SMARTGREY;
+static const char normbordercolor[] = "#281920";
+static const char selbordercolor[]  = "#5f0916";
+static const char normbgcolor[]     = "#5d5d5d";
 static const char normfgcolor[]     = "#ededed";
-static const char selbgcolor[]      = SMARTBLUE;
+static const char selbgcolor[]      = "#292b5c";
 static const char selfgcolor[]      = "#ededed";
 static const unsigned int borderpx  = 1;        
 static const unsigned int snap      = 5;       
