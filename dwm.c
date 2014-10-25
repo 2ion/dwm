@@ -617,7 +617,7 @@ applyrules(Client *c) {
         c->mon = m;
             // opacity; see updateopacity()
             d = r->opacity;
-            if(r->opacity > 1.0 || r->opacity < 0.0)
+            if(d > 1.0 || d < 0.0)
                 d = 1.0;
             c->opacity = (unsigned int) (d * OPAQUE);
     }
