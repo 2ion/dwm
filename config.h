@@ -19,8 +19,8 @@
     "-sf", selfgcolor, \
     NULL }
 
-static const char font[]            = "Noto Sans 8";
-static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-17-*-*-*-*-*-*-*";
+static const char font[]            = "Noto Sans 10";
+static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-20-*-*-*-*-*-*-*";
 static const char normbordercolor[] = "#281920";
 static const char selbordercolor[]  = "#5f0916";
 static const char normbgcolor[]     = "#343c45";
@@ -59,8 +59,10 @@ static const Layout layouts[]       = {
 
 #include "rules.h"
 
-static const char *cmd_terminal[]           = { "x-terminal-emulator", NULL };
-static const char *cmd_browser[]            = { "x-www-browser", NULL };
+static const char *cmd_backlightup[]	    = { "xbacklight", "+10", NULL };
+static const char *cmd_backlightdown[]	    = { "xbacklight", "-10", NULL };
+static const char *cmd_terminal[]           = { "urxvt", NULL };
+static const char *cmd_browser[]            = { "firefox", NULL };
 static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
@@ -132,6 +134,8 @@ static Key keys[] = {
   { False,                        XF86XK_AudioPlay,           mpdcmd, { .i = MpdTogglePause }},
   { False,                        XF86XK_AudioPrev,           mpdcmd, { .i = MpdPrev }},
   { False,                        XF86XK_AudioNext,           mpdcmd, { .i = MpdNext }},
+  { False,                        XF86XK_MonBrightnessDown,    spawn, {.v = cmd_backlightdown }},
+  { False,                        XF86XK_MonBrightnessUp,      spawn, {.v = cmd_backlightup }},
   { MODKEY,                       XK_Delete,                  mpdcmd, { .i = MpdPlayAgain }},
   { MODKEY,                       XK_c,                       mpdcmd_savepos, { .i = 0 }},
   { MODKEY,                       XK_v,                       mpdcmd_loadpos, { .i = 0 }},
