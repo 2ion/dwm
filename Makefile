@@ -47,7 +47,7 @@ install: all
 	@sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	@echo installing skippy-xd to ${DESTDIR}${PREFIX}/bin
-	@install -m0755 ${DESTDIR}${PREFIX}/bin
+	@install -m0755 skippy-xd/skippy-xd ${DESTDIR}${PREFIX}/bin/
 
 installresources:
 	@echo installing actions to $(HOME)/.actions.d
@@ -69,5 +69,6 @@ uninstall:
 
 skippy: all
 	make -C skippy-xd
+	strip skippy-xd/skippy-xd
 
 .PHONY: all options clean dist install uninstall skippy
