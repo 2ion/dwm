@@ -70,6 +70,13 @@ make install PREFIX=$PREFIX
 ```
 builds and installs dwm into $PREFIX.
 
+## Configuration premises
+
+config.h is tailored to my main machine, which is running Debian
+Unstable, and make assumptions about CPU frequencies, sudo configuration
+etc, so you need to review the file in any case. Windowing rules have
+been broken out into rules.h.
+
 ## MPD client extensions
 
 The MPD client extension provides the following bindable callbacks:

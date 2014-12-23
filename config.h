@@ -1,9 +1,7 @@
 // dwm - config.h
 
-#ifndef HAVE_CPUFREQ_DEF
 #define CPU_LOWER "825Mhz"
 #define CPU_UPPER "1.65Ghz"
-#endif
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
   { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
