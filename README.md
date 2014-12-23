@@ -70,6 +70,12 @@ make install PREFIX=$PREFIX
 ```
 builds and installs dwm into $PREFIX.
 
+### skippy-xd
+
+The build system will also build and install
+[skippy-xd](https://github.com/richardgv/skippy-xd/), a nice and small
+X11 task switcher (bound to Mod+Escape by default), via git-submodule.
+
 ## Configuration premises
 
 config.h is tailored to my main machine, which is running Debian
