@@ -2715,9 +2715,9 @@ void mpdcmd_prevnext_notify2(int which) {
 
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
-  const char *song_title = "名無し";
-  const char *song_artist = "名無し";
-  const char *song_album = "名無し";
+  const char *song_title = "ー";
+  const char *song_artist = "ー";
+  const char *song_album = "ー";
   const char *r = NULL;
   int song_pos = 0;
   int song_listlen = 0;
