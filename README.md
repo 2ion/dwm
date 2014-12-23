@@ -12,7 +12,7 @@ The code is based on suckless.org's DWM 6.0 and some patches (see below).
 And here is what it looks like (of course, the cool stuff is under the
 hood):
 
-![Screenshot](https://raw.githubusercontent.com/2ion/dwm/master/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot.png)
 
 ## PATCHES & MODIFICATIONS
 
@@ -218,7 +218,7 @@ everything needed to show the notification.
 Here is a screenshot of a notification produced by the default
 configuration (using the dunst notification daemon):
 
-![Notification example](https://raw.githubusercontent.com/2ion/dwm/master/screenshot-notification.png)
+![Notification example](https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot-notification.png)
 
 ## Setting the window opacity / transparency
 
