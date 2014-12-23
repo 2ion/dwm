@@ -68,7 +68,9 @@ uninstall:
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-skippy: all
+skippy: 
+	git submodule init
+	git submodule update
 	make -C skippy-xd
 	strip skippy-xd/skippy-xd
 
