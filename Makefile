@@ -6,7 +6,7 @@ include config.mk
 SRC = dwm.c
 OBJ = ${SRC:.c=.o}
 
-all: options dwm
+all: options dwm skippy
 
 options:
 	@echo dwm build options:
@@ -27,6 +27,7 @@ dwm: ${OBJ}
 clean:
 	@echo cleaning
 	@rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
+	@make -C skippy-xd clean
 
 dist: clean
 	@echo creating dist tarball
