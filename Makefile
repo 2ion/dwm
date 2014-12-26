@@ -20,7 +20,7 @@ options:
 
 ${OBJ}: config.h config.mk
 
-dwm: ${OBJ}
+dwm: ${OBJ} rules.h config.h
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
@@ -68,7 +68,7 @@ uninstall:
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-skippy: 
++skippy: 
 	git submodule init
 	git submodule update
 	make -C skippy-xd
