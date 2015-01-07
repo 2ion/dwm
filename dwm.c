@@ -1,101 +1,8 @@
-/* 
- * MIT/X Consortium License
- *
- * © 2006-2012 Anselm R Garbe <anselm@garbe.us>
- * © 2007-2011 Peter Hartlich <sgkkr at hartlich dot com>
- * © 2010-2011 Connor Lane Smith <cls@lubutu.com>
- * © 2006-2009 Jukka Salmi <jukka at salmi dot ch>
- * © 2007-2009 Premysl Hruby <dfenze at gmail dot com>
- * © 2007-2009 Szabolcs Nagy <nszabolcs at gmail dot com>
- * © 2007-2009 Christof Musik <christof at sendfax dot de>
- * © 2009 Mate Nagy <mnagy at port70 dot net>
- * © 2007-2008 Enno Gottox Boland <gottox at s01 dot de>
- * © 2008 Martin Hurton <martin dot hurton at gmail dot com>
- * © 2008 Neale Pickett <neale dot woozle dot org>
- * © 2006-2007 Sander van Dijk <a dot h dot vandijk at gmail dot com>
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- *  *
- * dynamic window manager is designed like any other X client as well. It is
- * driven through handling X events. In contrast to other X clients, a window
- * manager selects for SubstructureRedirectMask on the root window, to receive
- * events about window (dis-)appearance.  Only one X connection at a time is
- * allowed to select for this event mask.
- *
- * The event handlers of dwm are organized in an array which is accessed
- * whenever a new event has been fetched. This allows event dispatching
- * in O(1) time.
- *
- * Each child of the root window is called a client, except windows which have
- * set the override_redirect flag.  Clients are organized in a linked client
- * list on each monitor, the focus history is remembered through a stack list
- * on each monitor. Each client contains a bit array to indicate the tags of a
- * client.
- *
- * Keys and tagging rules are organized as arrays and defined in config.h.
- *
- * To understand everything else, start reading main().
- *
- * * *
- *
- * DWM
- *
- * Patched and modified by Jens Oliver John <dev ! 2ion ! de>
- * Based on the DWM 6.0 release
- *
- * The code for setting/changing the X11 client opacity property was
- * inspired by the X11 utility transset, which has the following license
- * notice:
- *
- * <x11-apps: transset copyright notice>
- *
- * Copyright © 2003-2004 Matthew Hawn
- * Copyright © 2003-2004 Andreas Kohn
- * Copyright © 2003-2004 Roman Divacky
- * Copyright © 2003-2004 Keith Packard
- * Copyright © 2005-2007 Daniel Forchheimer
- * Copyright © 2011-2012 Arnaud Fontaine
- *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice (including the next
- * paragraph) shall be included in all copies or substantial portions of the
- * Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- *
- * </x11-apps: transset copyright notice>
- *
- * Homepage: https://github.com/2ion/dwm
+/*
+ * DWM with a built-in MPD client and more
+ * Copyright 2012-2014 Jens Oliver John
+ * See the LICENSE file for license details and credits
  */
-
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
@@ -1563,6 +1470,7 @@ movemouse(const Arg *arg) {
   Client *c;
   Monitor *m;
   XEvent ev;
+  Time lasttime = 0;
 
   if(!(c = selmon->sel))
     return;
@@ -1583,6 +1491,9 @@ movemouse(const Arg *arg) {
       handler[ev.type](&ev);
       break;
     case MotionNotify:
+      if((ev.xmotion.time - lasttime) <= (1000 / 60))
+        continue;
+      lasttime = ev.xmotion.time;
       nx = ocx + (ev.xmotion.x - x);
       ny = ocy + (ev.xmotion.y - y);
       if(nx >= selmon->wx && nx <= selmon->wx + selmon->ww
@@ -1700,11 +1611,11 @@ resizeclient(Client *c, int x, int y, int w, int h) {
 
 void
 resizemouse(const Arg *arg) {
-  int ocx, ocy;
-  int nw, nh;
+  int ocx, ocy, nw, nh;
   Client *c;
   Monitor *m;
   XEvent ev;
+  Time lasttime = 0;
 
   if(!(c = selmon->sel))
     return;
@@ -1724,6 +1635,9 @@ resizemouse(const Arg *arg) {
       handler[ev.type](&ev);
       break;
     case MotionNotify:
+      if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+        continue;
+      lasttime = ev.xmotion.time;
       nw = MAX(ev.xmotion.x - ocx - 2 * c->bw + 1, 1);
       nh = MAX(ev.xmotion.y - ocy - 2 * c->bw + 1, 1);
       if(c->mon->wx + nw >= selmon->wx && c->mon->wx + nw <= selmon->wx + selmon->ww
@@ -1984,6 +1898,7 @@ setup(void) {
   XChangeWindowAttributes(dpy, root, CWEventMask|CWCursor, &wa);
   XSelectInput(dpy, root, wa.event_mask);
   grabkeys();
+  focus(NULL);
 }
 
 void
@@ -2800,9 +2715,9 @@ void mpdcmd_prevnext_notify2(int which) {
 
 void mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
-  const char *song_title = "名無し";
-  const char *song_artist = "名無し";
-  const char *song_album = "名無し";
+  const char *song_title = "ー";
+  const char *song_artist = "ー";
+  const char *song_album = "ー";
   const char *r = NULL;
   int song_pos = 0;
   int song_listlen = 0;

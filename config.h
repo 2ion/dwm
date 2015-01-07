@@ -1,9 +1,7 @@
 // dwm - config.h
 
-#ifndef HAVE_CPUFREQ_DEF
 #define CPU_LOWER "825Mhz"
 #define CPU_UPPER "1.65Ghz"
-#endif
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
   { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -67,20 +65,18 @@ static const char *cmd_lock[]               = { "xscreensaver-command", "-lock",
 static const char *cmd_gjiten[]             = { "gjiten", "-v", NULL };
 static const char *cmd_xkill[]              = { "xkill", NULL };
 static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
-static const char *cmd_cpu_lower[]          = { "cpufreq-set", "-u", CPU_LOWER , NULL };
-static const char *cmd_cpu_upper[]          = { "cpufreq-set", "-u", CPU_UPPER , NULL };
+static const char *cmd_cpu_lower[]          = { "sudo", "cpufreq-set", "-u", CPU_LOWER , NULL };
+static const char *cmd_cpu_upper[]          = { "sudo", "cpufreq-set", "-u", CPU_UPPER , NULL };
 static const char *cmd_action[]             = ACTION("runaction");
 static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 static const char *cmd_sleep[]              = ACTION("sleep");
 static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
-static const char *cmd_skippy[]             = { "/usr/local/bin/skippy-xd", NULL };
+static const char *cmd_skippy[]             = { "skippy-xd", NULL };
 static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
-//static const char *cmd_mozc_dic[]           = { "/usr/lib/mozc/mozc_tool", "--mode=dictionary_tool", NULL };
 static const char *cmd_mozc_register[]      = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
 static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mode=hand_writing", NULL };
-//static const char *cmd_mozc_chars[]         = { "/usr/lib/mozc/mozc_tool", "--mode=character_palette", NULL };
 
 static Key keys[] = {
     /* Alpha keys */

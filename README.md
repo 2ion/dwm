@@ -12,7 +12,7 @@ The code is based on suckless.org's DWM 6.0 and some patches (see below).
 And here is what it looks like (of course, the cool stuff is under the
 hood):
 
-![Screenshot](https://raw.githubusercontent.com/2ion/dwm/master/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot.png)
 
 ## PATCHES & MODIFICATIONS
 
@@ -69,6 +69,19 @@ make
 make install PREFIX=$PREFIX
 ```
 builds and installs dwm into $PREFIX.
+
+### skippy-xd
+
+The build system will also build and install
+[skippy-xd](https://github.com/richardgv/skippy-xd/), a nice and small
+X11 task switcher (bound to Mod+Escape by default), via git-submodule.
+
+## Configuration premises
+
+config.h is tailored to my main machine, which is running Debian
+Unstable, and make assumptions about CPU frequencies, sudo configuration
+etc, so you need to review the file in any case. Windowing rules have
+been broken out into rules.h.
 
 ## MPD client extensions
 
@@ -211,7 +224,7 @@ everything needed to show the notification.
 Here is a screenshot of a notification produced by the default
 configuration (using the dunst notification daemon):
 
-![Notification example](https://raw.githubusercontent.com/2ion/dwm/master/screenshot-notification.png)
+![Notification example](https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot-notification.png)
 
 ## Setting the window opacity / transparency
 
