@@ -1,3 +1,5 @@
+_The rinne (輪廻) branch tracks the dwm configration for my TPx240._
+
 ## README
 
 This repository contains a patched and further modified version of the
