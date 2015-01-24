@@ -127,7 +127,7 @@ struct Client {
   Client *snext;
   Monitor *mon;
   Window win;
-    unsigned int opacity;
+  unsigned int opacity;
 };
 
 typedef struct {
@@ -194,7 +194,7 @@ typedef struct {
   unsigned int tags;
   Bool isfloating;
   int monitor;
-    double opacity;
+  double opacity;
 } Rule;
 
 typedef struct mpd_connection MpdConnection;
@@ -500,7 +500,7 @@ void
 applyrules(Client *c) {
   const char *class, *instance;
   unsigned int i;
-    double d;
+  double d;
   const Rule *r;
   Monitor *m;
   XClassHint ch = { NULL, NULL };
@@ -522,11 +522,11 @@ applyrules(Client *c) {
       for(m = mons; m && m->num != r->monitor; m = m->next);
       if(m)
         c->mon = m;
-            // opacity; see updateopacity()
-            d = r->opacity;
-            if(d > 1.0 || d < 0.0)
-                d = 1.0;
-            c->opacity = (unsigned int) (d * OPAQUE);
+        // opacity; see updateopacity()
+        d = r->opacity;
+        if(d > 1.0 || d < 0.0)
+            d = 1.0;
+        c->opacity = (unsigned int) (d * OPAQUE);
     }
   }
   if(ch.res_class)
@@ -539,59 +539,59 @@ applyrules(Client *c) {
 void
 updateopacity(Client *c)
 {
-    if(c->opacity == OPAQUE) {
-        switch(XDeleteProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False))) {
-          case BadAtom:
-          case BadWindow:
-            LERROR(0,0, "XDeleteProperty() failed");
-          default:
-            break;
-        }
+  if(c->opacity == OPAQUE) {
+    switch(XDeleteProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False))) {
+      case BadAtom:
+      case BadWindow:
+        LERROR(0,0, "XDeleteProperty() failed");
+      default:
+        break;
     }
-    else {
-        switch(XChangeProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False),
-                XA_CARDINAL, 32, PropModeReplace,
-                (unsigned char*) &c->opacity, 1L)) {
-          case BadAlloc:
-          case BadAtom:
-          case BadMatch:
-          case BadValue:
-          case BadWindow:
-            LERROR(0,0, "XChangeProperty() failed");
-          default:
-            break;
-        }
+  }
+  else {
+    switch(XChangeProperty(dpy, c->win, XInternAtom(dpy, OPACITY, False),
+            XA_CARDINAL, 32, PropModeReplace,
+            (unsigned char*) &c->opacity, 1L)) {
+      case BadAlloc:
+      case BadAtom:
+      case BadMatch:
+      case BadValue:
+      case BadWindow:
+        LERROR(0,0, "XChangeProperty() failed");
+      default:
+        break;
     }
+  }
 //    XSync(dpy, False);
 }
 
 void
 changeopacity(const Arg *arg)
 {
-    Client *c;
-    double opacity;
-    double delta = (double) arg->f;
-    
-    if(!(c = selmon->sel))
-        return;
-    opacity = ((double) c->opacity / OPAQUE) + delta;
-    if(opacity > 1.0 || opacity < 0.0) {
-        opacity = 1.0;
-    }
-    c->opacity = (unsigned int) (opacity * (double) OPAQUE);
-    updateopacity(c);
+  Client *c;
+  double opacity;
+  double delta = (double) arg->f;
+  
+  if(!(c = selmon->sel))
+    return;
+  opacity = ((double) c->opacity / OPAQUE) + delta;
+  if(opacity > 1.0 || opacity < 0.0) {
+    opacity = 1.0;
+  }
+  c->opacity = (unsigned int) (opacity * (double) OPAQUE);
+  updateopacity(c);
 }
 
 void
 setopacity(const Arg *arg)
 {
-    Client *c;
-    double opacity = (arg->f <= 1.0 && arg->f >= 0.0) ? arg->f : 1.0;
-    
-    if(!(c = selmon->sel))
-        return;
-    c->opacity = (unsigned int) (opacity * (double) OPAQUE);
-    updateopacity(c);
+  Client *c;
+  double opacity = (arg->f <= 1.0 && arg->f >= 0.0) ? arg->f : 1.0;
+  
+  if(!(c = selmon->sel))
+      return;
+  c->opacity = (unsigned int) (opacity * (double) OPAQUE);
+  updateopacity(c);
 }
 
 Bool
