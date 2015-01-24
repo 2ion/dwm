@@ -29,16 +29,18 @@ static const unsigned int borderpx  = 1;
 static const unsigned int snap      = 5;       
 static const Bool showbar           = False;     
 static const Bool topbar            = True; 
+#define ETAG(i) (1 << (i))
 enum {
-  TagTerm   = 0,
-  TagWeb    = 1,
-  TagDic    = 2,
-  TagPdf    = 3,
-  TagMisc   = 4,
-  TagStash  = 5,
-  TagIota   = 6,
-  TagKappa  = 7,
-  TagLambda = 8};
+  TagTerm   = ETAG(0),
+  TagWeb    = ETAG(1),
+  TagDic    = ETAG(2),
+  TagPdf    = ETAG(3),
+  TagMisc   = ETAG(4),
+  TagStash  = ETAG(5),
+  TagIota   = ETAG(6),
+  TagKappa  = ETAG(7),
+  TagLambda = ETAG(8)};
+#undef ETAG
 static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
