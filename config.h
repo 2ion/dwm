@@ -72,7 +72,7 @@ static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 static const char *cmd_sleep[]              = ACTION("sleep");
-static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
+static const char *cmd_webcam[]             = { "/usr/local/bin/mpv", "tv:///", NULL };
 static const char *cmd_skippy[]             = { "skippy-xd", NULL };
 static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
 static const char *cmd_mozc_register[]      = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
