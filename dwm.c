@@ -2517,7 +2517,7 @@ mpdcmd_connect(void) {
   do { 
     retries -= 1;
     if(mpdc == NULL)
-      if((mpdc = mpd_connection_new("127.0.0.1", 6600, 0)) == NULL) {
+      if((mpdc = mpd_connection_new(cfg_mpdcmd_mpdhost, cfg_mpdcmd_mpdport, 0)) == NULL) {
           LERROR(0,0, "connection attempt %d (of %d) failed",
               retries, cfg_mpdcmd_retries);
           continue;
@@ -2533,6 +2533,7 @@ mpdcmd_connect(void) {
   } while(retries >= 0);
   if(mpdc == NULL)
     return 1;
+  LERROR(0, 0, "mpd: Connected");
   return 0;
 }
 
