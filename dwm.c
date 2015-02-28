@@ -2821,8 +2821,8 @@ mpdcmd_init_notify(void) {
     MpdcmdCanNotify = 1;
 }
 
-void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist,
-    const char *title) {
+void
+mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title) {
   assert(n != NULL);
   assert(artist != NULL);
   assert(title != NULL);
@@ -2835,7 +2835,8 @@ void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist,
   n->title = msg;
 }
 
-void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s) {
+void
+mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s) {
   assert(n != NULL);
   assert(s != NULL);
   const char *title_fmt = "%s · %s";
@@ -2856,8 +2857,8 @@ void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s) {
   n->txt = msg;
 }
 
-void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album,
-    int pos, int queuelen, int minutes, int seconds) {
+void
+mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds) {
   assert(n != NULL);
   assert(album != NULL);
   const char *fmt = "%s · #%d/%d · %d:%02d";
@@ -2870,7 +2871,8 @@ void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album,
   n->txt = msg;
 }
 
-void mpdcmd_notify(const MpdcmdNotification *n) {
+void
+mpdcmd_notify(const MpdcmdNotification *n) {
   assert(n != NULL);
   NotifyNotification *nn = NULL;
   GError *er = NULL;
@@ -2886,7 +2888,8 @@ void mpdcmd_notify(const MpdcmdNotification *n) {
   // free(nn); <- THIS is NOT right. fucking retarded notification interface.
 }
 
-void mpdcmd_free_notification(MpdcmdNotification *n) {
+void
+mpdcmd_free_notification(MpdcmdNotification *n) {
   assert(n != NULL);
   if(n->title != NULL) free(n->title);
   if(n->txt != NULL) free(n->txt);
