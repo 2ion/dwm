@@ -29,16 +29,18 @@ static const unsigned int borderpx  = 1;
 static const unsigned int snap      = 5;       
 static const Bool showbar           = False;     
 static const Bool topbar            = True; 
+#define ETAG(i) (1 << (i))
 enum {
-  TagTerm   = 0,
-  TagWeb    = 1,
-  TagDic    = 2,
-  TagPdf    = 3,
-  TagMisc   = 4,
-  TagStash  = 5,
-  TagIota   = 6,
-  TagKappa  = 7,
-  TagLambda = 8};
+  TagTerm   = ETAG(0),
+  TagWeb    = ETAG(1),
+  TagDic    = ETAG(2),
+  TagPdf    = ETAG(3),
+  TagMisc   = ETAG(4),
+  TagStash  = ETAG(5),
+  TagIota   = ETAG(6),
+  TagKappa  = ETAG(7),
+  TagLambda = ETAG(8)};
+#undef ETAG
 static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
 static const float mfact            = 0.62; 
 static const int nmaster            = 1;   
@@ -74,7 +76,7 @@ static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 static const char *cmd_sleep[]              = ACTION("sleep");
-static const char *cmd_webcam[]             = { "/usr/bin/mplayer", "tv:///", NULL };
+static const char *cmd_webcam[]             = { "/usr/local/bin/mpv", "tv:///", NULL };
 static const char *cmd_skippy[]             = { "skippy-xd", NULL };
 static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
 static const char *cmd_mozc_register[]      = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
