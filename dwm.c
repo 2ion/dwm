@@ -116,6 +116,7 @@ typedef struct Client Client;
 struct Client {
   char name[256];
   float mina, maxa;
+  float cfact;
   int x, y, w, h;
   int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
   int oldx, oldy, oldw, oldh;
@@ -221,8 +222,29 @@ typedef struct {
 
 /* function declarations */
 
-static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
+static Bool getrootptr(int *x, int *y);
+static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
+static Bool sendevent(Client *c, Atom proto);
+static Bool updategeom(void);
+static Client *nexttiled(Client *c);
+static Client *wintoclient(Window w);
+static Client* prevtiled(Client *c);
+static Monitor *createmon(void);
+static Monitor *dirtomon(int dir);
+static Monitor *recttomon(int x, int y, int w, int h);
+static Monitor *wintomon(Window w);
+static int mpdcmd_connect(void);
+static int mpdcmd_eval_forceflag(int, int);
+static int mpdcmd_query_song(MpdcmdSongInfo *si);
+static int shifttag(int dist);
+static int textnw(const char *text, unsigned int len);
+static int xerror(Display *dpy, XErrorEvent *ee);
+static int xerrordummy(Display *dpy, XErrorEvent *ee);
+static int xerrorstart(Display *dpy, XErrorEvent *ee);
+static long getstate(Window w);
+static unsigned long getcolor(const char *colstr, XftColor *color);
+static void applyrules(Client *c);
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
@@ -238,12 +260,12 @@ static void clientmessage(XEvent *e);
 static void configure(Client *c);
 static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
-static Monitor *createmon(void);
+static void cycle(const Arg *arg);
+static void deck(Monitor *);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
 static void die(const char *errstr, ...);
-static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
@@ -253,10 +275,6 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
-static unsigned long getcolor(const char *colstr, XftColor *color);
-static Bool getrootptr(int *x, int *y);
-static long getstate(Window w);
-static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, Bool focused);
 static void grabkeys(void);
 static void incnmaster(const Arg *arg);
@@ -271,57 +289,49 @@ static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static void mpdcmd(const Arg *arg);
 static void mpdcmd_cleanup(void);
-static int mpdcmd_connect(void);
-static void mpdcmd_init(void);
-static void mpdcmd_init_registers(void);
-static void mpdcmd_init_notify(void);
-static void mpdcmd_notify(const MpdcmdNotification*);
-static void mpdcmd_notify_settext(MpdcmdNotification *n,
-    const char *album, int pos, int queuelen, int minutes, int seconds);
-static void mpdcmd_notify_settitle(MpdcmdNotification *n,
-    const char *artist, const char *title);
-static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
 static void mpdcmd_free_notification(MpdcmdNotification *n);
+static void mpdcmd_init(void);
+static void mpdcmd_init_notify(void);
+static void mpdcmd_init_registers(void);
+static void mpdcmd_loadpos(const Arg *arg);
+static void mpdcmd_notify(const MpdcmdNotification*);
+static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
+static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds);
+static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title);
+static void mpdcmd_prevnext(int which, int override_notify);
 static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_prevnext_notify2(int which);
-static void mpdcmd_prevnext(int which, int override_notify);
+static void mpdcmd_savepos(const Arg *arg);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
-static void mpdcmd_loadpos(const Arg *arg);
-static void mpdcmd_savepos(const Arg *arg);
-static int mpdcmd_query_song(MpdcmdSongInfo *si);
-static int mpdcmd_eval_forceflag(int, int);
-static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
-static Client* prevtiled(Client *c);
-static void pushup(const Arg *arg);
 static void pushdown(const Arg *arg);
+static void pushup(const Arg *arg);
 static void quit(const Arg *arg);
-static Monitor *recttomon(int x, int y, int w, int h);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
 static void restack(Monitor *m);
 static void run(void);
 static void scan(void);
-static Bool sendevent(Client *c, Atom proto);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, Bool fullscreen);
 static void setlayout(const Arg *arg);
+static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
+static void setopacity(const Arg *arg);
 static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void sigterm(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
+static void tagcycle(const Arg *arg);
 static void tagmon(const Arg *arg);
-static int textnw(const char *text, unsigned int len);
 static void tile(Monitor *);
-static void deck(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void toggletag(const Arg *arg);
@@ -329,27 +339,16 @@ static void toggleview(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
-static Bool updategeom(void);
 static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updatenumlockmask(void);
 static void updateopacity(Client *c);
-static void setopacity(const Arg *arg);
 static void updatesizehints(Client *c);
-static void updatewindowtype(Client *c);
 static void updatetitle(Client *c);
+static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
-static Client *wintoclient(Window w);
-static Monitor *wintomon(Window w);
-static int xerror(Display *dpy, XErrorEvent *ee);
-static int xerrordummy(Display *dpy, XErrorEvent *ee);
-static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
-static void cycle(const Arg *arg);
-static int shifttag(int dist);
-static void tagcycle(const Arg *arg);
-
 /* variables */
 
 static const char broken[] = "broken";
@@ -1372,6 +1371,7 @@ manage(Window w, XWindowAttributes *wa) {
   c->w = c->oldw = wa->width;
   c->h = c->oldh = wa->height;
   c->oldbw = wa->border_width;
+  c->cfact = 1.0;
 
   if(c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
     c->x = c->mon->mx + c->mon->mw - WIDTH(c);
@@ -1998,9 +1998,15 @@ deck(Monitor *m) {
 void
 tile(Monitor *m) {
   unsigned int i, n, h, mw, my, ty;
+  float mfacts = 0, sfacts = 0;
   Client *c;
 
-  for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+  for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+    if(n < m->nmaster)
+      mfacts += c->cfact;
+    else
+      sfacts += c->cfact;
+  }
   if(n == 0)
     return;
 
@@ -2010,14 +2016,16 @@ tile(Monitor *m) {
     mw = m->ww;
   for(i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
     if(i < m->nmaster) {
-      h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+      h = (m->wh - my) * (c->cfact / mfacts);
       resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
       my += HEIGHT(c);
+      mfacts -= c->cfact;
     }
     else {
       h = (m->wh - ty) / (n - i);
       resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
       ty += HEIGHT(c);
+      sfacts -= c->cfact;
     }
 }
 
@@ -2883,6 +2891,25 @@ void mpdcmd_free_notification(MpdcmdNotification *n) {
   if(n->title != NULL) free(n->title);
   if(n->txt != NULL) free(n->txt);
 }
+
+void
+setcfact(const Arg *arg) {
+  float f;
+	Client *c;
+
+	c = selmon->sel;
+
+	if(!arg || !c || !selmon->lt[selmon->sellt]->arrange)
+		return;
+	f = arg->f + c->cfact;
+	if(arg->f == 0.0)
+		f = 1.0;
+	else if(f < 0.25 || f > 4.0)
+		return;
+	c->cfact = f;
+	arrange(selmon);
+}
+
 
 int
 main(int argc, char *argv[]) {
