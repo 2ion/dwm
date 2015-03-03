@@ -12,7 +12,8 @@ static const const Rule rules[] = {
     { "Okular",                 NULL,       NULL,       1 << TagPdf,       False,       -1,      1.0 },
     { "MuPDF",                  NULL,       NULL,       1 << TagPdf,       False,       -1,      1.0 },
     { "EBView",                 NULL,       NULL,       1 << TagDic,       False,       -1,      1.0 },
-    { "Filezilla",              NULL,       NULL,       1 << TagKappa,     False,       -1,      1.0 }
+    { "Filezilla",              NULL,       NULL,       1 << TagKappa,     False,       -1,      1.0 },
+    { "Kiten",                  NULL,       NULL,       1 << TagDic,       False,       -1,      1.0 }
 };
 
 
