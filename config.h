@@ -76,6 +76,7 @@ static const char *cmd_tmux[]               = ACTION("tmux");
 static const char *cmd_backlight[]          = ACTION("backlight-off");
 static const char *cmd_dmenu[]              = DCMD("dmenu_run");
 static const char *cmd_sleep[]              = ACTION("sleep");
+static const char *cmd_exit[]               = ACTION("exitmenu");
 static const char *cmd_webcam[]             = { "mpv", "tv:///", NULL };
 static const char *cmd_skippy[]             = { "skippy-xd", NULL };
 static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
@@ -90,7 +91,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmd_terminal}},
   { MODKEY|ControlMask,           XK_Return, spawn,          {.v = cmd_browser}},
   { MODKEY,                       XK_x,      spawn,          {.v = cmd_xkill}},
-
+  { MODKEY,                       XK_e,      spawn,          {.v = cmd_exit}},
   { MODKEY,                       XK_b,      togglebar,      {0}},
   { MODKEY,                       XK_j,      focusstack,     {.i = +1 }},
   { MODKEY,                       XK_k,      focusstack,     {.i = -1 }},
