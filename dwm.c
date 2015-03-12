@@ -1926,7 +1926,8 @@ sigchld(int unused) {
 
 void
 sigterm(int unused) {
-    running = False;
+  LERROR(0, 0, "caught SIGTERM");
+  running = False;
 }
 
 void
