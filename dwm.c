@@ -2811,39 +2811,39 @@ mpdcmd(const Arg *arg) {
   MPDCMD_BE_CONNECTED;
   switch(arg->i) {
     case MpdNotifyStatus:
-        mpdcmd_notify_statusflags();
-        break;
+      mpdcmd_notify_statusflags();
+      break;
     case MpdTogglePause:
-        mpdcmd_toggle_pause();
-        break;
+      mpdcmd_toggle_pause();
+      break;
     case MpdPrev:
-        mpdcmd_prevnext(MpdPrev, MpdFlag_Config_Respect);
-        break;
+      mpdcmd_prevnext(MpdPrev, MpdFlag_Config_Respect);
+      break;
     case MpdNext:
-        mpdcmd_prevnext(MpdNext, MpdFlag_Config_Respect);
-        break;
+      mpdcmd_prevnext(MpdNext, MpdFlag_Config_Respect);
+      break;
     case MpdPlayAgain:
-        mpdcmd_prevnext(MpdPrev, MpdFlag_Config_ForceOff);
-        mpdcmd_prevnext(MpdNext, MpdFlag_Config_Respect);
-        break;
+      mpdcmd_prevnext(MpdPrev, MpdFlag_Config_ForceOff);
+      mpdcmd_prevnext(MpdNext, MpdFlag_Config_Respect);
+      break;
     case MpdRaiseVolume:
     case MpdLowerVolume:
     case MpdMuteVolume:
-        mpdcmd_volume(arg);
-        break;
+      mpdcmd_volume(arg);
+      break;
     case MpdToggleRepeat:
-        mpdcmd_toggle(mpdc, mpd_status_get_repeat, mpd_run_repeat);
-        break;
+      mpdcmd_toggle(mpdc, mpd_status_get_repeat, mpd_run_repeat);
+      break;
     case MpdToggleConsume:
-        mpdcmd_toggle(mpdc, mpd_status_get_consume, mpd_run_consume);
+      mpdcmd_toggle(mpdc, mpd_status_get_consume, mpd_run_consume);
     case MpdToggleRandom:
-        mpdcmd_toggle(mpdc, mpd_status_get_random, mpd_run_random);
+      mpdcmd_toggle(mpdc, mpd_status_get_random, mpd_run_random);
     case MpdToggleSingle:
-        mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
-        break;
+      mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
+      break;
     case MpdUpdate:
-        mpd_run_update(mpdc, NULL);
-        break;
+      mpd_run_update(mpdc, NULL);
+      break;
   }
 }
 
