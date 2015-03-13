@@ -87,7 +87,7 @@ enum { ClkTagBar, ClkLtSymbol, ClkWinTitle,
 enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume,                           
        MpdTogglePause, MpdPrev, MpdNext,
        MpdToggleRepeat, MpdToggleConsume, MpdToggleRandom, MpdToggleSingle,
-       MpdUpdate, MpdPlayAgain };
+       MpdUpdate, MpdPlayAgain, MpdNotifyStatus };
 enum { MpdFlag_Consume  = 1<<0,
        MpdFlag_Repeat   = 1<<1,
        MpdFlag_Single   = 1<<2,
@@ -298,6 +298,7 @@ static void mpdcmd_notify(const MpdcmdNotification*);
 static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
 static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds);
 static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title);
+static void mpdcmd_notify_statusflags(void);
 static void mpdcmd_prevnext(int which, int override_notify);
 static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_prevnext_notify2(int which);
@@ -2784,9 +2785,34 @@ cleanup:
 }
 
 void
+mpdcmd_notify_statusflags(void) { MPDCMD_BE_CONNECTED;
+  struct mpd_status *st = mpd_run_status(mpdc);
+  if(st == NULL) return;
+  char mask[8] = {
+                                          '[',
+    mpd_status_get_repeat(st)     ? 'r' : '-',
+    mpd_status_get_random(st)     ? 'z' : '-',
+    mpd_status_get_single(st)     ? 's' : '-',
+    mpd_status_get_consume(st)    ? 'c' : '-',
+    mpd_status_get_crossfade(st)  ? 'x' : '-',
+                                          ']',
+                                          '\0'
+  };
+  MpdcmdNotification n = {
+    .title = mask,
+    .txt = NULL
+  };
+  mpdcmd_notify(&n);
+  mpd_status_free(st);
+}
+
+void
 mpdcmd(const Arg *arg) {
   MPDCMD_BE_CONNECTED;
   switch(arg->i) {
+    case MpdNotifyStatus:
+        mpdcmd_notify_statusflags();
+        break;
     case MpdTogglePause:
         mpdcmd_toggle_pause();
         break;

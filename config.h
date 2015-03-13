@@ -144,6 +144,10 @@ static Key keys[] = {
   { MODKEY|ShiftMask,             XK_v,                       mpdcmd_loadpos, { .i = 1 }},
   { MODKEY|ControlMask,           XK_c,                       mpdcmd_savepos, { .i = 2 }},
   { MODKEY|ControlMask,           XK_v,                       mpdcmd_loadpos, { .i = 2 }},
+  { MODKEY,                       XK_y,                       mpdcmd, { .i = MpdToggleSingle }},
+  { MODKEY,                       XK_r,                       mpdcmd, { .i = MpdToggleRepeat }},
+
+
   { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},
   { False,                        XF86XK_Display,             spawn,  { .v = cmd_backlight }},
   { False,                        XF86XK_WebCam,              spawn,  { .v = cmd_webcam }},
