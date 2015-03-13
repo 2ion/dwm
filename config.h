@@ -146,6 +146,7 @@ static Key keys[] = {
   { MODKEY|ControlMask,           XK_v,                       mpdcmd_loadpos, { .i = 2 }},
   { MODKEY,                       XK_y,                       mpdcmd, { .i = MpdToggleSingle }},
   { MODKEY,                       XK_r,                       mpdcmd, { .i = MpdToggleRepeat }},
+  { MODKEY,                       XK_n,                       mpdcmd, { .i = MpdNotifyStatus }},
 
 
   { False,                        XF86XK_Sleep,               spawn,  { .v = cmd_sleep }},
