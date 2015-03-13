@@ -36,18 +36,7 @@ hood):
 clients (see the section further down)
 * Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()
 * mpdcmd() callback to directly control mpd. Linked against
-libmpdclient. Provides the Following actions:
-  * MpdRaiseVolume
-  * MpdLowerVolume
-  * MpdMuteVolume
-  * MpdToggle (play/pause)
-  * MpdPlayAgain
-  * MpdPrev
-  * MpdNext
-  * MpdToggleRepeat
-  * MpdToggleConsume
-  * MpdToggleRandom
-  * MpdToggleSingle
+libmpdclient. Provides multiple actions; see below for details.
 * mpdcmd\_loadpos() and mpdcmd\_savepos() callbacks to create and
 access bookmarks. The state is lost when DWM exits. There are
 10 registers 0-9 available for storing up to 10 bookmarks.
