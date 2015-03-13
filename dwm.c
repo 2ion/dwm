@@ -326,6 +326,7 @@ static void setopacity(const Arg *arg);
 static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
+static void sigpipe(int unused);
 static void sigterm(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
@@ -1841,8 +1842,14 @@ setup(void) {
 
   /* clean up any zombies immediately */
   sigchld(0);
-    if(signal(SIGTERM, sigterm) == SIG_ERR)
-        die("Can't install SIGTERM handler");
+  if(signal(SIGTERM, sigterm) == SIG_ERR)
+    die("Can't install SIGTERM handler");
+
+  /* SIGPIPE is being send when a socket connection fails -- workaround
+   * for SIGPIPE-related process termination due to a libmpdclient bug */
+  if(signal(SIGPIPE, sigpipe) == SIG_ERR)
+    die("Can't install SIGPIPE handler");
+
   /* init screen */
   screen = DefaultScreen(dpy);
   root = RootWindow(dpy, screen);
@@ -1922,6 +1929,11 @@ sigchld(int unused) {
   if(signal(SIGCHLD, sigchld) == SIG_ERR)
     die("Can't install SIGCHLD handler");
   while(0 < waitpid(-1, NULL, WNOHANG));
+}
+
+void
+sigpipe(int unused) {
+  LERROR(0, 0, "caught SIGPIPE");
 }
 
 void
