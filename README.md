@@ -16,7 +16,7 @@ The code is based on suckless.org's DWM 6.0 and some patches (see below).
 And here is what it looks like (of course, the cool stuff is under the
 hood):
 
-![Screenshot](https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot2.png)
 
 ## PATCHES & MODIFICATIONS
 
