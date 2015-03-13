@@ -127,6 +127,10 @@ constants, which are defined as an enum type in dwm.c:
     MpdNext
         Play the next song in the queue.
 
+    MpdNotifyStatus
+        Displays a notification with the status of the
+        crossover/repeat/random/single//consume settings.
+
     MpdToggleRepeat
         Toggle the repeat flag.
 
