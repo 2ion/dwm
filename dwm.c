@@ -1,7 +1,7 @@
 /*
  * DWM with a built-in MPD client and more
- * Copyright 2012-2014 Jens Oliver John
- * See the LICENSE file for license details and credits
+ * Copyright 2012-2015 Jens Oliver John
+ * See the LICENSE file for license details and attribution.
  */
 #include <assert.h>
 #include <errno.h>
@@ -83,18 +83,30 @@ enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast };                   
 enum { ClkTagBar, ClkLtSymbol, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast };                                     /* clicks */
 
- /* libmpdclient patch */
-enum { MpdRaiseVolume, MpdLowerVolume, MpdMuteVolume,                           
-       MpdTogglePause, MpdPrev, MpdNext,
-       MpdToggleRepeat, MpdToggleConsume, MpdToggleRandom, MpdToggleSingle,
-       MpdUpdate, MpdPlayAgain, MpdNotifyStatus };
-enum { MpdFlag_Consume  = 1<<0,
-       MpdFlag_Repeat   = 1<<1,
-       MpdFlag_Single   = 1<<2,
-       MpdFlag_Random   = 1<<3,
-       MpdFlag_Config_Respect = 1<<4,
-       MpdFlag_Config_ForceOn = 1<<5,
-       MpdFlag_Config_ForceOff = 1<<6 };
+ /* mpdcmd */
+
+enum { MpdLowerVolume,
+       MpdMuteVolume,
+       MpdNext,
+       MpdNotifyStatus,
+       MpdPlayAgain,
+       MpdPrev,
+       MpdToggleConsume,
+       MpdTogglePause,
+       MpdToggleRandom,
+       MpdToggleRepeat,
+       MpdToggleSingle,
+       MpdUpdate,
+       MpdRaiseVolume };
+enum { MpdFlag_Config_ForceOff  = 1<<1,
+       MpdFlag_Config_ForceOn   = 1<<2,
+       MpdFlag_Config_Respect   = 1<<3,
+       MpdFlag_Random           = 1<<4,
+       MpdFlag_Repeat           = 1<<5,
+       MpdFlag_Single           = 1<<6,
+       MpdFlag_Consume          = 1<<7 };
+
+/* typedefs */
 
 typedef union {
   int i;
@@ -351,6 +363,7 @@ static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
 static void zoom(const Arg *arg);
+
 /* variables */
 
 static const char broken[] = "broken";
@@ -389,6 +402,7 @@ char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
 
 /* configuration, allows nested code to access above variables */
+
 #include "config.h"
 
 struct Pertag {
@@ -401,9 +415,11 @@ struct Pertag {
 };
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
+
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
 /* function implementations */
+
 static void
 bstack(Monitor *m) {
   int w, h, mh, mx, tx, ty, tw;
@@ -2665,7 +2681,8 @@ mpdcmd_toggle_pause(void) {
   mpd_status_free(s);
 }
 
-int mpdcmd_eval_forceflag(int value, int flag)
+int
+mpdcmd_eval_forceflag(int value, int flag)
 {
   switch(flag) {
     case MpdFlag_Config_Respect:
@@ -2679,7 +2696,8 @@ int mpdcmd_eval_forceflag(int value, int flag)
 }
 
 
-void mpdcmd_prevnext(int which, int override_notify) {
+void
+mpdcmd_prevnext(int which, int override_notify) {
   switch(which) {
     case MpdNext:
       mpd_run_next(mpdc);
@@ -2693,7 +2711,8 @@ void mpdcmd_prevnext(int which, int override_notify) {
   }
 }
 
-int mpdcmd_query_song(MpdcmdSongInfo *si) {
+int
+mpdcmd_query_song(MpdcmdSongInfo *si) {
   if(mpdcmd_connect() != 0)
     return -1;
   enum mpd_state st;
@@ -2726,7 +2745,8 @@ exit_undone:
   return -1;
 }
 
-void mpdcmd_prevnext_notify2(int which) {
+void
+mpdcmd_prevnext_notify2(int which) {
   MpdcmdNotification n;
   MpdcmdSongInfo s;
   if(mpdcmd_query_song(&s) != 0)
@@ -2736,7 +2756,8 @@ void mpdcmd_prevnext_notify2(int which) {
   mpdcmd_free_notification(&n);
 }
 
-void mpdcmd_prevnext_notify(int which) {
+void
+mpdcmd_prevnext_notify(int which) {
   MpdcmdNotification n;
   const char *song_title = "ー";
   const char *song_artist = "ー";
