@@ -2819,11 +2819,7 @@ mpdcmd_notify_statusflags(void) { MPDCMD_BE_CONNECTED;
                                           ']',
                                           '\0'
   };
-  MpdcmdNotification n = {
-    .title = mask,
-    .txt = NULL
-  };
-  mpdcmd_notify(&n);
+  mpdcmd_notify(&(MpdcmdNotification){ mask, NULL });
   mpd_status_free(st);
 }
 
