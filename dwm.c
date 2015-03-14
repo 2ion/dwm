@@ -2854,13 +2854,19 @@ mpdcmd(const Arg *arg) {
       break;
     case MpdToggleRepeat:
       mpdcmd_toggle(mpdc, mpd_status_get_repeat, mpd_run_repeat);
+      mpdcmd_notify_statusflags();
       break;
     case MpdToggleConsume:
       mpdcmd_toggle(mpdc, mpd_status_get_consume, mpd_run_consume);
+      mpdcmd_notify_statusflags();
+      break;
     case MpdToggleRandom:
       mpdcmd_toggle(mpdc, mpd_status_get_random, mpd_run_random);
+      mpdcmd_notify_statusflags();
+      break;
     case MpdToggleSingle:
       mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
+      mpdcmd_notify_statusflags();
       break;
     case MpdUpdate:
       mpd_run_update(mpdc, NULL);
