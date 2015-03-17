@@ -1,6 +1,6 @@
 # vim: filetype=dosini
 [global]
-    font = Noto Sans 14
+    font = Noto Sans 16
 
     # The format of the message. Possible variables are:
     #   %a  appname
@@ -49,7 +49,7 @@
     # right side of the screen.  Y is measured from the top and down respectevly.
     # The width can be negative. In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "400x10-10+10"
+    geometry = "500x30-10+10"
 
     # The transparency of the window. range: [0; 100]
     # This option will only work if a compositing windowmanager is present (e.g. xcompmgr, compiz, etc..)
@@ -115,7 +115,7 @@
 
 [frame]
     width = 1
-    color = "#33485d"
+    color = "#5f0916"
 
 [shortcuts]
     # shortcuts are specified as [modifier+][modifier+]...key
@@ -139,68 +139,17 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the '#' and following  would be interpreted as a comment.
-    background = "#5d5d5d"
+    background = "#1c2126"
     foreground = "#ededed"
     timeout = 5
 
 [urgency_normal]
-    background = "#5d5d5d"
+    background = "#1c2126"
     foreground = "#ededed"
     timeout = 5
 
 [urgency_critical]
-    background = "#5d5d5d"
+    background = "#1c2126"
     foreground = "#ededed"
     timeout = 0
 
-# Every section that isn't one of the above is interpreted as a rules
-# to override settings for certain messages.
-# Messages can be matched by 'appname', 'summary', 'body' or 'icon'
-# and you can override the 'timeout', 'urgency', 'foreground', 'background'
-# and 'format'.
-# Shell-like globbing will get expanded.
-#
-# SCRIPTING
-# you can specify a script that gets run when the rule matches by setting
-# the 'script' option.
-# The script will be called as follows:
-# script appname summary body icon urgency
-# where urgency can be "LOW", "NORMAL" or "CRITICAL".
-#
-# NOTE: if you don't want a notification to be displayed, set the format to ""
-# NOTE: It might be helpful to run dunst -print in a terminal in order to find
-# fitting options for rules.
-
-#[espeak]
-#    summary = "*"
-#    script = dunst_espeak.sh
-
-#[script-test]
-#    summary = "*script*"
-#    script = dunst_test.sh
-
-#[ignore]
-## This notification will not be displayed
-#    summary = "foobar"
-#    format = ""
-
-#[signed_on]
-#    appname = Pidgin
-#    summary = "*signed on*"
-#    urgency = low
-#
-#[signed_off]
-#    appname = Pidgin
-#    summary = *signed off*
-#    urgency = low
-#
-#[says]
-#    appname = Pidgin
-#    summary = *says*
-#    urgency = critical
-#
-#[twitter]
-#    appname = Pidgin
-#    summary = *twitter.com*
-#    urgency = normal
-#
