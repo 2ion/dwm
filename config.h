@@ -49,6 +49,7 @@ static const int cfg_mpdcmd_notify_enable = 1;
 static const int cfg_mpdcmd_notify_retries = 2;
 static const int cfg_mpdcmd_notify_timeout = 5;
 static const char cfg_mpdcmd_mpdhost[] = "/home/joj/.mpd_socket";
+static const char *cfg_mpdcmd_mute_command[] = { "amixer", "sset", "Master", "toggle", NULL };
 static unsigned cfg_mpdcmd_mpdport = 6600;
 static int voldelta                 = 4;
 static const Bool resizehints       = False;

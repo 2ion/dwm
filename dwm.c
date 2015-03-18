@@ -311,6 +311,7 @@ static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
 static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds);
 static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title);
 static void mpdcmd_notify_statusflags(void);
+static void mpdcmd_notify_volume(void);
 static void mpdcmd_prevnext(int which, int override_notify);
 static void mpdcmd_prevnext_notify(int which);
 static void mpdcmd_prevnext_notify2(int which);
@@ -2657,13 +2658,8 @@ mpdcmd_volume(const Arg *arg) {
       if(vol < 0) vol = 0;
       break;
     case MpdMuteVolume:
-      if(unmute2vol != 0) {
-          vol = unmute2vol;
-          unmute2vol = 0;
-      } else {
-          unmute2vol = vol;
-          vol = 0;
-      }
+      spawn(&(Arg){ .v = cfg_mpdcmd_mute_command });
+      mpdcmd_notify_volume();
       break;
   }
   mpd_run_set_volume(mpdc, vol);
@@ -2824,6 +2820,17 @@ mpdcmd_notify_statusflags(void) { MPDCMD_BE_CONNECTED;
 }
 
 void
+mpdcmd_notify_volume(void) { MPDCMD_BE_CONNECTED;
+  char txt[14]; /* %d will at most be 100, at least -1 */
+  struct mpd_status *st = mpd_run_status(mpdc);
+  if(st == NULL) return;
+  snprintf(txt, sizeof(txt), "Volume: %d", mpd_status_get_volume(st));
+  mpdcmd_notify(&(MpdcmdNotification){ txt, NULL });
+  mpd_status_free(st);
+}
+
+
+void
 mpdcmd(const Arg *arg) {
   MPDCMD_BE_CONNECTED;
   switch(arg->i) {
@@ -2975,7 +2982,6 @@ setcfact(const Arg *arg) {
 	c->cfact = f;
 	arrange(selmon);
 }
-
 
 int
 main(int argc, char *argv[]) {
