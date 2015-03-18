@@ -434,7 +434,7 @@ bstack(Monitor *m) {
     mh = m->nmaster ? m->mfact * m->wh : 0;
     tw = m->ww / (n - m->nmaster);
     ty = m->wy + mh;
-  } 
+  }
   else {
     mh = m->wh;
     tw = m->ww;
@@ -445,7 +445,7 @@ bstack(Monitor *m) {
       w = (m->ww - mx) / (MIN(n, m->nmaster) - i);
       resize(c, m->wx + mx, m->wy, w - (2 * c->bw), mh - (2 * c->bw), False);
       mx += WIDTH(c);
-    } 
+    }
     else {
       h = m->wh - mh;
       resize(c, tx, ty, tw - (2 * c->bw), h - (2 * c->bw), False);
@@ -589,7 +589,7 @@ changeopacity(const Arg *arg)
   Client *c;
   double opacity;
   double delta = (double) arg->f;
-  
+
   if(!(c = selmon->sel))
     return;
   opacity = ((double) c->opacity / OPAQUE) + delta;
@@ -605,7 +605,7 @@ setopacity(const Arg *arg)
 {
   Client *c;
   double opacity = (arg->f <= 1.0 && arg->f >= 0.0) ? arg->f : 1.0;
-  
+
   if(!(c = selmon->sel))
       return;
   c->opacity = (unsigned int) (opacity * (double) OPAQUE);
@@ -2540,7 +2540,7 @@ tagcycle(const Arg *arg) {
 }
 
 void
-mpdcmd_toggle(struct mpd_connection *c, 
+mpdcmd_toggle(struct mpd_connection *c,
         bool (*statf)(const struct mpd_status*),
         bool (*setf)(struct mpd_connection*, bool) ) {
     struct mpd_status *s;
@@ -2553,7 +2553,7 @@ mpdcmd_toggle(struct mpd_connection *c,
 int
 mpdcmd_connect(void) {
   int retries = cfg_mpdcmd_retries;
-  do { 
+  do {
     retries -= 1;
     if(mpdc == NULL)
       if((mpdc = mpd_connection_new(cfg_mpdcmd_mpdhost, cfg_mpdcmd_mpdport, 0)) == NULL) {
@@ -2953,7 +2953,7 @@ mpdcmd_notify(const MpdcmdNotification *n) {
   nn = notify_notification_new(n->title, n->txt, NULL);
   assert(nn != NULL);
   notify_notification_set_timeout(nn, cfg_mpdcmd_notify_timeout);
-  notify_notification_show(nn, &er); 
+  notify_notification_show(nn, &er);
   //FIXME: is this method to free nn the right one?
   // free(nn); <- THIS is NOT right. fucking retarded notification interface.
 }

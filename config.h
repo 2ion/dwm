@@ -25,10 +25,10 @@ static const char normbgcolor[]     = "#343c45";
 static const char normfgcolor[]     = "#ededed";
 static const char selbgcolor[]      = "#1c2126";
 static const char selfgcolor[]      = "#ededed";
-static const unsigned int borderpx  = 1;        
-static const unsigned int snap      = 5;       
-static const Bool showbar           = False;     
-static const Bool topbar            = True; 
+static const unsigned int borderpx  = 1;
+static const unsigned int snap      = 5;
+static const Bool showbar           = False;
+static const Bool topbar            = True;
 #define ETAG(i) (1 << (i))
 enum {
   TagTerm   = ETAG(0),
@@ -42,8 +42,8 @@ enum {
   TagLambda = ETAG(8)};
 #undef ETAG
 static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
-static const float mfact            = 0.62; 
-static const int nmaster            = 1;   
+static const float mfact            = 0.62;
+static const int nmaster            = 1;
 static const int cfg_mpdcmd_retries = 10;
 static const int cfg_mpdcmd_notify_enable = 1;
 static const int cfg_mpdcmd_notify_retries = 2;
@@ -55,7 +55,7 @@ static int voldelta                 = 4;
 static const Bool resizehints       = False;
 static const Layout layouts[]       = {
     { "[+]", monocle   },
-    { ">>=", tile      },    
+    { ">>=", tile      },
     { "TTT", bstack    },
     { "><>", NULL      },
     { ">>-", deck      }};
