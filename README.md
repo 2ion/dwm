@@ -120,6 +120,9 @@ constants, which are defined as an enum type in dwm.c:
         Displays a notification with the status of the
         crossover/repeat/random/single//consume settings.
 
+    MpdNotifyVolume
+        Displays a notification with the current volume.
+
     MpdToggleRepeat
         Toggle the repeat flag.
 

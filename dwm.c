@@ -89,6 +89,7 @@ enum { MpdLowerVolume,
        MpdMuteVolume,
        MpdNext,
        MpdNotifyStatus,
+       MpdNotifyVolume,
        MpdPlayAgain,
        MpdPrev,
        MpdToggleConsume,
@@ -2830,6 +2831,9 @@ mpdcmd(const Arg *arg) {
   switch(arg->i) {
     case MpdNotifyStatus:
       mpdcmd_notify_statusflags();
+      break;
+    case MpdNotifyVolume:
+      mpdcmd_notify_volume();
       break;
     case MpdTogglePause:
       mpdcmd_toggle_pause();
