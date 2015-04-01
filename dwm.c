@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
+#include <fcntl.h>
 #include <locale.h>
 #include <stdarg.h>
 #include <signal.h>
@@ -15,8 +16,10 @@
 #include <string.h>
 #include <stddef.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <math.h>
 #include <X11/cursorfont.h>
@@ -232,6 +235,14 @@ typedef struct {
   int queue_pos;
   MpdcmdSongLength len;
 } MpdcmdSongInfo;
+
+typedef struct {
+  int fd;
+  void *mem;
+  struct timespec lm;
+} Shm;
+
+Shm shm;
 
 /* function declarations */
 
@@ -2979,6 +2990,16 @@ setcfact(const Arg *arg) {
 		return;
 	c->cfact = f;
 	arrange(selmon);
+}
+
+void
+shmctl_init() {
+  return; 
+}
+
+void
+shmctl_close() {
+  return;
 }
 
 int

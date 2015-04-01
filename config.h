@@ -16,19 +16,6 @@
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
     NULL }
-
-static const char font[]            = "Noto Sans 10";
-static const char dmenufont[]       = "-*-tamsyn-medium-r-*-*-20-*-*-*-*-*-*-*";
-static const char normbordercolor[] = "#281920";
-static const char selbordercolor[]  = "#5f0916";
-static const char normbgcolor[]     = "#343c45";
-static const char normfgcolor[]     = "#ededed";
-static const char selbgcolor[]      = "#1c2126";
-static const char selfgcolor[]      = "#ededed";
-static const unsigned int borderpx  = 1;
-static const unsigned int snap      = 5;
-static const Bool showbar           = False;
-static const Bool topbar            = True;
 #define ETAG(i) (1 << (i))
 enum {
   TagTerm   = ETAG(0),
@@ -41,48 +28,61 @@ enum {
   TagKappa  = ETAG(7),
   TagLambda = ETAG(8)};
 #undef ETAG
-static const char *tags[]           = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
-static const float mfact            = 0.62;
-static const int nmaster            = 1;
-static const int cfg_mpdcmd_retries = 10;
-static const int cfg_mpdcmd_notify_enable = 1;
-static const int cfg_mpdcmd_notify_retries = 2;
-static const int cfg_mpdcmd_notify_timeout = 5;
-static const char cfg_mpdcmd_mpdhost[] = "/home/joj/.mpd_socket";
-static const char *cfg_mpdcmd_mute_command[] = { "amixer", "sset", "Master", "toggle", NULL };
-static unsigned cfg_mpdcmd_mpdport = 6600;
-static int voldelta                 = 4;
-static const Bool resizehints       = False;
-static const Layout layouts[]       = {
-    { "[+]", monocle   },
-    { ">>=", tile      },
-    { "TTT", bstack    },
-    { "><>", NULL      },
-    { ">>-", deck      }};
+
+static const char font[]                          = "Noto Sans 10";
+static const char dmenufont[]                     = "-*-tamsyn-medium-r-*-*-20-*-*-*-*-*-*-*";
+static const char normbordercolor[]               = "#281920";
+static const char selbordercolor[]                = "#5f0916";
+static const char normbgcolor[]                   = "#343c45";
+static const char normfgcolor[]                   = "#ededed";
+static const char selbgcolor[]                    = "#1c2126";
+static const char selfgcolor[]                    = "#ededed";
+static const unsigned int borderpx                = 1;
+static const unsigned int snap                    = 5;
+static const Bool showbar                         = False;
+static const Bool topbar                          = True;
+static const char *tags[]                         = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
+static const float mfact                          = 0.62;
+static const int nmaster                          = 1;
+static const int cfg_mpdcmd_retries               = 10;
+static const int cfg_mpdcmd_notify_enable         = 1;
+static const int cfg_mpdcmd_notify_retries        = 2;
+static const int cfg_mpdcmd_notify_timeout        = 5;
+static const char cfg_mpdcmd_mpdhost[]            = "/home/joj/.mpd_socket";
+static unsigned cfg_mpdcmd_mpdport                = 6600;
+static const char *cfg_mpdcmd_mute_command[]      = { "amixer", "sset", "Master", "toggle", NULL };
+static int voldelta                               = 4;
+static const Bool resizehints                     = False;
+static const Layout layouts[]                     = {
+                                                    { "[+]", monocle   },
+                                                    { ">>=", tile      },
+                                                    { "TTT", bstack    },
+                                                    { "><>", NULL      },
+                                                    { ">>-", deck      }};
 
 #include "rules.h"
 
-static const char *cmd_backlightup[]	    = { "xbacklight", "+10", NULL };
-static const char *cmd_backlightdown[]	    = { "xbacklight", "-10", NULL };
-static const char *cmd_terminal[]           = { "urxvt", NULL };
-static const char *cmd_browser[]            = { "firefox", NULL };
-static const char *cmd_lock[]               = { "xscreensaver-command", "-lock", NULL };
-static const char *cmd_gjiten[]             = { "kiten", NULL };
-static const char *cmd_xkill[]              = { "xkill", NULL };
-static const char *cmd_fetchmail[]          = { "fetchmail", NULL };
-static const char *cmd_cpu_lower[]          = { "sudo", "cpufreq-set", "-u", CPU_LOWER , NULL };
-static const char *cmd_cpu_upper[]          = { "sudo", "cpufreq-set", "-u", CPU_UPPER , NULL };
-static const char *cmd_action[]             = ACTION("runaction");
-static const char *cmd_tmux[]               = ACTION("tmux");
-static const char *cmd_backlight[]          = ACTION("backlight-off");
-static const char *cmd_dmenu[]              = DCMD("dmenu_run");
-static const char *cmd_sleep[]              = ACTION("sleep");
-static const char *cmd_exit[]               = ACTION("exitmenu");
-static const char *cmd_webcam[]             = { "mpv", "tv:///", NULL };
-static const char *cmd_skippy[]             = { "skippy-xd", NULL };
-static const char *cmd_mozc_config[]        = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
-static const char *cmd_mozc_register[]      = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
-static const char *cmd_mozc_pad[]           = { "/usr/lib/mozc/mozc_tool", "--mode=hand_writing", NULL };
+static const char *cmd_backlightup[]              = { "xbacklight", "+10", NULL };
+static const char *cmd_backlightdown[]            = { "xbacklight", "-10", NULL };
+static const char *cmd_terminal[]                 = { "urxvt", NULL };
+static const char *cmd_browser[]                  = { "firefox", NULL };
+static const char *cmd_lock[]                     = { "xscreensaver-command", "-lock", NULL };
+static const char *cmd_gjiten[]                   = { "kiten", NULL };
+static const char *cmd_xkill[]                    = { "xkill", NULL };
+static const char *cmd_fetchmail[]                = { "fetchmail", NULL };
+static const char *cmd_cpu_lower[]                = { "sudo", "cpufreq-set", "-u", CPU_LOWER , NULL };
+static const char *cmd_cpu_upper[]                = { "sudo", "cpufreq-set", "-u", CPU_UPPER , NULL };
+static const char *cmd_action[]                   = ACTION("runaction");
+static const char *cmd_tmux[]                     = ACTION("tmux");
+static const char *cmd_backlight[]                = ACTION("backlight-off");
+static const char *cmd_dmenu[]                    = DCMD("dmenu_run");
+static const char *cmd_sleep[]                    = ACTION("sleep");
+static const char *cmd_exit[]                     = ACTION("exitmenu");
+static const char *cmd_webcam[]                   = { "mpv", "tv:///", NULL };
+static const char *cmd_skippy[]                   = { "skippy-xd", NULL };
+static const char *cmd_mozc_config[]              = { "/usr/lib/mozc/mozc_tool", "--mode=config_dialog", NULL };
+static const char *cmd_mozc_register[]            = { "/usr/lib/mozc/mozc_tool", "--mode=word_register_dialog", NULL };
+static const char *cmd_mozc_pad[]                 = { "/usr/lib/mozc/mozc_tool", "--mode=hand_writing", NULL };
 
 static Key keys[] = {
     /* Alpha keys */
