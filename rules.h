@@ -1,5 +1,5 @@
 static const const Rule rules[] = {
-  /* class                            instance    title       tag           isfloating   monitor  opacity */
+    /* class                            instance    title       tag           isfloating   monitor  opacity */
     { "Gimp",                           NULL,       NULL,       TagLambda,    False,       -1,      1.0 },
     { "Firefox",                        NULL,       NULL,       TagWeb,       False,       -1,      1.0 },
     { "Iceweasel",                      NULL,       NULL,       TagWeb,       False,       -1,      1.0 },
