@@ -91,6 +91,7 @@ enum { ClkTagBar, ClkLtSymbol, ClkWinTitle,
 enum { MpdLowerVolume,
        MpdMuteVolume,
        MpdNext,
+       MpdNotifySong,
        MpdNotifyStatus,
        MpdNotifyVolume,
        MpdPlayAgain,
@@ -2840,6 +2841,9 @@ void
 mpdcmd(const Arg *arg) {
   MPDCMD_BE_CONNECTED;
   switch(arg->i) {
+    case MpdNotifySong:
+      mpdcmd_prevnext_notify(0);
+      break;
     case MpdNotifyStatus:
       mpdcmd_notify_statusflags();
       break;
