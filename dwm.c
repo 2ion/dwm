@@ -2700,7 +2700,7 @@ mpdcmd_eval_forceflag(int value, int flag)
 
 
 void
-mpdcmd_prevnext(int which, int override_notify) {
+mpdcmd_prevnext(int which, int override_notify) { MPDCMD_BE_CONNECTED;
   switch(which) {
     case MpdNext:
       mpd_run_next(mpdc);
@@ -2760,7 +2760,7 @@ mpdcmd_prevnext_notify2(int which) {
 }
 
 void
-mpdcmd_prevnext_notify(int which) {
+mpdcmd_prevnext_notify(int which) { MPDCMD_BE_CONNECTED;
   MpdcmdNotification n;
   const char *song_title = "ー";
   const char *song_artist = "ー";
