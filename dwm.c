@@ -354,6 +354,7 @@ static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void sigterm(int unused);
+static void sigusr1(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagcycle(const Arg *arg);
@@ -376,6 +377,10 @@ static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
 static void zoom(const Arg *arg);
+static void exportrainbow(const char *p, const char *v);
+static void initrainbow(void);
+static void uninitrainbow(void);
+static void runrainbow(void);
 
 /* variables */
 
@@ -793,6 +798,7 @@ cleanup(void) {
   XSync(dpy, False);
   XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
   mpdcmd_cleanup();
+  uninitrainbow();
 }
 
 void
@@ -1879,6 +1885,12 @@ setup(void) {
    * for SIGPIPE-related process termination due to a libmpdclient bug */
   if(signal(SIGPIPE, SIG_IGN) == SIG_ERR)
     die("Can't install SIGPIPE handler");
+
+  /* SIGUSR1 calls runrainbow() */
+  if(signal(SIGUSR1, sigusr1) == SIG_ERR)
+    die("Can't install SIGUSR1 handler");
+
+  initrainbow();
 
   /* init screen */
   screen = DefaultScreen(dpy);
@@ -2996,15 +3008,7 @@ setcfact(const Arg *arg) {
 	arrange(selmon);
 }
 
-void
-shmctl_init() {
-  return; 
-}
-
-void
-shmctl_close() {
-  return;
-}
+#include "rainbow.c"
 
 int
 main(int argc, char *argv[]) {
