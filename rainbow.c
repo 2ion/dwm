@@ -74,14 +74,21 @@ runrainbow(void) {
     fd = shm_open(rainbownames[i], O_RDONLY, RAINBOW_FILEMODE); 
     if(fd == -1)
       continue;
-    read(fd, buf, 7); /* read: #abcdef, excl. NULL */
+    if(read(fd, buf, 7) < 7) { /* read: #abcdef, excl. NULL */
+      LERROR(0,0, "%s: less than 7 bytes in update: invalid value", rainbownames[i]);
+      close(fd);
+      continue;
+    }
     close(fd);
 
     buf[7] = '\0'; /* NULL-terminate colour string */
     cur = maprainbow(i);
+
     if(strcmp(buf, cur) == 0)
       continue; /* no change */
+
     LERROR(0,0, "runrainbow: %s: %s => %s\n", rainbownames[i], cur, buf);
+    strncpy(cur, (const char*) buf, 8);
   }
   return;
 }

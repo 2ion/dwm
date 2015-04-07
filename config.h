@@ -31,12 +31,12 @@ enum {
 
 static const char font[]                          = "Noto Sans 10";
 static const char dmenufont[]                     = "-*-tamsyn-medium-r-*-*-20-*-*-*-*-*-*-*";
-static const char normbordercolor[]               = "#281920";
-static const char selbordercolor[]                = "#5f0916";
-static const char normbgcolor[]                   = "#343c45";
-static const char normfgcolor[]                   = "#ededed";
-static const char selbgcolor[]                    = "#1e261c";
-static const char selfgcolor[]                    = "#ededed";
+static char normbordercolor[]                     = "#281920";
+static char selbordercolor[]                      = "#5f0916";
+static char normbgcolor[]                         = "#343c45";
+static char normfgcolor[]                         = "#ededed";
+static char selbgcolor[]                          = "#1e261c";
+static char selfgcolor[]                          = "#ededed";
 static const unsigned int borderpx                = 1;
 static const unsigned int snap                    = 5;
 static const Bool showbar                         = False;

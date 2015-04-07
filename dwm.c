@@ -350,6 +350,7 @@ static void setlayout(const Arg *arg);
 static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setopacity(const Arg *arg);
+static void setupappearance(void);
 static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
@@ -1873,6 +1874,24 @@ setmfact(const Arg *arg) {
 }
 
 void
+setupappearance(void) {
+  dc.norm[ColBorder] = getcolor(normbordercolor, dc.xftnorm+ColBorder);
+  dc.norm[ColBG] = getcolor(normbgcolor, dc.xftnorm+ColBG);
+  dc.norm[ColFG] = getcolor(normfgcolor, dc.xftnorm+ColFG);
+  dc.sel[ColBorder] = getcolor(selbordercolor, dc.xftsel+ColBorder);
+  dc.sel[ColBG] = getcolor(selbgcolor, dc.xftsel+ColBG);
+  dc.sel[ColFG] = getcolor(selfgcolor, dc.xftsel+ColFG);
+  dc.drawable = XCreatePixmap(dpy, root, DisplayWidth(dpy, screen), bh, DefaultDepth(dpy, screen));
+  dc.gc = XCreateGC(dpy, root, 0, NULL);
+
+  XSetLineAttributes(dpy, dc.gc, 1, LineSolid, CapButt, JoinMiter);
+
+  dc.xftdrawable = XftDrawCreate(dpy, dc.drawable, DefaultVisual(dpy,screen), DefaultColormap(dpy,screen));
+  if(!dc.xftdrawable)
+    printf("error, cannot create drawable\n");
+}
+
+void
 setup(void) {
   XSetWindowAttributes wa;
 
@@ -1900,6 +1919,7 @@ setup(void) {
   sh = DisplayHeight(dpy, screen);
   bh = dc.h = dc.font.height + 3;
   updategeom();
+
   /* init atoms */
   wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
   wmatom[WMDelete] = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
@@ -1912,26 +1932,14 @@ setup(void) {
   netatom[NetWMFullscreen] = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
   netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
   netatom[NetWMWindowTypeDialog] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+
   /* init cursors */
   cursor[CurNormal] = XCreateFontCursor(dpy, XC_left_ptr);
   cursor[CurResize] = XCreateFontCursor(dpy, XC_sizing);
   cursor[CurMove] = XCreateFontCursor(dpy, XC_fleur);
 
   /* init appearance */
-        dc.norm[ColBorder] = getcolor(normbordercolor, dc.xftnorm+ColBorder);
-        dc.norm[ColBG] = getcolor(normbgcolor, dc.xftnorm+ColBG);
-        dc.norm[ColFG] = getcolor(normfgcolor, dc.xftnorm+ColFG);
-        dc.sel[ColBorder] = getcolor(selbordercolor, dc.xftsel+ColBorder);
-        dc.sel[ColBG] = getcolor(selbgcolor, dc.xftsel+ColBG);
-        dc.sel[ColFG] = getcolor(selfgcolor, dc.xftsel+ColFG);
-
-  dc.drawable = XCreatePixmap(dpy, root, DisplayWidth(dpy, screen), bh, DefaultDepth(dpy, screen));
-  dc.gc = XCreateGC(dpy, root, 0, NULL);
-  XSetLineAttributes(dpy, dc.gc, 1, LineSolid, CapButt, JoinMiter);
-
-        dc.xftdrawable = XftDrawCreate(dpy, dc.drawable, DefaultVisual(dpy,screen), DefaultColormap(dpy,screen));
-        if(!dc.xftdrawable)
-          printf("error, cannot create drawable\n");
+  setupappearance();
 
   /* init bar */
   updatebars();
