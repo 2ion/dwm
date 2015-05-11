@@ -68,6 +68,7 @@ builds and installs dwm into $PREFIX.
 The build system will also build and install
 [skippy-xd](https://github.com/richardgv/skippy-xd/), a nice and small
 X11 task switcher (bound to Mod+Escape by default), via git-submodule.
+It is by default bound to Mod4+Backspace.
 
 ## Configuration premises
 
@@ -75,6 +76,9 @@ config.h is tailored to my main machine, which is running Debian
 Unstable, and make assumptions about CPU frequencies, sudo configuration
 etc, so you need to review the file in any case. Windowing rules have
 been broken out into rules.h.
+
+Unlike the original dwm package, the config.def.h file has been removed.
+In order to modify the configuration, edit the config.h file directly.
 
 ## MPD client extensions
 
@@ -84,6 +88,36 @@ The MPD client extension provides the following bindable callbacks:
 void mpdcmd(const Arg *arg);
 void mpdcmd_playpos(const Arg *arg);
 void mpdcmd_savepos(const Arg *arg);
+```
+
+In config.h, the following variables affect the mpd functions'
+behaviour:
+
+```C
+/* Connection attempts when there is no active connection */
+static const int cfg_mpdcmd_retries               = 10;
+
+/* IP address of the MPD server or path to the UNIX socket */
+static const char cfg_mpdcmd_mpdhost[]            = "/home/joj/.mpd_socket";
+
+/* IP port of the MPD server. Ignored when a socket is being used */
+static unsigned cfg_mpdcmd_mpdport                = 6600;
+
+/* Enable notifcations via libnotify */
+static const int cfg_mpdcmd_notify_enable         = 1;
+
+/* Connection attempts to get a connection to a notification daemon */
+static const int cfg_mpdcmd_notify_retries        = 2;
+
+/* Time notifications stay visible, in seconds */
+static const int cfg_mpdcmd_notify_timeout        = 5;
+
+/* Shell command used to mute the MPD volume, the MPD server currently
+ * doesn't provide this functinality */
+static const char *cfg_mpdcmd_mute_command[]      = { "amixer", "sset", "Master", "toggle", NULL };
+
+/* Volume step interval when increasing/decreasing volume */
+static int voldelta                               = 4;
 ```
 
 ### mpdcmd(const Arg \*arg)
