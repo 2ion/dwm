@@ -8,6 +8,7 @@
 #include <error.h>
 #include <fcntl.h>
 #include <locale.h>
+#include <pthread.h>
 #include <stdarg.h>
 #include <signal.h>
 #include <time.h>
@@ -261,7 +262,6 @@ static Monitor *recttomon(int x, int y, int w, int h);
 static Monitor *wintomon(Window w);
 static int mpdcmd_connect(void);
 static int mpdcmd_eval_forceflag(int, int);
-static int mpdcmd_query_song(MpdcmdSongInfo *si);
 static int shifttag(int dist);
 static int textnw(const char *text, unsigned int len);
 static int xerror(Display *dpy, XErrorEvent *ee);
@@ -320,17 +320,18 @@ static void mpdcmd_init_notify(void);
 static void mpdcmd_init_registers(void);
 static void mpdcmd_loadpos(const Arg *arg);
 static void mpdcmd_notify(const MpdcmdNotification*);
-static void mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s);
 static void mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds);
 static void mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *title);
 static void mpdcmd_notify_statusflags(void);
 static void mpdcmd_notify_volume(void);
 static void mpdcmd_prevnext(int which, int override_notify);
 static void mpdcmd_prevnext_notify(int which);
-static void mpdcmd_prevnext_notify2(int which);
 static void mpdcmd_savepos(const Arg *arg);
 static void mpdcmd_toggle_pause(void);
 static void mpdcmd_volume(const Arg *arg);
+static void *mpdcmd_watcher(void *arg);
+static void mpdcmd_start_watcher(void);
+static void mpdcmd_stop_watcher(void);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
 static void pushdown(const Arg *arg);
@@ -347,7 +348,6 @@ static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, Bool fullscreen);
 static void setlayout(const Arg *arg);
-static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setopacity(const Arg *arg);
 static void setup(void);
@@ -409,10 +409,10 @@ static DC dc;
 static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 static MpdConnection *mpdc = NULL;
-static int unmute2vol = 0;
 int MpdcmdRegister[10][4];
 char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
+pthread_t mpd_watcher_thread;
 
 /* configuration, allows nested code to access above variables */
 
@@ -2591,6 +2591,8 @@ mpdcmd_init_registers(void)
     MPDCMD_BE_CONNECTED;
     for(i = 0; i < 10; i++)
         sprintf(MpdCmdRegisterPlaylists[i], pn, i);
+    if(cfg_mpdcmd_watch_enable == 1)
+      mpdcmd_start_watcher();
 }
 
 void
@@ -2605,6 +2607,8 @@ mpdcmd_cleanup(void)
         mpd_connection_free(mpdc);
     if(MpdcmdCanNotify == 1)
       notify_uninit();
+    if(cfg_mpdcmd_watch_enable == 1)
+      mpdcmd_stop_watcher();
 }
 
 void
@@ -2712,51 +2716,6 @@ mpdcmd_prevnext(int which, int override_notify) { MPDCMD_BE_CONNECTED;
   if(mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1) {
     mpdcmd_prevnext_notify(which);
   }
-}
-
-int
-mpdcmd_query_song(MpdcmdSongInfo *si) {
-  if(mpdcmd_connect() != 0)
-    return -1;
-  enum mpd_state st;
-  struct mpd_status *s = NULL;
-  struct mpd_song *so = NULL;
-  if((s = mpd_run_status(mpdc)) == NULL)
-    return -1;
-  st = mpd_status_get_state(s);
-  if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN)
-    goto exit_undone;
-  mpd_send_current_song(mpdc);
-  if((so = mpd_recv_song(mpdc)) == NULL)
-    goto exit_undone;
-  si->artist = mpd_song_get_tag((const struct mpd_song*) so,
-      MPD_TAG_ARTIST, 0);
-  si->title = mpd_song_get_tag((const struct mpd_song*) so,
-      MPD_TAG_TITLE, 0);
-  si->album = mpd_song_get_tag((const struct mpd_song*) so,
-      MPD_TAG_ALBUM, 0);
-  si->queue_pos = mpd_status_get_song_pos(s);
-  si->queue_len = mpd_status_get_queue_length(s);
-  si->len.total = mpd_status_get_total_time(s);
-  si->len.secs = si->len.total % 60;
-  si->len.mins = (si->len.total - si->len.secs) / 60;
-  mpd_song_free(so);
-  mpd_status_free(s);
-  return 0;
-exit_undone:
-  mpd_status_free(s);
-  return -1;
-}
-
-void
-mpdcmd_prevnext_notify2(int which) {
-  MpdcmdNotification n;
-  MpdcmdSongInfo s;
-  if(mpdcmd_query_song(&s) != 0)
-    return;
-  mpdcmd_notify_make(&n, &s);
-  mpdcmd_notify(&n);
-  mpdcmd_free_notification(&n);
 }
 
 void
@@ -2919,28 +2878,6 @@ mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *ti
 }
 
 void
-mpdcmd_notify_make(MpdcmdNotification *n, const MpdcmdSongInfo *s) {
-  assert(n != NULL);
-  assert(s != NULL);
-  const char *title_fmt = "%s · %s";
-  const char *text_fmt = "%s · #%d/%d · %d:%02d";
-  // make the title
-  int msglen = snprintf(NULL, 0, title_fmt, s->artist, s->title) + 1;
-  char *msg = malloc(sizeof(wchar_t)*msglen);
-  assert(msg != NULL);
-  snprintf(msg, msglen, title_fmt, s->artist, s->title);
-  n->title = msg;
-  // make the text body
-  msglen = snprintf(NULL, 0, text_fmt, s->album, s->queue_pos,
-      s->queue_len, s->len.mins, s->len.secs) + 1;
-  msg = malloc(sizeof(wchar_t)*msglen);
-  assert(msg != NULL);
-  snprintf(msg, msglen, text_fmt, s->album, s->queue_pos,
-      s->queue_len, s->len.mins, s->len.secs);
-  n->txt = msg;
-}
-
-void
 mpdcmd_notify_settext(MpdcmdNotification *n, const char *album, int pos, int queuelen, int minutes, int seconds) {
   assert(n != NULL);
   assert(album != NULL);
@@ -2979,31 +2916,59 @@ mpdcmd_free_notification(MpdcmdNotification *n) {
 }
 
 void
-setcfact(const Arg *arg) {
-  float f;
-	Client *c;
+mpdcmd_start_watcher(void)
+{
+  pthread_attr_t attr;
 
-	c = selmon->sel;
-
-	if(!arg || !c || !selmon->lt[selmon->sellt]->arrange)
-		return;
-	f = arg->f + c->cfact;
-	if(arg->f == 0.0)
-		f = 1.0;
-	else if(f < 0.25 || f > 4.0)
-		return;
-	c->cfact = f;
-	arrange(selmon);
+  pthread_attr_init(&attr);
+  if(pthread_create(&mpd_watcher_thread, &attr, mpdcmd_watcher, NULL) != 0)
+  {
+    LERROR(0, errno, "pthread_create()");
+    cfg_mpdcmd_watch_enable = 0;
+  }
+  pthread_attr_destroy(&attr);
 }
 
 void
-shmctl_init() {
-  return; 
+mpdcmd_stop_watcher(void)
+{
+  pthread_cancel(mpd_watcher_thread);
 }
 
-void
-shmctl_close() {
-  return;
+void*
+mpdcmd_watcher(void *arg)
+{
+  struct mpd_connection *con = NULL;
+  struct mpd_status *st = NULL;
+  int psid = -1;
+  int csid = -1;
+
+  for(;;)
+  {
+    usleep(cfg_mpdcmd_watch_interval);
+
+    if(con == NULL || mpd_connection_get_error(con) != MPD_ERROR_SUCCESS)
+    {
+      con = mpd_connection_new(cfg_mpdcmd_mpdhost, cfg_mpdcmd_mpdport, 0);
+      continue;
+    }
+
+    if((st = mpd_run_status(con)) == NULL)
+      continue;
+
+    csid = mpd_status_get_song_id(st);
+
+    if(csid != psid)
+    {
+      mpdcmd_prevnext_notify(0); 
+      psid = csid;
+    }
+  }
+
+  if(con != NULL)
+    mpd_connection_free(con);
+
+  return NULL;
 }
 
 int
