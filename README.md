@@ -44,6 +44,7 @@ access bookmarks. The state is lost when DWM exits. There are
 * DCMD() macro for convenient dmenu invocation
 * Compile with -O2 instead of -Os
 * wmii-like actions
+* MPD status change notifications
 
 ## Building and installing
 
@@ -118,6 +119,14 @@ static const char *cfg_mpdcmd_mute_command[]      = { "amixer", "sset", "Master"
 
 /* Volume step interval when increasing/decreasing volume */
 static int voldelta                               = 4;
+
+/* MPD watcher: status query interval in microseconds */
+static const int cfg_mpdcmd_watch_interval        = 500;
+
+/* Enable or disable the MPD watcher. If enabled,
+ * notifications when going to the previous/next song will be disabled
+ * since the watcher looks out for the same event */
+static int cfg_mpdcmd_watch_enable                = 1;
 ```
 
 ### mpdcmd(const Arg \*arg)
