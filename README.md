@@ -48,6 +48,14 @@ access bookmarks. The state is lost when DWM exits. There are
 
 ## Building and installing
 
+Before continueing, check out the latest tagged release version:
+```
+# Current development branch
+git checkout 6.24
+```
+Every commit that has not been tagged should be considered unstable and
+not suited for productive use!
+
 Due to the extensions, we need the following extra libraries:
 
 * libxft

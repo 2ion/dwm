@@ -3,11 +3,22 @@
  * Copyright 2012-2015 Jens Oliver John
  * See the LICENSE file for license details and attribution.
  */
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
+#include <libnotify/notify.h>
 #include <locale.h>
+#include <mpd/client.h>
+#include <pango/pango.h>
+#include <pango/pangoxft.h>
+#include <pango/pango-font.h>
 #include <pthread.h>
 #include <stdarg.h>
 #include <signal.h>
@@ -17,11 +28,6 @@
 #include <string.h>
 #include <stddef.h>
 #include <unistd.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <sys/time.h>
 #include <math.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
@@ -35,11 +41,6 @@
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif
-#include <pango/pango.h>
-#include <pango/pangoxft.h>
-#include <pango/pango-font.h>
-#include <mpd/client.h>
-#include <libnotify/notify.h>
 
 #ifndef DEBUG
 #define DEBUG 0
