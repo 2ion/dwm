@@ -1,6 +1,6 @@
 # Maintainer: 2ion <dev@2ion.de>
 pkgname=dwm-rinne-git
-pkgver=6.24.r0.df40d6f
+pkgver=6.24.r12.5f91dd3
 pkgrel=1
 pkgdesc="dwm window manager with a built-in MPD client and more, based on dwm 6.0"
 arch=('x86_64' 'i686')
@@ -27,6 +27,8 @@ build() {
 package() {
   cd "$srcdir/${pkgname%-git}"
   install -Dm755 dwm "$pkgdir"/usr/bin/dwm
-  install -Dm644 README.md "$pkgdir/usr/share/doc/${pkgname%-git}"
-  install -Dm644 LICENSE "$pkgdir/usr/share/doc/${pkgname%-git}"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/${pkgname%-git}/README.mkd"
+  install -Dm644 LICENSE "$pkgdir/usr/share/doc/${pkgname%-git}/LICENSE"
+  install -d "$pkgdir"/usr/share/dwm
+  cp -r resources "$pkgdir"/usr/share/dwm
 }
