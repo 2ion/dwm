@@ -2950,6 +2950,7 @@ mpdcmd_watcher(void *arg)
 
     if(con == NULL || mpd_connection_get_error(con) != MPD_ERROR_SUCCESS)
     {
+      LERROR(0, 0, "no connection, calling mpd_connection_new() ...");
       con = mpd_connection_new(cfg_mpdcmd_mpdhost, cfg_mpdcmd_mpdport, 0);
       continue;
     }
