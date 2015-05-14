@@ -2964,9 +2964,10 @@ mpdcmd_watcher(void *arg)
       mpdcmd_prevnext_notify(0); 
       psid = csid;
     }
+
+    mpd_status_free(st);
   }
 
-  mpd_status_free(st);
 
   if(con != NULL)
     mpd_connection_free(con);
