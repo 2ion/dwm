@@ -2713,7 +2713,8 @@ mpdcmd_prevnext(int which, int override_notify) { MPDCMD_BE_CONNECTED;
       mpd_run_previous(mpdc);
       break;
   }
-  if(mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1) {
+  if(mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1
+      && cfg_mpdcmd_watch_enable == 0) {
     mpdcmd_prevnext_notify(which);
   }
 }
@@ -2964,6 +2965,8 @@ mpdcmd_watcher(void *arg)
       psid = csid;
     }
   }
+
+  mpd_status_free(st);
 
   if(con != NULL)
     mpd_connection_free(con);
