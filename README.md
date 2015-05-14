@@ -42,7 +42,7 @@ access bookmarks. The state is lost when DWM exits. There are
 10 registers 0-9 available for storing up to 10 bookmarks.
 * libnotify notifications triggered by mpdcmd() actions!
 * DCMD() macro for convenient dmenu invocation
-* Compile with -O2 instead of -Os
+* Compile with -O3 -march=native
 * wmii-like actions
 * MPD status change notifications
 
