@@ -15,6 +15,7 @@
     "-nf", normfgcolor, \
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
+    "-g", "Tc", \
     NULL }
 #define ETAG(i) (1 << (i))
 enum {
@@ -77,7 +78,7 @@ static const char *cmd_cpu_upper[]                = { "sudo", "cpufreq-set", "-u
 static const char *cmd_action[]                   = ACTION("runaction");
 static const char *cmd_tmux[]                     = ACTION("tmux");
 static const char *cmd_backlight[]                = ACTION("backlight-off");
-static const char *cmd_dmenu[]                    = DCMD("dmenu_run");
+static const char *cmd_dmenu[]                    = DCMD("dmenuv_run");
 static const char *cmd_sleep[]                    = ACTION("sleep");
 static const char *cmd_exit[]                     = ACTION("exitmenu");
 static const char *cmd_webcam[]                   = { "mpv", "tv:///", NULL };
