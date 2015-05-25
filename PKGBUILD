@@ -7,7 +7,9 @@ arch=('x86_64' 'i686')
 url="https://github.com/2ion/dwm"
 license=('MIT')
 depends=('libx11' 'libxinerama' 'pango' 'libnotify' 'libmpdclient')
-optdepends=('skippy: exposé-like window overview')
+optdepends=(\
+  'skippy: exposé-like window overview' \
+  'dmenuv-git: provides dmenuv_run which is used as the default run-dialog in config.h')
 makedepends=('git')
 provides=("${pkgname%-git}" 'dwm')
 conflicts=("${pkgname%-git}" 'dwm')
