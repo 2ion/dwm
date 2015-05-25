@@ -1,6 +1,6 @@
 # Maintainer: 2ion <dev@2ion.de>
 pkgname=dwm-rinne-git
-pkgver=6.24.r12.5f91dd3
+pkgver=6.24.r17.9adafc9
 pkgrel=1
 pkgdesc="dwm window manager with a built-in MPD client and more, based on dwm 6.0"
 arch=('x86_64' 'i686')
