@@ -103,6 +103,7 @@ enum { MpdLowerVolume,
        MpdToggleRandom,
        MpdToggleRepeat,
        MpdToggleSingle,
+       MpdToggleWatcher,
        MpdUpdate,
        MpdRaiseVolume };
 enum { MpdFlag_Config_ForceOff  = 1<<1,
@@ -413,6 +414,7 @@ static MpdConnection *mpdc = NULL;
 int MpdcmdRegister[10][4];
 char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
+volatile int mpd_watcher_pause = 0;
 pthread_t mpd_watcher_thread;
 
 /* configuration, allows nested code to access above variables */
@@ -2845,6 +2847,9 @@ mpdcmd(const Arg *arg) {
       mpdcmd_toggle(mpdc, mpd_status_get_single, mpd_run_single);
       mpdcmd_notify_statusflags();
       break;
+    case MpdToggleWatcher:
+      mpd_watcher_pause = !mpd_watcher_pause;
+      break;
     case MpdUpdate:
       mpd_run_update(mpdc, NULL);
       break;
@@ -2924,10 +2929,7 @@ mpdcmd_start_watcher(void)
 
   pthread_attr_init(&attr);
   if(pthread_create(&mpd_watcher_thread, &attr, mpdcmd_watcher, NULL) != 0)
-  {
     LERROR(0, errno, "pthread_create()");
-    cfg_mpdcmd_watch_enable = 0;
-  }
   pthread_attr_destroy(&attr);
 }
 
@@ -2944,13 +2946,22 @@ mpdcmd_watcher(void *arg)
   struct mpd_status *st = NULL;
   int psid = -1;
   int csid = -1;
+  int bcnt = 3;
 
   for(;;)
   {
     usleep(cfg_mpdcmd_watch_interval);
 
+    if(mpd_watcher_pause == 1)
+      continue;
+
     if(con == NULL || mpd_connection_get_error(con) != MPD_ERROR_SUCCESS)
     {
+      if(--bcnt < 0)
+      {
+        LERROR(0, 0, "all connection attempts failed, stopping the watcher");
+        break;
+      }
       LERROR(0, 0, "no connection, calling mpd_connection_new() ...");
       con = mpd_connection_new(cfg_mpdcmd_mpdhost, cfg_mpdcmd_mpdport, 0);
       continue;
@@ -2969,7 +2980,6 @@ mpdcmd_watcher(void *arg)
 
     mpd_status_free(st);
   }
-
 
   if(con != NULL)
     mpd_connection_free(con);
