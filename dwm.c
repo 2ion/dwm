@@ -2594,8 +2594,6 @@ mpdcmd_init_registers(void)
     MPDCMD_BE_CONNECTED;
     for(i = 0; i < 10; i++)
         sprintf(MpdCmdRegisterPlaylists[i], pn, i);
-    if(cfg_mpdcmd_watch_enable == 1)
-      mpdcmd_start_watcher();
 }
 
 void
@@ -2862,6 +2860,8 @@ void
 mpdcmd_init(void) {
   mpdcmd_init_registers();
   mpdcmd_init_notify();
+  if(cfg_mpdcmd_watch_enable == 1)
+    mpdcmd_start_watcher();
 }
 
 void
