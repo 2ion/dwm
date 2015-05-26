@@ -190,6 +190,12 @@ constants, which are defined as an enum type in dwm.c:
     MpdToggleSingle
         Toggle single player mode.
 
+    MpdToggleWatcher
+        If the watcher is enabled, the watcher will be paused. While
+        the watcher is paused, regular notifications will be shown when
+        skipping to the previous or next song if notifications are
+        enabled.
+
     MpdUpdate
         Execute a full database update.
 
