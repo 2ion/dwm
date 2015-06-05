@@ -108,11 +108,7 @@ enum { MpdLowerVolume,
        MpdRaiseVolume };
 enum { MpdFlag_Config_ForceOff  = 1<<1,
        MpdFlag_Config_ForceOn   = 1<<2,
-       MpdFlag_Config_Respect   = 1<<3,
-       MpdFlag_Random           = 1<<4,
-       MpdFlag_Repeat           = 1<<5,
-       MpdFlag_Single           = 1<<6,
-       MpdFlag_Consume          = 1<<7 };
+       MpdFlag_Config_Respect   = 1<<3 };
 
 /* typedefs */
 
