@@ -1,0 +1,2 @@
+#!/bin/bash
+notify-send "$(sensors -u | grep temp1_input | head -n1 | cut -d: -f2 | tr -d ' ') °C"
