@@ -15,8 +15,9 @@
     "-nf", normfgcolor, \
     "-sb", selbgcolor, \
     "-sf", selfgcolor, \
-    "-g", "Tc", \
-    "-w", "0.5", \
+    "-g", "tl", \
+    "-w", "0.25", \
+    "-l", "30", \
     NULL }
 #define ETAG(i) (1 << (i))
 enum {
