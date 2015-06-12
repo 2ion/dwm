@@ -6,7 +6,7 @@ include config.mk
 SRC = dwm.c
 OBJ = ${SRC:.c=.o}
 
-all: options dwm skippy
+all: options dwm
 
 options:
 	@echo dwm build options:
@@ -27,7 +27,6 @@ dwm: ${OBJ} rules.h config.h
 clean:
 	@echo cleaning
 	@rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
-	@make -C skippy-xd clean
 
 dist: clean
 	@echo creating dist tarball
@@ -47,8 +46,6 @@ install: all
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	@sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
-	@echo installing skippy-xd to ${DESTDIR}${PREFIX}/bin
-	@install -m0755 skippy-xd/skippy-xd ${DESTDIR}${PREFIX}/bin/
 
 installresources:
 	@echo installing actions to $(HOME)/.actions.d
@@ -68,10 +65,4 @@ uninstall:
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-+skippy: 
-	git submodule init
-	git submodule update
-	make -C skippy-xd
-	strip skippy-xd/skippy-xd
-
-.PHONY: all options clean dist install uninstall skippy
+.PHONY: all options clean dist install uninstall
