@@ -11,10 +11,7 @@
 #define ACTION(action) DCMD("/home/joj/.actions.d/" action)
 #define DCMD(cmd) { cmd, "-b", \
     "-fn", dmenufont, \
-    "-nb", normbgcolor, \
-    "-nf", normfgcolor, \
-    "-sb", selbgcolor, \
-    "-sf", selfgcolor, \
+    "-sb", dmenubgcolor, \
     "-g", "tl", \
     "-w", "0.25", \
     "-l", "30", \
@@ -33,13 +30,14 @@ enum {
 #undef ETAG
 
 static const char font[]                          = "Noto Sans 10";
-static const char dmenufont[]                     = "-*-tamsyn-medium-r-*-*-20-*-*-*-*-*-*-*";
+static const char dmenufont[]                     = "-*-tamsyn-bold-r-*-*-20-*-*-*-*-*-*-*";
 static const char normbordercolor[]               = "#281920";
 static const char selbordercolor[]                = "#5f0916";
 static const char normbgcolor[]                   = "#343C45";
 static const char normfgcolor[]                   = "#ededed";
 static const char selbgcolor[]                    = "#233951";
 static const char selfgcolor[]                    = "#ededed";
+static const char dmenubgcolor[]                  = "#b23025";
 static const unsigned int borderpx                = 1;
 static const unsigned int snap                    = 5;
 static const Bool showbar                         = False;
