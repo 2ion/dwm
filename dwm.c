@@ -410,7 +410,7 @@ static MpdConnection *mpdc = NULL;
 int MpdcmdRegister[10][4];
 char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
-volatile int mpd_watcher_pause = 0;
+volatile int mpd_watcher_exists = 0;
 pthread_t mpd_watcher_thread;
 
 /* configuration, allows nested code to access above variables */
@@ -2604,8 +2604,6 @@ mpdcmd_cleanup(void)
         mpd_connection_free(mpdc);
     if(MpdcmdCanNotify == 1)
       notify_uninit();
-    if(cfg_mpdcmd_watch_enable == 1)
-      mpdcmd_stop_watcher();
 }
 
 void
@@ -2710,12 +2708,9 @@ mpdcmd_prevnext(int which, int override_notify) { MPDCMD_BE_CONNECTED;
       mpd_run_previous(mpdc);
       break;
   }
-  if( /* Notifcations enabled, watcher disabled */
-      (mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1 && cfg_mpdcmd_watch_enable == 0)
-      /* Notifications enabled, watcher paused */
-      || (mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1 && mpd_watcher_pause == 1)) {
+  if( /* Notifcations enabled, watcher not running */
+      mpdcmd_eval_forceflag(cfg_mpdcmd_notify_enable, override_notify) == 1 && mpd_watcher_exists == 0)
     mpdcmd_prevnext_notify(which);
-  }
 }
 
 void
@@ -2844,7 +2839,10 @@ mpdcmd(const Arg *arg) {
       mpdcmd_notify_statusflags();
       break;
     case MpdToggleWatcher:
-      mpd_watcher_pause = !mpd_watcher_pause;
+      if(mpd_watcher_exists == 0)
+        mpdcmd_start_watcher();
+      if(mpd_watcher_exists == 1)
+        mpdcmd_stop_watcher();
       break;
     case MpdUpdate:
       mpd_run_update(mpdc, NULL);
@@ -2856,8 +2854,6 @@ void
 mpdcmd_init(void) {
   mpdcmd_init_registers();
   mpdcmd_init_notify();
-  if(cfg_mpdcmd_watch_enable == 1)
-    mpdcmd_start_watcher();
 }
 
 void
@@ -2929,12 +2925,14 @@ mpdcmd_start_watcher(void)
   if(pthread_create(&mpd_watcher_thread, &attr, mpdcmd_watcher, NULL) != 0)
     LERROR(0, errno, "pthread_create()");
   pthread_attr_destroy(&attr);
+  mpd_watcher_exists = 1;
 }
 
 void
 mpdcmd_stop_watcher(void)
 {
   pthread_cancel(mpd_watcher_thread);
+  mpd_watcher_exists = 0;
 }
 
 void*
@@ -2949,9 +2947,6 @@ mpdcmd_watcher(void *arg)
   for(;;)
   {
     usleep(cfg_mpdcmd_watch_interval);
-
-    if(mpd_watcher_pause == 1)
-      continue;
 
     if(con == NULL || mpd_connection_get_error(con) != MPD_ERROR_SUCCESS)
     {

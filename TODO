@@ -1,3 +1,5 @@
 - mpdcmd_loadpos(): load the n-th last bookmark made, indicated by
   negative integers
 - mpd watcher: disable prevnext notify when using the watcher
+- mpd watcher: instead of just pausing, destroy/create the watcher
+  thread if required
