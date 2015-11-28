@@ -4,10 +4,13 @@
  * See the LICENSE file for license details and attribution.
  */
 #include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <sys/wait.h>
+#include <linux/socket.h>
 
 #include <assert.h>
 #include <errno.h>
@@ -109,6 +112,10 @@ enum { MpdLowerVolume,
 enum { MpdFlag_Config_ForceOff  = 1<<1,
        MpdFlag_Config_ForceOn   = 1<<2,
        MpdFlag_Config_Respect   = 1<<3 };
+
+/* mpvcmd */
+
+enum { MpvToggle, MpvMpvNext, MpvPrev, MpvMuteVolume, MpvRaiseVolume, MpvLowerVolume, MpvReplay };
 
 /* typedefs */
 
@@ -2978,6 +2985,41 @@ mpdcmd_watcher(void *arg)
     mpd_connection_free(con);
 
   return NULL;
+}
+
+/* returns a valid socket fd or -1 */
+int
+mpvcmd_connect(void)
+{
+  struct sockaddr_un a;
+  int sfd;
+
+  sfd = socket(AF_UNIX, SOCK_STREAM, 0);
+  if(sfd == -1)
+    return -1;
+
+  memset(&a, 0, sizeof(struct sockaddr_un));
+  a.sun_family = AF_UNIX;
+  /* The maximum length of a.sun_path is commonly only 108 bytes as
+   * defined in sys/un.h */
+  if(sizeof(mpvsocket)<sizeof(a.sun_path))
+    return -1;
+  memcpy(a.sun_path, mpvsocket, sizeof(mpvsocket));
+
+  if(connect(sfd, (struct sockaddr*)&a, sizeof(struct sockaddr_un)) == -1)
+    return -1;
+
+  return sfd;
+}
+
+void
+mpvcmd(Arg *a)
+{
+  switch(a->i)
+  {
+    default:
+      return;
+  }
 }
 
 int
