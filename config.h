@@ -135,11 +135,16 @@ static Key keys[] = {
   /* XF86 KEYS */
 
   { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MpdLowerVolume }},
+  { MODKEY,                       XF86XK_AudioLowerVolume,    mpvcmd, { .i = MpvLowerVolume }},
   { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MpdRaiseVolume }},
+  { MODKEY,                       XF86XK_AudioRaiseVolume,    mpvcmd, { .i = MpvRaiseVolume }},
   { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MpdMuteVolume }},
+  { MODKEY,                       XF86XK_AudioMute,           mpvcmd, { .i = MpvMuteVolume }},
   { False,                        XF86XK_LaunchA,             mpdcmd, { .i = MpdTogglePause }},
   { False,                        XF86XK_Search,              mpdcmd, { .i = MpdPrev }},
+  { MODKEY,                       XF86XK_Search,              mpvcmd, { .i = MpdPrev }},
   { False,                        XF86XK_Explorer,            mpdcmd, { .i = MpdNext }},
+  { MODKEY,                       XF86XK_Explorer,            mpvcmd, { .i = MpvNext }},
   { False,                        XF86XK_MonBrightnessDown,   spawn, {.v = cmd_backlightdown }},
   { False,                        XF86XK_MonBrightnessUp,     spawn, {.v = cmd_backlightup }},
   { MODKEY,                       XK_Delete,                  mpdcmd, { .i = MpdPlayAgain }},

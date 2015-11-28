@@ -115,7 +115,7 @@ enum { MpdFlag_Config_ForceOff  = 1<<1,
 
 /* mpvcmd */
 
-enum { MpvToggle, MpvMpvNext, MpvPrev, MpvMuteVolume, MpvRaiseVolume, MpvLowerVolume, MpvReplay };
+enum { MpvToggle, MpvNext, MpvPrev, MpvMuteVolume, MpvRaiseVolume, MpvLowerVolume };
 
 /* typedefs */
 
@@ -337,6 +337,8 @@ static void mpdcmd_volume(const Arg *arg);
 static void *mpdcmd_watcher(void *arg);
 static void mpdcmd_start_watcher(void);
 static void mpdcmd_stop_watcher(void);
+static void mpvcmd(const Arg *a);
+static int mpvcmd_connect(void);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
 static void pushdown(const Arg *arg);
@@ -3018,10 +3020,10 @@ mpvcmd_connect(void)
 }
 
 #define MPVCMD(s) \
-  if(write(mpvfd, #s, sizeof(#s)) < sizeof(#s)) \
+  if(write(mpvfd, s, sizeof(s)) < sizeof(s)) \
     LERROR(0, 0, "incomplete write() to mpv socket");
 void
-mpvcmd(Arg *a)
+mpvcmd(const Arg *a)
 {
   if(mpvfd == -1 && mpvcmd_connect() != 0)
     return;
@@ -3035,6 +3037,15 @@ mpvcmd(Arg *a)
       break;
     case MpvRaiseVolume:
       MPVCMD("volume add +1");
+      break;
+    case MpvMuteVolume:
+      MPVCMD("cycle mute");
+      break;
+    case MpvNext:
+      MPVCMD("playlist_next");
+      break;
+    case MpvPrev:
+      MPVCMD("playlist_prev");
       break;
   }
 }
