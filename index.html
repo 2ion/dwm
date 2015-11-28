@@ -5,7 +5,7 @@
     <title>dwm by 2ion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -19,12 +19,25 @@
     </section>
 
     <section class="main-content">
-      <p>This software is a X11 window manager based on suckless.org's dwm 6.0, adding a client for the <a href="http://www.musicpd.org/">music player daemon</a> and various other gimmicks.</p>
+      <p>This is the patched and further modified version of the
+DWM window manager I use, most notably it is linked against libmpdclient
+to provide MPD playback and volume control as well as the capability to
+bookmark songs and playing times.</p>
+
+<p>Documentation on the MPD patch can be found further down in this file.</p>
+
+<p>The code is based on suckless.org's DWM 6.0 and some patches (see below).</p>
+
+<p>And here is what it looks like (of course, the cool stuff is under the
+hood):</p>
+
+<p><img src="https://raw.githubusercontent.com/2ion/dwm/gh-pages/screenshot2.png" alt="Screenshot"></p>
 
 <h2>
-<a id="patches" class="anchor" href="#patches" aria-hidden="true"><span class="octicon octicon-link"></span></a>Patches</h2>
+<a id="patches--modifications" class="anchor" href="#patches--modifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>PATCHES &amp; MODIFICATIONS</h2>
 
-<p>The code incorporates the following patches by various authors which are or at some point in time have been listed on <a href="http://dwm.suckless.org">dwm.suckless.org</a>. </p>
+<h3>
+<a id="official-patches" class="anchor" href="#official-patches" aria-hidden="true"><span class="octicon octicon-link"></span></a>'OFFICIAL' PATCHES</h3>
 
 <ul>
 <li>pango</li>
@@ -32,24 +45,324 @@
 <li>savefloats</li>
 <li>pushstack</li>
 <li>cycletag</li>
-<li>bstack layout</li>
+<li>bstack</li>
 <li>deck layout</li>
-<li>Cherrypick from upstream git: Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()</li>
 </ul>
 
-<p>These are changes made by me. A clean patchset against dwm 6.0 doesn't exist; this mod is a take-it-or-leave-it thing. View the README if you want to find out how to configure this stuff.</p>
+<h3>
+<a id="personal-mods" class="anchor" href="#personal-mods" aria-hidden="true"><span class="octicon octicon-link"></span></a>PERSONAL MODS</h3>
 
 <ul>
-<li>Manually set window opacity using bindable callbacks</li>
-<li>Automatically set window opacity using window matching rules</li>
-<li>Control a MPD instance using bindable callbacks</li>
-<li>Inform about the player state (song info, player settings) of a MPD instance using desktop notifications either when triggering a bindable callback or on player state changes (uses a separate watch thread)</li>
-<li>Bookmark time positions within songs and playlists</li>
-<li>
-<a href="http://wmii.suckless.org">wmii</a>-like actions</li>
-<li>Compile with <code>-O3 -march=native</code>
-</li>
+<li>You can define filter rules to automatically set the opacity of
+clients (see the section further down)</li>
+<li>Use XkbKeycodeToKeysym() instead of XKeycodeToKeysym()</li>
+<li>mpdcmd() callback to directly control mpd. Linked against
+libmpdclient. Provides multiple actions; see below for details.</li>
+<li>mpdcmd_loadpos() and mpdcmd_savepos() callbacks to create and
+access bookmarks. The state is lost when DWM exits. There are
+10 registers 0-9 available for storing up to 10 bookmarks.</li>
+<li>libnotify notifications triggered by mpdcmd() actions!</li>
+<li>DCMD() macro for convenient dmenu invocation</li>
+<li>Compile with -O3 -march=native</li>
+<li>wmii-like actions</li>
+<li>MPD status change notifications</li>
+<li>Support for IPC with the <a href="https://github.com/mpv-player/mpv/blob/master/DOCS/man/ipc.rst">mpv media player</a> via UNIX
+domain sockets</li>
 </ul>
+
+<h2>
+<a id="building-and-installing" class="anchor" href="#building-and-installing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building and installing</h2>
+
+<p>Before continueing, check out the latest tagged release version:</p>
+
+<pre><code># Current development branch
+git checkout 6.24
+</code></pre>
+
+<p>Every commit that has not been tagged should be considered unstable and
+not suited for productive use!</p>
+
+<p>Due to the extensions, we need the following extra libraries:</p>
+
+<ul>
+<li>libxft</li>
+<li>libpango</li>
+<li>libpangoxft</li>
+<li>libmpdclient</li>
+<li>libnotify</li>
+</ul>
+
+<p>The Makefile uses pkg-config to obtain CFLAGS and LDFLAGS. If you don't
+have pkg-config insalled, you need to adjust the Make config. Then,</p>
+
+<div class="highlight highlight-source-shell"><pre>make
+make install PREFIX=<span class="pl-smi">$PREFIX</span></pre></div>
+
+<p>builds and installs dwm into $PREFIX.</p>
+
+<h3>
+<a id="skippy-xd" class="anchor" href="#skippy-xd" aria-hidden="true"><span class="octicon octicon-link"></span></a>skippy-xd</h3>
+
+<p>The build system will also build and install
+<a href="https://github.com/richardgv/skippy-xd/">skippy-xd</a>, a nice and small
+X11 task switcher (bound to Mod+Escape by default), via git-submodule.
+It is by default bound to Mod4+Backspace.</p>
+
+<h2>
+<a id="configuration-premises" class="anchor" href="#configuration-premises" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration premises</h2>
+
+<p>config.h is tailored to my main machine, which is running Debian
+Unstable, and make assumptions about CPU frequencies, sudo configuration
+etc, so you need to review the file in any case. Windowing rules have
+been broken out into rules.h.</p>
+
+<p>Unlike the original dwm package, the config.def.h file has been removed.
+In order to modify the configuration, edit the config.h file directly.</p>
+
+<h2>
+<a id="mpd-client-extensions" class="anchor" href="#mpd-client-extensions" aria-hidden="true"><span class="octicon octicon-link"></span></a>MPD client extensions</h2>
+
+<p>The MPD client extension provides the following bindable callbacks:</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">void</span> <span class="pl-en">mpdcmd</span>(<span class="pl-k">const</span> Arg *arg);
+<span class="pl-k">void</span> <span class="pl-en">mpdcmd_playpos</span>(<span class="pl-k">const</span> Arg *arg);
+<span class="pl-k">void</span> <span class="pl-en">mpdcmd_savepos</span>(<span class="pl-k">const</span> Arg *arg);</pre></div>
+
+<p>In config.h, the following variables affect the mpd functions'
+behaviour:</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-c">/* Connection attempts when there is no active connection */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_retries               = <span class="pl-c1">10</span>;
+
+<span class="pl-c">/* IP address of the MPD server or path to the UNIX socket */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">char</span> cfg_mpdcmd_mpdhost[]            = <span class="pl-s"><span class="pl-pds">"</span>/home/joj/.mpd_socket<span class="pl-pds">"</span></span>;
+
+<span class="pl-c">/* IP port of the MPD server. Ignored when a socket is being used */</span>
+<span class="pl-k">static</span> <span class="pl-k">unsigned</span> cfg_mpdcmd_mpdport                = <span class="pl-c1">6600</span>;
+
+<span class="pl-c">/* Enable notifcations via libnotify */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_notify_enable         = <span class="pl-c1">1</span>;
+
+<span class="pl-c">/* Connection attempts to get a connection to a notification daemon */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_notify_retries        = <span class="pl-c1">2</span>;
+
+<span class="pl-c">/* Time notifications stay visible, in seconds */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_notify_timeout        = <span class="pl-c1">5</span>;
+
+<span class="pl-c">/* Shell command used to mute the MPD volume, the MPD server currently</span>
+<span class="pl-c"> * doesn't provide this functinality */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">char</span> *cfg_mpdcmd_mute_command[]      = { <span class="pl-s"><span class="pl-pds">"</span>amixer<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>sset<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Master<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>toggle<span class="pl-pds">"</span></span>, <span class="pl-c1">NULL</span> };
+
+<span class="pl-c">/* Volume step interval when increasing/decreasing volume */</span>
+<span class="pl-k">static</span> <span class="pl-k">int</span> voldelta                               = <span class="pl-c1">4</span>;
+
+<span class="pl-c">/* MPD watcher: status query interval in microseconds */</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_watch_interval        = <span class="pl-c1">500</span>;
+
+<span class="pl-c">/* Enable or disable the MPD watcher. If enabled,</span>
+<span class="pl-c"> * notifications when going to the previous/next song will be disabled</span>
+<span class="pl-c"> * since the watcher looks out for the same event */</span>
+<span class="pl-k">static</span> <span class="pl-k">int</span> cfg_mpdcmd_watch_enable                = <span class="pl-c1">1</span>;</pre></div>
+
+<h3>
+<a id="mpdcmdconst-arg-arg" class="anchor" href="#mpdcmdconst-arg-arg" aria-hidden="true"><span class="octicon octicon-link"></span></a>mpdcmd(const Arg *arg)</h3>
+
+<p>Control MPD player state and volume.</p>
+
+<p>arg needs to have its member i set to one of the following integer
+constants, which are defined as an enum type in dwm.c:</p>
+
+<pre><code>MpdPlayAgain
+    Re-play the currently playing song from the beginning.
+
+MpdRaiseVolume
+    Raise the MPD mixer volume by voldelta points. voldelta is set
+    in config.h.
+
+MpdLowerVolume
+    Opposite of MpdRaiseVolume.
+
+MpdMuteVolume
+    Toggle mute. If unmuted, the volume will be restored to the
+    previous level.
+
+MpdTogglePause
+    Toggle play/pause.
+
+MpdPrev
+    Play the previous song in the queue.
+
+MpdNext
+    Play the next song in the queue.
+
+MpdNotifySong
+    Displays info (title/artist/album/queue-pos/length) on the
+    currently playing or selected song.
+
+MpdNotifyStatus
+    Displays a notification with the status of the
+    crossover/repeat/random/single//consume settings.
+
+MpdNotifyVolume
+    Displays a notification with the current volume.
+
+MpdToggleRepeat
+    Toggle the repeat flag.
+
+MpdToggleConsume
+    Toggle the consume flag.
+
+MpdToggleRandom
+    Toggle random playback.
+
+MpdToggleSingle
+    Toggle single player mode.
+
+MpdToggleWatcher
+    If the watcher is enabled, the watcher will be paused. While
+    the watcher is paused, regular notifications will be shown when
+    skipping to the previous or next song if notifications are
+    enabled.
+
+MpdUpdate
+    Execute a full database update.
+</code></pre>
+
+<h3>
+<a id="mpdcmd_loadposconst-arg-arg--mpdcmd_saveposconst-arg-arg" class="anchor" href="#mpdcmd_loadposconst-arg-arg--mpdcmd_saveposconst-arg-arg" aria-hidden="true"><span class="octicon octicon-link"></span></a>mpdcmd_loadpos(const Arg *arg) / mpdcmd_savepos(const Arg *arg)</h3>
+
+<p>Provides 10 registers to bookmark/restore song and playing position.</p>
+
+<p>args needs to have its member i set to an integer 0 through 9. A call to
+mpdcmd_savepos({.i = n}) saves the playlist index and play position of
+the currently playing song (includes being paused) into register n. A
+corresponding call to mpdcmd_loadpos({.i = n}) plays the song with the
+previously saved playlist index from the saved playing position.</p>
+
+<p>The current playlist will also be saved and restored in order to ensure
+that the bookmark is being played correctly even if the underlying
+playlist has changed in the meantime.</p>
+
+<h3>
+<a id="notifications" class="anchor" href="#notifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notifications</h3>
+
+<p>Notifications with information on the newly selected song are being
+displayed if notifications are enabled in config.h. Notifications are
+triggered on mpdcmd()'s MpdNext and MpdPrev actions. Naturally, dwm must
+have access to a running notification service via dbus. An example
+configuration for the lightweight dunst notification daemon can be found
+in /resources.</p>
+
+<p>In config.h, the following switches can be set:</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-c">// set to 0 or 1 to disable/enable the libnotify codepath</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_notify_enable  = <span class="pl-c1">1</span>;
+
+<span class="pl-c">// times the libnotify code should try to re-initialize if</span>
+<span class="pl-c">// a connection attempt to the notification service failed</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_notify_retries = <span class="pl-c1">2</span>;
+
+<span class="pl-c">// seconds how long a single notification should be kept visible</span>
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">int</span> cfg_mpdcmd_notify_timeout = <span class="pl-c1">5</span>;</pre></div>
+
+<p>Modifying the notification contents takes a little more effort because
+I decided to avoid allowing user templates in order to keep things
+simple. You have to re-implement the functions</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">mpdcmd_prevnext_notify</span>(<span class="pl-k">int</span> mpdaction);
+<span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">mpdcmd_notify_settext</span>(MpdcmdNotification *n,
+    <span class="pl-k">const</span> <span class="pl-k">char</span> *album, <span class="pl-k">int</span> pos, <span class="pl-k">int</span> queuelen, <span class="pl-k">int</span> minutes, <span class="pl-k">int</span> seconds);
+<span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">mpdcmd_notify_settitle</span>(MpdcmdNotification *n,
+    <span class="pl-k">const</span> <span class="pl-k">char</span> *artist, <span class="pl-k">const</span> <span class="pl-k">char</span> *title);</pre></div>
+
+<p>where MpdcmdNotification is a defined as</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">typedef</span> <span class="pl-k">struct</span> {
+  <span class="pl-k">char</span> *title;
+  <span class="pl-k">char</span> *txt;
+} MpdcmdNotification;</pre></div>
+
+<p>The function</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">mpdcmd_prevnext_notify</span>(<span class="pl-k">int</span> mpdaction);</pre></div>
+
+<p>retrieves the metadata via libmpdclient calls and allocates a
+MpdcmdNotification struct. It can decide to take different actions
+depending on the mpdaction it was triggered by (MpdPrev|MpdNext). It
+then passes the data to</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">mpdcmd_notify_settext</span>(MpdcmdNotification *n, &lt;metadata&gt;);
+<span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">mpdcmd_notify_settitle</span>(MpdcmdNotification *n, &lt;metadata&gt;);</pre></div>
+
+<p>which set up the title and txt fields of the MpdcmdNotification as
+NULL-terminated strings. They currently use snprintf() and a simple
+printf-style format spec to format notification title (field: title) and
+body (field: txt).</p>
+
+<p>Finally, mpdcmd_prevnext_notify() calls mpdcmd_notify() with the
+notification data as the argument. This function takes care of
+everything needed to show the notification.</p>
+
+<h2>
+<a id="setting-the-window-opacity--transparency" class="anchor" href="#setting-the-window-opacity--transparency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting the window opacity / transparency</h2>
+
+<p>The client filter rules have been extended and now allow setting the
+opacity of clients matching a certain rule. The filter table now
+looks like this:</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">const</span> Rule rules[] = {
+    <span class="pl-c">/* class                    instance    title       tags mask     isfloating   monitor  opacity */</span>
+    { <span class="pl-s"><span class="pl-pds">"</span>Iceweasel<span class="pl-pds">"</span></span>,              <span class="pl-c1">NULL</span>,       <span class="pl-c1">NULL</span>,       <span class="pl-c1">1</span> &lt;&lt; <span class="pl-c1">1</span>,       False,       -<span class="pl-c1">1</span>,      <span class="pl-c1">1.0</span> },
+    { <span class="pl-s"><span class="pl-pds">"</span>mplayer2<span class="pl-pds">"</span></span>,               <span class="pl-c1">NULL</span>,       <span class="pl-c1">NULL</span>,       <span class="pl-c1">1</span>,            True,        -<span class="pl-c1">1</span>,      <span class="pl-c1">1.0</span> },
+    { <span class="pl-s"><span class="pl-pds">"</span>mpv<span class="pl-pds">"</span></span>,                    <span class="pl-c1">NULL</span>,       <span class="pl-c1">NULL</span>,       <span class="pl-c1">1</span>,            True,        -<span class="pl-c1">1</span>,      <span class="pl-c1">1.0</span> },
+    { <span class="pl-s"><span class="pl-pds">"</span>URxvt<span class="pl-pds">"</span></span>,                  <span class="pl-c1">NULL</span>,       <span class="pl-c1">NULL</span>,       <span class="pl-c1">1</span> &lt;&lt; <span class="pl-c1">0</span>,       False,       -<span class="pl-c1">1</span>,      <span class="pl-c1">0.9</span> }};</pre></div>
+
+<p>Note the new "opacity" field. The number here must be a double d 0.0 &lt;=
+d &lt;= 1.0 with 0.0 meaning 100% transparent (=invisible) and 1.0 opaque
+(=no transparency). Values which are out of bounds will be sanitized and
+default to 1.0, though.</p>
+
+<p>The default opacity for clients not matching any rule is = 1.0.</p>
+
+<h3>
+<a id="changeopacityconst-arg-arg" class="anchor" href="#changeopacityconst-arg-arg" aria-hidden="true"><span class="octicon octicon-link"></span></a>changeopacity(const Arg *arg)</h3>
+
+<p>This callback can be used in keybindings. arg needs to have its float
+member set to a positive or negative number; when called, the value will
+be added to the client's opacity as explained above. Values f &gt; 0.0 will
+increase the opacity until its value reaches 1.0, values f &lt; 0.0 will
+decrease the opacity. Out of bound values will default to 1.0 (fully
+opaque). Example configuration snippet:</p>
+
+<div class="highlight highlight-source-c"><pre>
+    { MODKEY,                       XK_o,      changeopacity,   {.<span class="pl-smi">f</span> = +<span class="pl-c1">0.05</span> }},
+    { MODKEY|ShiftMask,             XK_o,      changeopacity,   {.<span class="pl-smi">f</span> = -<span class="pl-c1">0.05</span> }},</pre></div>
+
+<h3>
+<a id="setopacityconst-arg-arg" class="anchor" href="#setopacityconst-arg-arg" aria-hidden="true"><span class="octicon octicon-link"></span></a>setopacity(const Arg *arg)</h3>
+
+<p>Like changeopacity(), but sets the opacity of the focus client to a fix
+value.</p>
+
+<h2>
+<a id="mpv-ipc" class="anchor" href="#mpv-ipc" aria-hidden="true"><span class="octicon octicon-link"></span></a>mpv IPC</h2>
+
+<p>In <code>config.h</code>, set <code>mpvsocket</code> to the path to the socket path
+configured using mpv's <code>input-unix-socket</code> option:</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">char</span> mpvsocket[] = <span class="pl-s"><span class="pl-pds">"</span>/home/joj/.mpv.socket<span class="pl-pds">"</span></span>;</pre></div>
+
+<p>and bind the mpv actions to keys in <code>config.h</code>, for example:</p>
+
+<div class="highlight highlight-source-c"><pre>{ MODKEY, XK_z, mpvcmd, { .<span class="pl-smi">i</span> = MpdPrev }},
+{ MODKEY, XK_g, mpvcmd, { .<span class="pl-smi">i</span> = MpvToggle }},
+{ MODKEY, XK_v, mpvcmd, { .<span class="pl-smi">i</span> = MpvNext }},</pre></div>
+
+<p>Available actions are defined as follows:</p>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-k">enum</span> { MpvToggle, MpvNext, MpvPrev, MpvMuteVolume, MpvRaiseVolume, MpvLowerVolume };</pre></div>
+
+<p>Their effects correspond to their mpd equivalents.</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/2ion/dwm">dwm</a> is maintained by <a href="https://github.com/2ion">2ion</a>.</span>
@@ -72,4 +385,3 @@
 
   </body>
 </html>
-
