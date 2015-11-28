@@ -45,7 +45,6 @@ static const Bool topbar                          = True;
 static const char *tags[]                         = { "term", "web", "dic", "pdf", "misc", "stash", "ι", "κ", "λ" };
 static const float mfact                          = 0.62;
 static const int nmaster                          = 1;
-static const char mpvsocket[]                     = "/home/joj/.mpv.socket";
 static const int cfg_mpdcmd_retries               = 10;
 static const int cfg_mpdcmd_notify_enable         = 1;
 static const int cfg_mpdcmd_notify_retries        = 2;
@@ -63,6 +62,7 @@ static const Layout layouts[]                     = {
                                                     { "TTT", bstack    },
                                                     { "><>", NULL      },
                                                     { ">>-", deck      }};
+static const char mpvsocket[]                     = "/home/joj/.mpv.socket";
 
 #include "rules.h"
 

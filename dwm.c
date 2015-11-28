@@ -419,6 +419,7 @@ char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
 volatile int mpd_watcher_exists = 0;
 pthread_t mpd_watcher_thread;
+int mpvfd = -1;
 
 /* configuration, allows nested code to access above variables */
 
@@ -799,6 +800,8 @@ cleanup(void) {
   XSync(dpy, False);
   XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
   mpdcmd_cleanup();
+  if(mpvfd != -1)
+    close(mpvfd);
 }
 
 void
@@ -2992,34 +2995,55 @@ int
 mpvcmd_connect(void)
 {
   struct sockaddr_un a;
-  int sfd;
 
-  sfd = socket(AF_UNIX, SOCK_STREAM, 0);
-  if(sfd == -1)
-    return -1;
+  mpvfd = socket(AF_UNIX, SOCK_STREAM, 0);
+  if(mpvfd == -1)
+    return 1;
 
   memset(&a, 0, sizeof(struct sockaddr_un));
   a.sun_family = AF_UNIX;
   /* The maximum length of a.sun_path is commonly only 108 bytes as
    * defined in sys/un.h */
   if(sizeof(mpvsocket)<sizeof(a.sun_path))
-    return -1;
+    return 1;
   memcpy(a.sun_path, mpvsocket, sizeof(mpvsocket));
 
-  if(connect(sfd, (struct sockaddr*)&a, sizeof(struct sockaddr_un)) == -1)
-    return -1;
-
-  return sfd;
+  if(connect(mpvfd, (struct sockaddr*)&a, sizeof(struct sockaddr_un)) == -1)
+  {
+    close(mpvfd);
+    mpvfd = -1;
+    return 1;
+  }
+  return 0;
 }
 
+#define MPVCMD(s) \
+  if(write(mpvfd, #s, sizeof(#s)) < sizeof(#s)) \
+    LERROR(0, 0, "incomplete write() to mpv socket");
 void
 mpvcmd(Arg *a)
 {
+  if(mpvfd == -1 && mpvcmd_connect() != 0)
+    return;
   switch(a->i)
   {
-    default:
-      return;
+    case MpvToggle:
+      MPVCMD("cycle pause");
+      break;
+    case MpvLowerVolume:
+      MPVCMD("volume add -1");
+      break;
+    case MpvRaiseVolume:
+      MPVCMD("volume add +1");
+      break;
   }
+}
+
+void
+mpdcmd_deconnet(void)
+{
+  if(mpvfd != -1)
+    close(mpvfd);
 }
 
 int
