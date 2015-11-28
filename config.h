@@ -135,7 +135,7 @@ static Key keys[] = {
 
   /* XF86 KEYS */
 
-  { MODKEY,                       XK_z,                       mpvcmd, { .i = MpdPrev }},
+  { MODKEY,                       XK_z,                       mpvcmd, { .i = MpvPrev }},
   { MODKEY,                       XK_g,                       mpvcmd, { .i = MpvToggle }},
   { MODKEY,                       XK_v,                       mpvcmd, { .i = MpvNext }},
 
