@@ -62,6 +62,8 @@ static const Layout layouts[]                     = {
                                                     { "TTT", bstack    },
                                                     { "><>", NULL      },
                                                     { ">>-", deck      }};
+/* Note that on many systems, the maximum length of this path is limited
+ * to 108 bytes */
 static const char mpvsocket[]                     = "/home/joj/.mpv.socket";
 
 #include "rules.h"
@@ -112,7 +114,6 @@ static Key keys[] = {
   { MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]}}, // tiled
   { MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[4]}}, // deck
   { MODKEY,                       XK_s,      setlayout,      {.v = &layouts[2]}}, // bstack
-  { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[3]}}, // float
   { MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]}}, // mononocle
   { MODKEY,                       XK_space,  setlayout,      {0}},
   { MODKEY|ShiftMask,             XK_space,  togglefloating, {0}},
@@ -134,27 +135,28 @@ static Key keys[] = {
 
   /* XF86 KEYS */
 
+  { MODKEY,                       XK_z,                       mpvcmd, { .i = MpdPrev }},
+  { MODKEY,                       XK_g,                       mpvcmd, { .i = MpvToggle }},
+  { MODKEY,                       XK_v,                       mpvcmd, { .i = MpvNext }},
+
   { False,                        XF86XK_AudioLowerVolume,    mpdcmd, { .i = MpdLowerVolume }},
-  { MODKEY,                       XF86XK_AudioLowerVolume,    mpvcmd, { .i = MpvLowerVolume }},
   { False,                        XF86XK_AudioRaiseVolume,    mpdcmd, { .i = MpdRaiseVolume }},
-  { MODKEY,                       XF86XK_AudioRaiseVolume,    mpvcmd, { .i = MpvRaiseVolume }},
   { False,                        XF86XK_AudioMute,           mpdcmd, { .i = MpdMuteVolume }},
-  { MODKEY,                       XF86XK_AudioMute,           mpvcmd, { .i = MpvMuteVolume }},
   { False,                        XF86XK_LaunchA,             mpdcmd, { .i = MpdTogglePause }},
   { False,                        XF86XK_Search,              mpdcmd, { .i = MpdPrev }},
-  { MODKEY,                       XF86XK_Search,              mpvcmd, { .i = MpdPrev }},
   { False,                        XF86XK_Explorer,            mpdcmd, { .i = MpdNext }},
-  { MODKEY,                       XF86XK_Explorer,            mpvcmd, { .i = MpvNext }},
   { False,                        XF86XK_MonBrightnessDown,   spawn, {.v = cmd_backlightdown }},
   { False,                        XF86XK_MonBrightnessUp,     spawn, {.v = cmd_backlightup }},
   { MODKEY,                       XK_Delete,                  mpdcmd, { .i = MpdPlayAgain }},
   { MODKEY|ShiftMask,             XK_Delete,                  mpdcmd, { .i = MpdToggleWatcher }},
+  /*
   { MODKEY,                       XK_c,                       mpdcmd_savepos, { .i = 0 }},
   { MODKEY,                       XK_v,                       mpdcmd_loadpos, { .i = 0 }},
   { MODKEY|ShiftMask,             XK_c,                       mpdcmd_savepos, { .i = 1 }},
   { MODKEY|ShiftMask,             XK_v,                       mpdcmd_loadpos, { .i = 1 }},
   { MODKEY|ControlMask,           XK_c,                       mpdcmd_savepos, { .i = 2 }},
   { MODKEY|ControlMask,           XK_v,                       mpdcmd_loadpos, { .i = 2 }},
+  */
   { MODKEY,                       XK_y,                       mpdcmd, { .i = MpdToggleSingle }},
   { MODKEY,                       XK_r,                       mpdcmd, { .i = MpdToggleRepeat }},
   { MODKEY,                       XK_n,                       mpdcmd, { .i = MpdNotifyStatus }},

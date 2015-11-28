@@ -21,7 +21,7 @@ hood):
 ## PATCHES & MODIFICATIONS
 
 ### 'OFFICIAL' PATCHES
-    
+
 * pango
 * pertag
 * savefloats
@@ -45,6 +45,8 @@ access bookmarks. The state is lost when DWM exits. There are
 * Compile with -O3 -march=native
 * wmii-like actions
 * MPD status change notifications
+* Support for IPC with the [mpv media player](https://github.com/mpv-player/mpv/blob/master/DOCS/man/ipc.rst) via UNIX
+  domain sockets
 
 ## Building and installing
 
@@ -285,7 +287,7 @@ everything needed to show the notification.
 ## Setting the window opacity / transparency
 
 The client filter rules have been extended and now allow setting the
-opacity of clients matching a certain rule. The filter table now 
+opacity of clients matching a certain rule. The filter table now
 looks like this:
 
 ```C
@@ -323,3 +325,28 @@ opaque). Example configuration snippet:
 
 Like changeopacity(), but sets the opacity of the focus client to a fix
 value.
+
+## mpv IPC
+
+In `config.h`, set `mpvsocket` to the path to the socket path
+configured using mpv's `input-unix-socket` option:
+
+```C
+static const char mpvsocket[] = "/home/joj/.mpv.socket";
+```
+
+and bind the mpv actions to keys in `config.h`, for example:
+
+```C
+{ MODKEY, XK_z, mpvcmd, { .i = MpdPrev }},
+{ MODKEY, XK_g, mpvcmd, { .i = MpvToggle }},
+{ MODKEY, XK_v, mpvcmd, { .i = MpvNext }},
+```
+
+Available actions are defined as follows:
+
+```C
+enum { MpvToggle, MpvNext, MpvPrev, MpvMuteVolume, MpvRaiseVolume, MpvLowerVolume };
+```
+
+Their effects correspond to their mpd equivalents.

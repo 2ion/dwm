@@ -338,7 +338,6 @@ static void *mpdcmd_watcher(void *arg);
 static void mpdcmd_start_watcher(void);
 static void mpdcmd_stop_watcher(void);
 static void mpvcmd(const Arg *a);
-static int mpvcmd_connect(void);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
 static void pushdown(const Arg *arg);
@@ -421,7 +420,6 @@ char MpdCmdRegisterPlaylists[10][256];
 int MpdcmdCanNotify = 0;
 volatile int mpd_watcher_exists = 0;
 pthread_t mpd_watcher_thread;
-int mpvfd = -1;
 
 /* configuration, allows nested code to access above variables */
 
@@ -802,8 +800,6 @@ cleanup(void) {
   XSync(dpy, False);
   XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
   mpdcmd_cleanup();
-  if(mpvfd != -1)
-    close(mpvfd);
 }
 
 void
@@ -2992,69 +2988,54 @@ mpdcmd_watcher(void *arg)
   return NULL;
 }
 
-/* returns a valid socket fd or -1 */
-int
-mpvcmd_connect(void)
-{
-  struct sockaddr_un a;
-
-  mpvfd = socket(AF_UNIX, SOCK_STREAM, 0);
-  if(mpvfd == -1)
-    return 1;
-
-  memset(&a, 0, sizeof(struct sockaddr_un));
-  a.sun_family = AF_UNIX;
-  /* The maximum length of a.sun_path is commonly only 108 bytes as
-   * defined in sys/un.h */
-  if(sizeof(mpvsocket)<sizeof(a.sun_path))
-    return 1;
-  memcpy(a.sun_path, mpvsocket, sizeof(mpvsocket));
-
-  if(connect(mpvfd, (struct sockaddr*)&a, sizeof(struct sockaddr_un)) == -1)
-  {
-    close(mpvfd);
-    mpvfd = -1;
-    return 1;
-  }
-  return 0;
-}
-
-#define MPVCMD(s) \
-  if(write(mpvfd, s, sizeof(s)) < sizeof(s)) \
-    LERROR(0, 0, "incomplete write() to mpv socket");
 void
 mpvcmd(const Arg *a)
 {
-  if(mpvfd == -1 && mpvcmd_connect() != 0)
+  int sfd;
+  struct sockaddr_un addr;
+
+  if((sfd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
     return;
+  memset(&addr, 0, sizeof(struct sockaddr_un));
+  addr.sun_family = AF_UNIX;
+  strncpy(addr.sun_path, mpvsocket, sizeof(addr.sun_path)-1);
+
+  if(connect(sfd, (struct sockaddr*)&addr, sizeof(struct sockaddr_un)) == -1)
+  {
+    close(sfd);
+    return;
+  }
+
+/* When defining additional actions, note that every command must be
+ * terminated by a newline '\n' character.  */
+#define mpv_send(msg) \
+  {\
+    int tmp __attribute__((unused)) = write(sfd, msg, sizeof(msg)-1); \
+  }
   switch(a->i)
   {
     case MpvToggle:
-      MPVCMD("cycle pause");
+      mpv_send("cycle pause\n");
       break;
     case MpvLowerVolume:
-      MPVCMD("volume add -1");
+      mpv_send("add volume -1\n");
       break;
     case MpvRaiseVolume:
-      MPVCMD("volume add +1");
+      mpv_send("add volume +1\n");
       break;
     case MpvMuteVolume:
-      MPVCMD("cycle mute");
+      mpv_send("cycle mute\n");
       break;
     case MpvNext:
-      MPVCMD("playlist_next");
+      mpv_send("playlist_next\n");
       break;
     case MpvPrev:
-      MPVCMD("playlist_prev");
+      mpv_send("playlist_prev\n");
       break;
   }
-}
+#undef mpv_send
 
-void
-mpdcmd_deconnet(void)
-{
-  if(mpvfd != -1)
-    close(mpvfd);
+  close(sfd);
 }
 
 int
