@@ -115,7 +115,19 @@ enum { MpdFlag_Config_ForceOff  = 1<<1,
 
 /* mpvcmd */
 
-enum { MpvToggle, MpvNext, MpvPrev, MpvMuteVolume, MpvRaiseVolume, MpvLowerVolume };
+enum
+{
+  MpvToggle,
+  MpvNext,
+  MpvPrev,
+  MpvMuteVolume,
+  MpvRaiseVolume,
+  MpvLowerVolume,
+  MpvSeekAhead10,
+  MpvSeekBehind10,
+  MpvSeekAhead30,
+  MpvSeekBehind30
+};
 
 /* typedefs */
 
@@ -3031,6 +3043,18 @@ mpvcmd(const Arg *a)
       break;
     case MpvPrev:
       mpv_send("playlist_prev\n");
+      break;
+    case MpvSeekAhead10:
+      mpv_send("seek +10\n");
+      break;
+    case MpvSeekAhead30:
+      mpv_send("seek +30\n");
+      break;
+    case MpvSeekBehind10:
+      mpv_send("seek -10\n");
+      break;
+    case MpvSeekBehind30:
+      mpv_send("seek -30\n");
       break;
   }
 #undef mpv_send
