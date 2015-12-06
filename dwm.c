@@ -126,7 +126,11 @@ enum
   MpvSeekAhead10,
   MpvSeekBehind10,
   MpvSeekAhead30,
-  MpvSeekBehind30
+  MpvSeekBehind30,
+  MpvQuit,
+  MpvNextChapter,
+  MpvPrevChapter,
+  MpvSwitchAudioChannel
 };
 
 /* typedefs */
@@ -3055,6 +3059,18 @@ mpvcmd(const Arg *a)
       break;
     case MpvSeekBehind30:
       mpv_send("seek -30\n");
+      break;
+    case MpvQuit:
+      mpv_send("quit\n");
+      break;
+    case MpvNextChapter:
+      mpv_send("add chapter +1\n");
+      break;
+    case MpvPrevChapter:
+      mpv_send("add chapter -1\n");
+      break;
+    case MpvSwitchAudioChannel:
+      mpv_send("switch_audio\n");
       break;
   }
 #undef mpv_send
