@@ -2758,8 +2758,7 @@ mpdcmd_prevnext_notify(int which) { MPDCMD_BE_CONNECTED;
   st = mpd_status_get_state(s);
   if(st == MPD_STATE_STOP || st == MPD_STATE_UNKNOWN)
     goto cleanup;
-  mpd_send_current_song(mpdc);
-  if((so = mpd_recv_song(mpdc)) == NULL)
+  if((so = mpd_run_current_song(mpdc)) == NULL)
     goto cleanup;
   if((r = mpd_song_get_tag((const struct mpd_song*)so,
       MPD_TAG_TITLE, 0)) != NULL)
@@ -2813,7 +2812,6 @@ mpdcmd_notify_volume(void) { MPDCMD_BE_CONNECTED;
   mpdcmd_notify(&(MpdcmdNotification){ txt, NULL });
   mpd_status_free(st);
 }
-
 
 void
 mpdcmd(const Arg *arg) {
