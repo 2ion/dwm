@@ -2925,7 +2925,7 @@ mpdcmd_notify(const MpdcmdNotification *n) {
     mpdcmd_init_notify();
   nn = notify_notification_new(n->title, n->txt, NULL);
   assert(nn != NULL);
-  notify_notification_set_timeout(nn, cfg_mpdcmd_notify_timeout);
+  notify_notification_set_timeout(nn, cfg_mpdcmd_notify_timeout*1000);
   notify_notification_show(nn, &er);
   //FIXME: is this method to free nn the right one?
   // free(nn); <- THIS is NOT right. fucking retarded notification interface.
