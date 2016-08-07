@@ -1,6 +1,6 @@
-_The rinne (輪廻) branch tracks the dwm configration for my TPx240._
-
-_The master branch tracks the dwm configuration for my TPx121e._
+* The tpx240 branch tracks the dwm configration for my TPx240.
+* The tpx121e branch tracks the dwm configuration for my TPx121e.
+* master tracks dwm upstream
 
 ## README
 
