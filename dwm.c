@@ -1410,6 +1410,15 @@ manage(Window w, XWindowAttributes *wa) {
     die("fatal: could not malloc() %u bytes\n", sizeof(Client));
   c->win = w;
   c->opacity = OPAQUE;
+
+  /* geometry */
+  c->x = c->oldx = wa->x;
+  c->y = c->oldy = wa->y;
+  c->w = c->oldw = wa->width;
+  c->h = c->oldh = wa->height;
+  c->oldbw = wa->border_width;
+  c->cfact = 1.0;
+
   updatetitle(c);
   if(XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
     c->mon = t->mon;
@@ -1419,13 +1428,6 @@ manage(Window w, XWindowAttributes *wa) {
     c->mon = selmon;
     applyrules(c);
   }
-  /* geometry */
-  c->x = c->oldx = wa->x;
-  c->y = c->oldy = wa->y;
-  c->w = c->oldw = wa->width;
-  c->h = c->oldh = wa->height;
-  c->oldbw = wa->border_width;
-  c->cfact = 1.0;
 
   if(c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
     c->x = c->mon->mx + c->mon->mw - WIDTH(c);
