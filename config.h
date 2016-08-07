@@ -145,8 +145,8 @@ static Key keys[] = {
   { False,                        XF86XK_LaunchA,             mpdcmd, { .i = MpdTogglePause }},
   { False,                        XF86XK_Search,              mpdcmd, { .i = MpdPrev }},
   { False,                        XF86XK_Explorer,            mpdcmd, { .i = MpdNext }},
-  { False,                        XF86XK_MonBrightnessDown,   spawn, {.v = cmd_backlightdown }},
-  { False,                        XF86XK_MonBrightnessUp,     spawn, {.v = cmd_backlightup }},
+//  { False,                        XF86XK_MonBrightnessDown,   spawn, {.v = cmd_backlightdown }},
+//  { False,                        XF86XK_MonBrightnessUp,     spawn, {.v = cmd_backlightup }},
   { MODKEY,                       XK_Delete,                  mpdcmd, { .i = MpdPlayAgain }},
   { MODKEY|ShiftMask,             XK_Delete,                  mpdcmd, { .i = MpdToggleWatcher }},
   /*

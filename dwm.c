@@ -1409,7 +1409,7 @@ manage(Window w, XWindowAttributes *wa) {
   if(!(c = calloc(1, sizeof(Client))))
     die("fatal: could not malloc() %u bytes\n", sizeof(Client));
   c->win = w;
-    c->opacity = OPAQUE;
+  c->opacity = OPAQUE;
   updatetitle(c);
   if(XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
     c->mon = t->mon;
@@ -2738,7 +2738,7 @@ mpdcmd_prevnext(int which, int override_notify) { MPDCMD_BE_CONNECTED;
 }
 
 void
-mpdcmd_prevnext_notify(int which) { MPDCMD_BE_CONNECTED;
+mpdcmd_prevnext_notify(int which) { MPDCMD_BE_CONNECTED; (void) which;
   MpdcmdNotification n;
   const char *song_title = "ー";
   const char *song_artist = "ー";
@@ -2892,7 +2892,7 @@ mpdcmd_notify_settitle(MpdcmdNotification *n, const char *artist, const char *ti
   assert(artist != NULL);
   assert(title != NULL);
   char *msg = NULL;
-  const char *fmt = "%s · %s";
+  const char *fmt = "%s 〜 %s";
   int msglen = snprintf(NULL, 0, fmt, artist, title) + 1;
   msg = malloc(sizeof(wchar_t)*(msglen));
   assert(msg != NULL);
@@ -2965,6 +2965,8 @@ mpdcmd_watcher(void *arg)
   int psid = -1;
   int csid = -1;
   int bcnt = 3;
+
+  (void) arg;
 
   for(;;)
   {
