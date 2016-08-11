@@ -32,7 +32,7 @@ dist: clean
 	@echo creating dist tarball
 	@mkdir -p dwm-${VERSION}
 	@cp -R LICENSE Makefile README config.def.h config.mk \
-		dwm.1 ${SRC} dwm-${VERSION}
+		${SRC} dwm-${VERSION}
 	@tar -cf dwm-${VERSION}.tar dwm-${VERSION}
 	@gzip dwm-${VERSION}.tar
 	@rm -rf dwm-${VERSION}
@@ -44,8 +44,6 @@ install: all
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/dwm
 	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man1
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
-	@sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
-	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 installresources:
 	@echo installing actions to $(HOME)/.actions.d
@@ -63,6 +61,5 @@ uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/dwm
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
-	@rm -f ${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 .PHONY: all options clean dist install uninstall
