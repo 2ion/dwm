@@ -1,6 +1,6 @@
 # vim: filetype=dosini
 [global]
-    font = Noto Sans 16
+    font = Kozuka Gothic Pro M 16
 
     # The format of the message. Possible variables are:
     #   %a  appname
@@ -49,11 +49,11 @@
     # right side of the screen.  Y is measured from the top and down respectevly.
     # The width can be negative. In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "500x30-10+10"
+    geometry = "0x40-10+10"
 
     # The transparency of the window. range: [0; 100]
     # This option will only work if a compositing windowmanager is present (e.g. xcompmgr, compiz, etc..)
-    transparency = 0
+    transparency = 10
 
     # Don't remove messages, if the user is idle (no mouse or keyboard input)
     # for longer than idle_threshold seconds.
@@ -82,7 +82,7 @@
     # The height of a single line. If the height is smaller than the font height,
     # it will get raised to the font height.
     # This adds empty space above and under the text.
-    line_height = 0
+    line_height = 12
 
     # Draw a line of 'separatpr_height' pixel height between two notifications.
     # Set to 0 to disable
