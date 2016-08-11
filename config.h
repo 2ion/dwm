@@ -59,6 +59,7 @@ static const Bool resizehints                     = False;
 static const Layout layouts[]                     = {
                                                     { "[+]", monocle   },
                                                     { ">>=", tile      },
+                                                    { "|||", tcl       },
                                                     { "TTT", bstack    },
                                                     { "><>", NULL      },
                                                     { ">>-", deck      }};
