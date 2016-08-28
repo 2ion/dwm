@@ -18,6 +18,7 @@
     NULL }
 #define ETAG(i) (1 << (i))
 enum {
+  Current   = 0,
   TagTerm   = ETAG(0),
   TagWeb    = ETAG(1),
   TagDic    = ETAG(2),
