@@ -1,7 +1,5 @@
 // dwm - config.h
 
-#define CPU_LOWER "825Mhz"
-#define CPU_UPPER "1.65Ghz"
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
   { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -72,13 +70,10 @@ static const char mpvsocket[]                     = "/home/joj/.mpv.socket";
 #include "rules.h"
 
 static const char *cmd_terminal[]                 = { "urxvt", NULL };
-static const char *cmd_browser[]                  = { "firefox-nightly", NULL };
+static const char *cmd_browser[]                  = { "firefox-esr", NULL };
 static const char *cmd_lock[]                     = { "xscreensaver-command", "-lock", NULL };
-static const char *cmd_gjiten[]                   = { "kiten", NULL };
 static const char *cmd_xkill[]                    = { "xkill", NULL };
 static const char *cmd_fetchmail[]                = { "fetchmail", NULL };
-static const char *cmd_cpu_lower[]                = { "sudo", "cpufreq-set", "-u", CPU_LOWER , NULL };
-static const char *cmd_cpu_upper[]                = { "sudo", "cpufreq-set", "-u", CPU_UPPER , NULL };
 static const char *cmd_action[]                   = ACTION("runaction");
 static const char *cmd_tmux[]                     = ACTION("tmux");
 static const char *cmd_backlight[]                = ACTION("backlight-off");
@@ -170,9 +165,6 @@ static Key keys[] = {
 
   /* F ROW */
 
-  { MODKEY,                       XK_F5,     spawn,          {.v = cmd_gjiten }},
-  { MODKEY,                       XK_F6,     spawn,          {.v = cmd_cpu_lower }},
-  { MODKEY,                       XK_F7,     spawn,          {.v = cmd_cpu_upper }},
   { MODKEY,                       XK_F9,     spawn,          {.v = cmd_fetchmail}},
   { MODKEY,                       XK_F10,    spawn,          {.v = cmd_mozc_config}},
   { MODKEY,                       XK_F11,    spawn,          {.v = cmd_mozc_register}},
