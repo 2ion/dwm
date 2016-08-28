@@ -576,11 +576,11 @@ applyrules(Client *c) {
       for(m = mons; m && m->num != r->monitor; m = m->next);
       if(m)
         c->mon = m;
-        // opacity; see updateopacity()
-        d = r->opacity;
-        if(d > 1.0 || d < 0.0)
-            d = 1.0;
-        c->opacity = (unsigned int) (d * OPAQUE);
+      // opacity; see updateopacity()
+      d = r->opacity;
+      if(d > 1.0 || d < 0.0)
+          d = 1.0;
+      c->opacity = (unsigned int) (d * OPAQUE);
     }
   }
   if(ch.res_class)
