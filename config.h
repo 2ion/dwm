@@ -71,8 +71,6 @@ static const char mpvsocket[]                     = "/home/joj/.mpv.socket";
 
 #include "rules.h"
 
-static const char *cmd_backlightup[]              = { "xbacklight", "+10", NULL };
-static const char *cmd_backlightdown[]            = { "xbacklight", "-10", NULL };
 static const char *cmd_terminal[]                 = { "urxvt", NULL };
 static const char *cmd_browser[]                  = { "firefox-nightly", NULL };
 static const char *cmd_lock[]                     = { "xscreensaver-command", "-lock", NULL };
