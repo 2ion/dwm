@@ -2890,7 +2890,7 @@ void
 mpdcmd_init_notify(void) {
   if(cfg_mpdcmd_notify_enable == 0)
     return;
-  if(notify_init("dwm-mpdclient"))
+  if(notify_init(cfg_mpdcmd_notify_clientid))
     MpdcmdCanNotify = 1;
 }
 

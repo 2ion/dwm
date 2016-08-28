@@ -49,6 +49,7 @@ static const int cfg_mpdcmd_retries               = 10;
 static const int cfg_mpdcmd_notify_enable         = 1;
 static const int cfg_mpdcmd_notify_retries        = 2;
 static const int cfg_mpdcmd_notify_timeout        = 5;
+static const char cfg_mpdcmd_notify_clientid[]    = "mpd";
 static const int cfg_mpdcmd_watch_interval        = 750;
 static const int cfg_mpdcmd_watch_enable          = 0;
 static const char cfg_mpdcmd_mpdhost[]            = "/home/joj/.mpd_socket";
