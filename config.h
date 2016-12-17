@@ -12,7 +12,7 @@
     "-sb", dmenubgcolor, \
     "-g", "tl", \
     "-w", "0.25", \
-    "-l", "30", \
+    "-l", "48", \
     NULL }
 #define ETAG(i) (1 << (i))
 enum {

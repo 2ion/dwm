@@ -10,6 +10,7 @@ static const const Rule rules[] = {
     { "Gjiten",                         NULL,       NULL,       TagDic,       False,       -1,      1.0 },
     { "URxvt",                          NULL,       NULL,       TagTerm,      False,       -1,      1.0 },
     { "Okular",                         NULL,       NULL,       TagPdf,       False,       -1,      1.0 },
+    { "okular",                         NULL,       NULL,       TagPdf,       False,       -1,      1.0 },
     { "EBView",                         NULL,       NULL,       TagDic,       False,       -1,      1.0 },
     { "Filezilla",                      NULL,       NULL,       TagKappa,     False,       -1,      1.0 },
     { "Kiten",                          NULL,       NULL,       TagDic,       False,       -1,      1.0 },
